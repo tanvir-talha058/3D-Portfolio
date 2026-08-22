@@ -1,0 +1,113 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: var(--ink);
+  --color-panel: var(--panel);
+  --color-line: var(--line);
+  --color-paper: var(--paper);
+  --color-muted: var(--muted);
+  --color-brass: var(--brass);
+  --color-brass-bright: var(--brass-bright);
+
+  --font-display: var(--font-display-family), ui-serif, Georgia, serif;
+  --font-sans: var(--font-body-family), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-mono-family), ui-monospace, monospace;
+}
+
+/* Dark — default */
+:root {
+  --ink: #0b0d10;
+  --panel: #14171c;
+  --line: #2a2f37;
+  --paper: #ede9e1;
+  --muted: #9a9d9f;
+  --brass: #c9a227;
+  --brass-bright: #f0c750;
+  color-scheme: dark;
+}
+
+/* Light — via system preference, only when not explicitly overridden */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --ink: #f4f1ea;
+    --panel: #fbf9f4;
+    --line: #ddd6c4;
+    --paper: #1c1a14;
+    --muted: #6b6558;
+    --brass: #8a621c;
+    --brass-bright: #a8791c;
+    color-scheme: light;
+  }
+}
+
+/* Light — explicit choice, wins regardless of system preference */
+:root[data-theme="light"] {
+  --ink: #f4f1ea;
+  --panel: #fbf9f4;
+  --line: #ddd6c4;
+  --paper: #1c1a14;
+  --muted: #6b6558;
+  --brass: #8a621c;
+  --brass-bright: #a8791c;
+  color-scheme: light;
+}
+
+/* Dark — explicit choice, wins regardless of system preference */
+:root[data-theme="dark"] {
+  --ink: #0b0d10;
+  --panel: #14171c;
+  --line: #2a2f37;
+  --paper: #ede9e1;
+  --muted: #9a9d9f;
+  --brass: #c9a227;
+  --brass-bright: #f0c750;
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-ink);
+  color: var(--color-paper);
+}
+
+::selection {
+  background: var(--color-brass);
+  color: var(--color-ink);
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes dataStream {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

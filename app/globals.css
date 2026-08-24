@@ -1,0 +1,579 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---------------------------------------------------------------
+   Tokens. The accent scale is a magma colormap: the palette an ML
+   engineer actually reads all day. Used semantically as a scale
+   (cold = structure, hot = signal), never decoratively.
+   --------------------------------------------------------------- */
+:root {
+  color-scheme: dark;
+
+  --void:   #08090c;
+  --deep:   #0e1017;
+  --raise:  #161922;
+  --ridge:  #1e222d;
+
+  --paper:  #edeae3;
+  --muted:  #939aa8;
+  --faint:  #5f6675;
+
+  --line:        rgba(237, 234, 227, 0.10);
+  --line-strong: rgba(237, 234, 227, 0.20);
+
+  /* magma ramp */
+  --r0: #2e2a4f;
+  --r1: #6b4a7e;
+  --r2: #b2506a;
+  --r3: #e07a55;
+  --r4: #f2c063;
+
+  --ember: var(--r3);
+  --gold:  var(--r4);
+
+  /* Apple-glass surface system */
+  --glass-blur:  28px;
+  --glass-sat:   180%;
+  --glass-fill:  rgba(255, 255, 255, 0.055);
+  --glass-fill-2:rgba(255, 255, 255, 0.015);
+  --glass-edge:  rgba(255, 255, 255, 0.22);
+  --glass-spec:  rgba(255, 255, 255, 0.55);
+
+  --r-sm: 14px;
+  --r-md: 22px;
+  --r-lg: 30px;
+  --r-xl: 38px;
+
+  /* ---------------------------------------------------------------
+     Type ramp. Locked 1.2 -> 1.25 modular ratio, fluid between a
+     320px and 1440px viewport. Every font-size on the page is one of
+     these steps; no ad-hoc rem values.
+     --------------------------------------------------------------- */
+  --step--2: clamp(0.694rem, 0.687rem + 0.037vw, 0.72rem);
+  --step--1: clamp(0.833rem, 0.814rem + 0.096vw, 0.9rem);
+  --step-0:  clamp(1rem,     0.964rem + 0.179vw, 1.125rem);
+  --step-1:  clamp(1.2rem,   1.141rem + 0.295vw, 1.406rem);
+  --step-2:  clamp(1.44rem,  1.349rem + 0.455vw, 1.758rem);
+  --step-3:  clamp(1.728rem, 1.594rem + 0.671vw, 2.197rem);
+  --step-4:  clamp(2.074rem, 1.881rem + 0.962vw, 2.747rem);
+  --step-5:  clamp(2.488rem, 2.218rem + 1.35vw,  3.433rem);
+  --step-6:  clamp(2.986rem, 2.613rem + 1.864vw, 4.292rem);
+  --step-7:  clamp(3.583rem, 3.074rem + 2.545vw, 5.364rem);
+
+  /* Spacing on a strict 4px base. */
+  --space-1: 0.25rem;   /*  4 */
+  --space-2: 0.5rem;    /*  8 */
+  --space-3: 0.75rem;   /* 12 */
+  --space-4: 1rem;      /* 16 */
+  --space-5: 1.5rem;    /* 24 */
+  --space-6: 2rem;      /* 32 */
+  --space-7: 3rem;      /* 48 */
+  --space-8: 4rem;      /* 64 */
+  --space-9: 6rem;      /* 96 */
+
+  /* Control heights, all multiples of 4. */
+  --ctl-sm: 36px;
+  --ctl-md: 44px;
+  --chip-h: 28px;
+  --chip-lg-h: 32px;
+
+  --shell:  1240px;
+  --gutter: clamp(1.15rem, 4vw, 2.5rem);
+
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+* { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  /* sticky header clearance for anchor jumps */
+  scroll-padding-top: 6rem;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--void);
+  color: var(--paper);
+  font-family: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  font-synthesis-weight: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-size: var(--step-0);
+  font-kerning: normal;
+  font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1;
+  hanging-punctuation: first last;
+}
+
+::selection {
+  background: var(--r3);
+  color: var(--void);
+}
+
+/* Visible keyboard focus everywhere, never on mouse click. */
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* --------------------------- type roles --------------------------- */
+
+.display {
+  text-wrap: balance;
+  font-family: var(--font-fraunces), ui-serif, Georgia, serif;
+  font-optical-sizing: auto;
+  font-variation-settings: 'SOFT' 0, 'WONK' 1;
+  font-weight: 500;
+  letter-spacing: -0.035em;
+  line-height: 0.98;
+}
+
+.mono {
+  font-family: var(--font-mono), ui-monospace, "SF Mono", Menlo, monospace;
+  font-feature-settings: 'zero' 1;
+}
+
+/* Section eyebrow: a coordinate, not a decoration. */
+.eyebrow {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--faint);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.eyebrow::after {
+  content: '';
+  height: 1px;
+  flex: 1;
+  background: linear-gradient(90deg, var(--line-strong), transparent);
+}
+
+.prose-serif {
+  text-wrap: pretty;
+  font-family: var(--font-fraunces), ui-serif, Georgia, serif;
+  font-optical-sizing: auto;
+  font-variation-settings: 'SOFT' 20, 'WONK' 0;
+  font-weight: 400;
+  line-height: 1.62;
+  letter-spacing: -0.005em;
+  color: #cfd3dc;
+}
+
+/* ---------------------------- layout ----------------------------- */
+
+.shell {
+  width: 100%;
+  max-width: var(--shell);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* Single owner of vertical section rhythm — no competing selectors. */
+.band {
+  padding-block: clamp(4.5rem, 10vw, 8.5rem);
+  position: relative;
+}
+
+.rule {
+  height: 1px;
+  background: var(--line);
+  border: 0;
+  margin: 0;
+}
+
+/* ---------------------------- surfaces ---------------------------- */
+
+/* Liquid glass. Three stacked layers make it read as a real pane:
+   a blurred+saturated backdrop, a soft fill gradient, and a specular
+   top edge that catches "light" the way a bevelled sheet would. */
+.panel {
+  position: relative;
+  isolation: isolate;
+  border-radius: var(--r-md);
+  background: linear-gradient(160deg, var(--glass-fill), var(--glass-fill-2));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+  border: 1px solid var(--glass-edge);
+  box-shadow:
+    0 16px 50px -18px rgba(0, 0, 0, 0.85),
+    inset 0 1px 0 0 var(--glass-spec),
+    inset 0 -1px 0 0 rgba(255, 255, 255, 0.06);
+}
+
+/* Specular sheen sweeping the upper-left, like a lit glass edge. */
+.panel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: radial-gradient(
+    120% 90% at 12% 0%,
+    rgba(255, 255, 255, 0.14),
+    rgba(255, 255, 255, 0.03) 42%,
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+.panel-lg { border-radius: var(--r-xl); }
+.panel-sm { border-radius: var(--r-sm); }
+
+/* Hairline that warms on hover — the ramp used as an interaction state. */
+.lit {
+  position: relative;
+  transition: border-color 0.4s var(--ease), background-color 0.4s var(--ease);
+}
+
+.lit::before {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--r3), var(--r4), transparent);
+  opacity: 0;
+  transition: opacity 0.4s var(--ease);
+}
+
+.lit:hover::before,
+.lit:focus-within::before { opacity: 1; }
+.lit:hover, .lit:focus-within { border-color: var(--line-strong); }
+
+.chip {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.625rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  padding: 0.34rem 0.7rem;
+  white-space: nowrap;
+  background: rgba(255, 255, 255, 0.045);
+  backdrop-filter: blur(14px) saturate(160%);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* ----------------------- 3D card tilt ----------------------- */
+
+.tilt-root { perspective: 900px; }
+
+.tilt-body {
+  /* Part of the stretch chain: reveal -> tilt-root -> tilt-body -> card.
+     Miss this link and cards in a row end up ragged. */
+  height: 100%;
+  transform-style: preserve-3d;
+  transform:
+    rotateX(var(--rx, 0deg))
+    rotateY(var(--ry, 0deg))
+    translateZ(0);
+  transition: transform 0.5s var(--ease), box-shadow 0.5s var(--ease);
+  will-change: transform;
+}
+
+.tilt-root[data-active='true'] .tilt-body {
+  transition: transform 0.09s linear, box-shadow 0.5s var(--ease);
+  box-shadow:
+    0 30px 60px -20px rgba(0, 0, 0, 0.75),
+    0 0 0 1px var(--line-strong);
+}
+
+/* Children lift out of the card plane on hover. */
+.tilt-lift {
+  transform: translateZ(var(--z, 0px));
+  transition: transform 0.5s var(--ease);
+}
+
+/* --------------------------- hero canvas --------------------------- */
+
+.field {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.field canvas { display: block; }
+
+/* Anchor labels rendered into the WebGL scene via drei <Html>. */
+.node-label {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.625rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 999px;
+  padding: 0.3rem 0.62rem;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 8px 24px -10px rgba(0,0,0,0.8);
+  transform: translate(14px, -50%);
+  transition: color 0.3s var(--ease), border-color 0.3s var(--ease), opacity 0.3s var(--ease);
+  pointer-events: none;
+  opacity: 0;
+}
+
+.node-label[data-hot='true'] {
+  color: var(--void);
+  background: var(--r4);
+  border-color: var(--r4);
+  opacity: 1;
+}
+
+/* -------------------------- entrance motion -------------------------- */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+}
+
+.reveal[data-shown='true'] {
+  opacity: 1;
+  transform: none;
+}
+
+/* --------------------------- case study --------------------------- */
+
+.sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  background: rgba(6, 7, 10, 0.82);
+  backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: flex-end;
+  animation: fade 0.25s var(--ease);
+}
+
+.sheet {
+  position: relative;
+  width: min(680px, 100%);
+  height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: linear-gradient(200deg, rgba(30, 34, 45, 0.82), rgba(14, 16, 23, 0.92));
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  border-left: 1px solid var(--glass-edge);
+  box-shadow: inset 1px 0 0 rgba(255,255,255,0.28), -40px 0 90px -30px rgba(0,0,0,0.9);
+  padding: clamp(1.5rem, 4vw, 3rem);
+  animation: slide-in 0.42s var(--ease);
+}
+
+@keyframes fade { from { opacity: 0; } }
+@keyframes slide-in { from { transform: translateX(3rem); opacity: 0; } }
+
+/* --------------------------- reduced motion --------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .reveal { opacity: 1; transform: none; }
+  .tilt-body { transform: none !important; }
+}
+
+/* ------------------------ glass controls ------------------------ */
+
+.glass-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 999px;
+  padding: 0.8rem 1.4rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: var(--paper);
+  background: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.42),
+    0 10px 30px -14px rgba(0, 0, 0, 0.9);
+  transition: transform 0.35s var(--ease), background-color 0.35s var(--ease),
+              border-color 0.35s var(--ease), box-shadow 0.35s var(--ease);
+}
+
+.glass-btn:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.34);
+}
+
+.glass-btn:active { transform: translateY(0) scale(0.985); }
+
+/* Primary sits on the hot end of the ramp — the one warm control. */
+.glass-btn--hot {
+  color: #150c07;
+  background: linear-gradient(150deg, var(--r4), var(--r3));
+  border-color: rgba(255, 255, 255, 0.42);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.65),
+    0 12px 34px -12px rgba(224, 122, 85, 0.65);
+}
+
+.glass-btn--hot:hover {
+  background: linear-gradient(150deg, #f7cd7c, #e88a68);
+  border-color: rgba(255, 255, 255, 0.55);
+}
+
+/* Floating glass header — a pane hovering over the scene, not a bar. */
+.topbar {
+  position: fixed;
+  top: 0.9rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 70;
+  width: calc(100% - 2 * var(--gutter));
+  max-width: var(--shell);
+  border-radius: 999px;
+  padding: 0.6rem 0.7rem 0.6rem 1.35rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(26px) saturate(180%);
+  -webkit-backdrop-filter: blur(26px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.34);
+  transition: background-color 0.5s var(--ease), border-color 0.5s var(--ease),
+              box-shadow 0.5s var(--ease);
+}
+
+.topbar[data-stuck='true'] {
+  background: rgba(14, 16, 23, 0.62);
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    0 18px 44px -22px rgba(0, 0, 0, 0.95);
+}
+
+.topbar a { text-decoration: none; }
+
+.navlink {
+  position: relative;
+  font-size: 0.8125rem;
+  color: var(--muted);
+  padding: 0.35rem 0;
+  transition: color 0.3s var(--ease);
+}
+
+.navlink:hover, .navlink[aria-current='true'] { color: var(--paper); }
+
+.navlink[aria-current='true']::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--r3), var(--r4));
+}
+
+/* Glass rows for the experience timeline. */
+.rowglass {
+  border-radius: var(--r-lg);
+  background: linear-gradient(160deg, rgba(255,255,255,0.05), rgba(255,255,255,0.012));
+  backdrop-filter: blur(22px) saturate(170%);
+  -webkit-backdrop-filter: blur(22px) saturate(170%);
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  transition: border-color 0.45s var(--ease), transform 0.45s var(--ease),
+              box-shadow 0.45s var(--ease);
+}
+
+.rowglass:hover {
+  border-color: rgba(255, 255, 255, 0.24);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    0 22px 50px -26px rgba(0, 0, 0, 0.9);
+}
+
+/* Backdrop-filter is a real cost on large panes; on small screens the
+   scene is simplified anyway, so trade blur for opaque fills. */
+@media (max-width: 640px) {
+  :root { --glass-blur: 18px; }
+}
+
+/* --------------------------- hero field host --------------------------- */
+
+.field-host {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Only the scene canvas takes pointer input; the copy above it stays
+   clickable because the host itself is inert. */
+.field-host canvas { pointer-events: auto; }
+
+/* No-WebGL / pre-hydration stand-in. Same ramp, no GPU. */
+.fallback-core {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(46vmin, 320px);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 34% 30%, rgba(255,255,255,0.55), transparent 42%),
+    conic-gradient(from 210deg, var(--r0), var(--r1), var(--r2), var(--r3), var(--r4), var(--r0));
+  filter: blur(2px);
+  opacity: 0.6;
+}
+
+.fallback-ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  transform: translate(-50%, -50%);
+}
+
+.fallback-ring--a { width: min(62vmin, 440px); aspect-ratio: 1; }
+.fallback-ring--b { width: min(78vmin, 560px); aspect-ratio: 1; }
+
+/* Vignette so hero copy always clears the field behind it. */
+.field-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(100deg, var(--void) 6%, rgba(8, 9, 12, 0.94) 42%, rgba(8, 9, 12, 0.4) 62%, transparent 82%),
+    linear-gradient(180deg, rgba(8, 9, 12, 0.7) 0%, transparent 22%, transparent 66%, var(--void) 100%);
+}
+
+@media (max-width: 860px) {
+  .field-veil {
+    background:
+      radial-gradient(90% 60% at 50% 48%, rgba(8, 9, 12, 0.86), rgba(8, 9, 12, 0.6) 60%, transparent 88%),
+      linear-gradient(180deg, rgba(8, 9, 12, 0.75) 0%, transparent 24%, transparent 62%, var(--void) 100%);
+  }
+}

@@ -17,9 +17,21 @@ field.
 propagates left to right — each layer and its edges brighten as the front reaches
 them. A real diagram of how every system on the page works, not an ornament.
 
-**Refractive glass.** The hero core uses `MeshTransmissionMaterial`, so the point
-field genuinely bends through it. Surfaces across the page are layered glass with a
-specular highlight that tracks the cursor.
+**An attention map you can read.** The research section renders a 10x10
+self-attention matrix over a Banglish banking query — the exact register the UCB
+assistant has to handle. Rows are genuinely softmax-normalised, tile height and
+colour both carry the weight, and four heads (positional, syntactic, lexical,
+aggregate) each do a different job. Pick a head, hover a token, and the caption
+reports the actual numbers that row spends its attention on.
+
+**A loss landscape being descended.** The method section runs momentum SGD against
+the analytic gradient of a real two-basin surface. The step counter and loss
+readout are live, and because every run starts somewhere new, which minimum it
+finds genuinely depends on where it began.
+
+**Refractive glass.** The hero core is a faceted crystal on
+`MeshTransmissionMaterial`, so the point field genuinely bends through it. Surfaces
+across the page are layered glass with a specular highlight that tracks the cursor.
 
 ## Design system
 
@@ -30,6 +42,12 @@ structure, hot for signal.
 Type is Fraunces (display), Archivo (UI and body), and JetBrains Mono (data and
 labels), on a locked 1.25 modular ratio that scales fluidly between 320px and
 1440px. Every control snaps to a 4px grid.
+
+A project's accent colour is the colour of its own node in the hero field, so the
+work grid and the latent field are one map rather than two decorations. The stack
+is set as a typographic index rather than a wall of pills, and the build pipeline
+runs vertically with each step tinted one stop further along the ramp — the list
+literally heats up from intake to impact.
 
 ## Stack
 
@@ -50,14 +68,17 @@ npm run build    # production build
 
 - `prefers-reduced-motion` is respected throughout: the custom cursor and headline
   assembly are disabled, scroll behaviour goes instant, and all reveals render in
-  their final state.
+  their final state. The scenes hold a still frame rather than an empty one — the
+  descent runs to convergence on its first frame and parks at the minimum.
+- The attention map's controls are real buttons: heads and tokens are reachable by
+  keyboard, and the readout is an `aria-live` region.
 - No custom cursor on touch devices.
 - Animated headline characters are `aria-hidden`; each heading carries its real
   text as an `aria-label`.
 - The case-study sheet traps focus, closes on `Escape`, locks background scroll,
   and restores focus to its trigger.
-- three.js is lazy-loaded and stays out of the initial bundle. Scenes freeze their
-  render loop when scrolled off screen, and the expensive transmission material
+- three.js is lazy-loaded and stays out of the initial bundle (first load is 103 kB).
+  All four scenes freeze their render loop when scrolled off screen, and the expensive transmission material
   drops to a cheaper one on low-core or small-viewport devices.
 - A static fallback renders when WebGL is unavailable.
 

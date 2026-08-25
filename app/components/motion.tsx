@@ -3,6 +3,7 @@
 import {
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
   type ReactNode,
@@ -358,7 +359,10 @@ export function Count({ value }: { value: string }) {
   const reduced = useReducedMotion();
   const [text, setText] = useState(reduced ? value : null);
 
-  const match = value.match(/^(\D*)([\d,.]+)(.*)$/);
+  // Memoised on the value: a fresh array each render would land in the
+  // effect's dependency list and restart the count on every frame it
+  // painted, freezing the number a hair above zero.
+  const match = useMemo(() => value.match(/^(\D*)([\d,.]+)(.*)$/), [value]);
 
   useEffect(() => {
     if (reduced) {

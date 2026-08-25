@@ -165,9 +165,10 @@ export function Topbar() {
   }, []);
 
   useEffect(() => {
-    const sections = SECTION_IDS.map((id) => document.getElementById(id)).filter(
-      (el): el is HTMLElement => !!el,
-    );
+    // Observe every section, not only the six that have a nav link: watching
+    // just the linked ones leaves the last match highlighted while you read
+    // a section that has no link, which points at the wrong place entirely.
+    const sections = Array.from(document.querySelectorAll<HTMLElement>('section[id]'));
     if (!sections.length || typeof IntersectionObserver === 'undefined') return;
 
     const io = new IntersectionObserver(
@@ -175,7 +176,9 @@ export function Topbar() {
         const hit = entries
           .filter((e) => e.isIntersecting)
           .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-        if (hit) setCurrent(hit.target.id);
+        // An unlinked section clears the highlight rather than leaving a
+        // stale one lit.
+        if (hit) setCurrent(SECTION_IDS.includes(hit.target.id) ? hit.target.id : '');
       },
       { rootMargin: '-45% 0px -45% 0px', threshold: [0, 0.25, 0.5, 1] },
     );

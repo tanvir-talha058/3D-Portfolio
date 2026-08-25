@@ -3,12 +3,15 @@
 import { useCallback, useState } from 'react';
 import FieldMount from './components/FieldMount';
 import NetMount from './components/NetMount';
+import AttentionMount from './components/AttentionMount';
+import DescentMount from './components/DescentMount';
 import { Topbar, Reveal, TiltCard, Lift, Sheet } from './components/ui';
 import { Split, Magnet, Count, Wipe } from './components/motion';
 import {
   awards,
   capabilities,
   contact,
+  domainColour,
   education,
   experience,
   expertise,
@@ -273,34 +276,56 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ----------------------------- pipeline ----------------------------- */}
-        <section className="band">
+        {/* ----------------------------- method ----------------------------- */}
+        <section id="method" className="band">
           <div className="shell">
             <Reveal>
-              <p className="eyebrow">How a system gets built</p>
+              <p className="eyebrow">Method</p>
             </Reveal>
             <Reveal delay={80}>
-              <h2 className="display h2 band-title" aria-label="From data to decision">
-                <Split text="From data to decision" />
+              <h2 className="display h2 band-title" aria-label="Two loops, and only one of them is glamorous">
+                <Split text="Two loops, and only one" />
+                <br />
+                <Split text="of them is glamorous" offset={340} />
               </h2>
             </Reveal>
 
-            {/* A genuine ordered sequence, so the steps are genuinely numbered. */}
-            <Reveal delay={140}>
-              <ol className="pipeline">
-                {pipeline.map((step, i) => (
-                  <li key={step} className="pipeline-step">
-                    <span className="mono pipeline-index">{String(i + 1).padStart(2, '0')}</span>
-                    <span className="pipeline-label">{step}</span>
-                    <span
-                      className="pipeline-heat"
-                      style={{ '--t': i / (pipeline.length - 1) } as React.CSSProperties}
-                      aria-hidden="true"
-                    />
-                  </li>
-                ))}
-              </ol>
-            </Reveal>
+            <div className="method-grid">
+              {/* A genuine ordered sequence, so the steps are genuinely numbered. */}
+              <Reveal delay={140}>
+                <div className="method-col">
+                  <h3 className="method-head">
+                    <span className="mono method-head-tag">Build</span>
+                    Data to decision
+                  </h3>
+                  <ol className="pipeline">
+                    {pipeline.map((step, i) => (
+                      <li key={step} className="pipeline-step">
+                        <span className="mono pipeline-index">
+                          {String(i + 1).padStart(2, '0')}
+                        </span>
+                        <span className="pipeline-label">{step}</span>
+                        <span
+                          className="pipeline-heat"
+                          style={{ '--t': i / (pipeline.length - 1) } as React.CSSProperties}
+                          aria-hidden="true"
+                        />
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+              </Reveal>
+
+              <Reveal delay={200}>
+                <div className="method-col">
+                  <h3 className="method-head">
+                    <span className="mono method-head-tag">Train</span>
+                    Descending the loss
+                  </h3>
+                  <DescentMount />
+                </div>
+              </Reveal>
+            </div>
           </div>
         </section>
 
@@ -320,9 +345,15 @@ export default function Home() {
               {projects.map((p, i) => (
                 <Reveal key={p.title} delay={(i % 3) * 90}>
                   <TiltCard className="work-card-root">
-                    <article className="panel work-card">
+                    <article
+                      className="panel work-card"
+                      style={{ '--dom': domainColour(p.category) } as React.CSSProperties}
+                    >
                       <Lift z={26}>
-                        <p className="mono work-cat">{p.category}</p>
+                        <p className="mono work-cat">
+                          <span className="work-cat-dot" aria-hidden="true" />
+                          {p.category}
+                        </p>
                         <h3 className="display work-title">{p.title}</h3>
                       </Lift>
 
@@ -385,19 +416,33 @@ export default function Home() {
               </h2>
             </Reveal>
 
-            <div className="research-grid">
-              {research.map((r, i) => (
-                <Reveal key={r.title} delay={i * 90}>
-                  <article className="rowglass research-card lit">
+            <p className="prose-serif research-lede">
+              Most of it is low-resource work: languages and datasets that the
+              pretrained models were never really built for. The map is one
+              Banglish query read four ways &mdash; the same mechanism every
+              system on this page runs on.
+            </p>
+
+            <div className="research-layout">
+              <Reveal delay={120}>
+                <div className="research-figure">
+                  <AttentionMount />
+                </div>
+              </Reveal>
+
+              {/* A publication record is a list, not a card wall. */}
+              <ol className="research-list">
+                {research.map((r, i) => (
+                  <Reveal as="li" key={r.title} delay={i * 70} className="research-entry">
                     <p className="mono research-sub">{r.subtitle}</p>
                     <h3 className="display research-title">{r.title}</h3>
                     <p className="prose-serif research-detail">{r.detail}</p>
                     <p className="research-result mono" data-done={r.done}>
                       {r.result}
                     </p>
-                  </article>
-                </Reveal>
-              ))}
+                  </Reveal>
+                ))}
+              </ol>
             </div>
           </div>
         </section>
@@ -414,25 +459,26 @@ export default function Home() {
               </h2>
             </Reveal>
 
-            <div className="stack-groups">
+            {/* An index, not a wall: the group is the left-hand label and
+                the tools run as a line of type, which is how a colophon
+                lists what a thing was made with. */}
+            <dl className="stack-index">
               {stackGroups.map((g, i) => (
-                <Reveal key={g.group} delay={i * 70}>
-                  <div className="stack-group">
-                    <p className="mono stack-group-head">
-                      {g.group}
-                      <span className="stack-count">{g.items.length}</span>
-                    </p>
-                    <ul className="chip-row stack-row">
-                      {g.items.map((it) => (
-                        <li key={it} className="chip chip-lg">
-                          {it}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+                <Reveal as="div" key={g.group} delay={i * 70} className="stack-row-wrap">
+                  <dt className="mono stack-group-head">
+                    {g.group}
+                    <span className="stack-count">{g.items.length}</span>
+                  </dt>
+                  <dd className="stack-items">
+                    {g.items.map((it) => (
+                      <span key={it} className="stack-item">
+                        {it}
+                      </span>
+                    ))}
+                  </dd>
                 </Reveal>
               ))}
-            </div>
+            </dl>
 
             <Reveal delay={200}>
               <div className="principles">

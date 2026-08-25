@@ -122,13 +122,23 @@ export const awards = [
  * and to the section a visitor should land on when they click it.
  */
 export const domains = [
-  { id: 'language', label: 'Language', href: '#research', pos: [1.75, 0.55, -0.35] as [number, number, number] },
-  { id: 'retrieval', label: 'Retrieval', href: '#work', pos: [-1.55, 0.95, 0.55] as [number, number, number] },
-  { id: 'vision', label: 'Vision', href: '#work', pos: [0.35, -1.45, 1.15] as [number, number, number] },
-  { id: 'risk', label: 'Risk', href: '#work', pos: [-0.85, -0.75, -1.55] as [number, number, number] },
-  { id: 'geospatial', label: 'Geospatial', href: '#work', pos: [0.95, 1.35, 0.95] as [number, number, number] },
-  { id: 'automation', label: 'Automation', href: '#experience', pos: [-1.15, -0.25, 1.45] as [number, number, number] },
+  { id: 'language', label: 'Language', href: '#research', colour: '#6b4a7e', pos: [1.75, 0.55, -0.35] as [number, number, number] },
+  { id: 'retrieval', label: 'Retrieval', href: '#work', colour: '#b2506a', pos: [-1.55, 0.95, 0.55] as [number, number, number] },
+  { id: 'vision', label: 'Vision', href: '#work', colour: '#e07a55', pos: [0.35, -1.45, 1.15] as [number, number, number] },
+  { id: 'risk', label: 'Risk', href: '#work', colour: '#f2c063', pos: [-0.85, -0.75, -1.55] as [number, number, number] },
+  { id: 'geospatial', label: 'Geospatial', href: '#work', colour: '#c25f7a', pos: [0.95, 1.35, 0.95] as [number, number, number] },
+  { id: 'automation', label: 'Automation', href: '#experience', pos: [-1.15, -0.25, 1.45] as [number, number, number], colour: '#e8955f' },
 ];
+
+/**
+ * A project's accent is the colour of its own node in the hero field, so the
+ * two are visibly the same map rather than two unrelated decorations. A
+ * category with no node in the field falls back to the ramp's cold end.
+ */
+export function domainColour(category: string): string {
+  const hit = domains.find((d) => d.label.toLowerCase() === category.toLowerCase());
+  return hit?.colour ?? '#7d7fa8';
+}
 
 export const capabilities = [
   { k: 'AI / ML', v: 'Intelligent Systems' },
@@ -341,3 +351,73 @@ export const contact = {
   linkedin: 'https://linkedin.com/in/tanvir-talha058',
   cv: '/tanvir-ahmed-cv.pdf',
 };
+
+/* ---------------------------------------------------------------------
+   Attention map. The research section's diagram is a real self-attention
+   heatmap, not a texture: a Banglish banking query — the exact register
+   the UCB assistant has to handle — read by four heads that each do a
+   different job. Scores below are turned into rows by a softmax at
+   render time, so every row genuinely sums to 1 the way attention does.
+   --------------------------------------------------------------------- */
+
+export const attnTokens = [
+  '[CLS]', 'ami', 'ki', 'tomar', 'account', 'balance', 'dekhte', 'pari', '?', '[SEP]',
+];
+
+export type AttnHead = {
+  id: string;
+  name: string;
+  note: string;
+  /** Raw score for query i attending to key j, pre-softmax. */
+  score: (i: number, j: number) => number;
+};
+
+export const attnHeads: AttnHead[] = [
+  {
+    id: 'positional',
+    name: 'Positional',
+    note: 'Looks one token back. The head that keeps word order.',
+    score: (i, j) => -Math.abs(j - (i - 1)) * 2.6 + (i === j ? 0.4 : 0),
+  },
+  {
+    id: 'syntactic',
+    name: 'Syntactic',
+    note: 'Binds the possessive to its noun and the verb to its auxiliary.',
+    score: (i, j) => {
+      // tomar -> account, dekhte <-> pari, ami -> dekhte
+      const bind: Record<number, number> = { 3: 4, 6: 7, 7: 6, 1: 6, 4: 3, 2: 7 };
+      let s = -2.2 + (i === j ? 0.9 : 0);
+      if (bind[i] === j) s += 5.2;
+      return s;
+    },
+  },
+  {
+    id: 'lexical',
+    name: 'Lexical',
+    note: 'Ties the domain terms together — the pair that decides the intent.',
+    score: (i, j) => {
+      const domain = [4, 5];
+      let s = -2.4 + (i === j ? 1.6 : 0);
+      if (domain.includes(i) && domain.includes(j)) s += 4.8;
+      if (domain.includes(j)) s += 1.4;
+      return s;
+    },
+  },
+  {
+    id: 'aggregate',
+    name: 'Aggregate',
+    note: 'Pools the whole sentence into [CLS] — the vector the classifier reads.',
+    score: (_i, j) => (j === 0 ? 4.4 : j === 9 ? 1.1 : -0.6),
+  },
+];
+
+/** Row-wise softmax, exactly as attention normalises it. */
+export function attnMatrix(head: AttnHead, n = attnTokens.length): number[][] {
+  return Array.from({ length: n }, (_, i) => {
+    const raw = Array.from({ length: n }, (_, j) => head.score(i, j));
+    const max = Math.max(...raw);
+    const exp = raw.map((v) => Math.exp(v - max));
+    const sum = exp.reduce((a, b) => a + b, 0);
+    return exp.map((v) => v / sum);
+  });
+}

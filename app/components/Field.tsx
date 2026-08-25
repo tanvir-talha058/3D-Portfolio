@@ -96,12 +96,12 @@ const fragmentShader = /* glsl */ `
 
     // Soft core with a falloff halo, so points read as light not squares.
     float core = smoothstep(0.5, 0.0, d);
-    float alpha = pow(core, 1.6);
+    float alpha = pow(core, 1.35);
 
     vec3 col = ramp(vRamp + vHot * 0.35);
     col += vHot * 0.28;
 
-    gl_FragColor = vec4(col, alpha * uOpacity * mix(0.35, 1.0, vFade));
+    gl_FragColor = vec4(col, alpha * uOpacity * mix(0.5, 1.0, vFade));
   }
 `;
 
@@ -116,11 +116,11 @@ class PointMaterial extends THREE.ShaderMaterial {
       uniforms: {
         uTime: { value: 0 },
         uHotIndex: { value: -1 },
-        uSize: { value: 62 },
+        uSize: { value: 78 },
         uDpr: { value: 1 },
         uOpacity: { value: 0.95 },
         uIntro: { value: 0 },
-        uMaxSize: { value: 9 },
+        uMaxSize: { value: 12 },
       },
     });
   }
@@ -236,7 +236,8 @@ function Points({ hot, reduced }: { hot: number; reduced: boolean }) {
  * point field genuinely bends through it rather than being faked with alpha.
  */
 function GlassCore({ quality }: { quality: 'high' | 'low' }) {
-  const ref = useRef<THREE.Mesh>(null);
+  const ref = useRef<THREE.Group>(null);
+  const edges = useMemo(() => new THREE.IcosahedronGeometry(1, 0), []);
 
   useFrame((state, delta) => {
     if (!ref.current) return;
@@ -245,42 +246,63 @@ function GlassCore({ quality }: { quality: 'high' | 'low' }) {
   });
 
   return (
-    <mesh ref={ref} scale={0.68}>
-      <icosahedronGeometry args={[1, 6]} />
-      {quality === 'high' ? (
+    // Nudged clear of the copy column: at the widest layout the core would
+    // otherwise sit on the last word of the headline.
+    <group ref={ref} scale={0.74} position={[0.55, 0, 0]}>
+      {/* Faceted, not smooth. A subdivided sphere needs a bright environment
+          to read as glass at all; twenty flat faces each catch their own
+          highlight, so the core still reads as a cut lens on a near-black
+          page — and a crystal over an embedding space is the more honest
+          object anyway. */}
+      <mesh>
+        <icosahedronGeometry args={[1, 0]} />
+        {quality === 'high' ? (
         <MeshTransmissionMaterial
-          samples={6}
-          resolution={256}
+          samples={8}
+          resolution={320}
           transmission={1}
-          thickness={0.45}
-          roughness={0.06}
-          ior={1.45}
-          chromaticAberration={0.28}
-          anisotropy={0.2}
-          distortion={0.22}
-          distortionScale={0.35}
-          temporalDistortion={0.06}
+          /* Thin and lightly aberrated. The heavier settings read as a smoked
+             marble against a near-black page rather than as glass, and they
+             muddy the very field the core is supposed to be bending. */
+          thickness={0.34}
+          roughness={0.04}
+          ior={1.36}
+          chromaticAberration={0.06}
+          /* No distortion terms. Through a sphere they smear the refracted
+             lightformers into horizontal bands, which reads as a rendering
+             artefact rather than as glass. */
+          anisotropy={0}
+          distortion={0}
+          distortionScale={0}
+          temporalDistortion={0}
           clearcoat={1}
-          clearcoatRoughness={0.05}
-          attenuationDistance={5}
-          attenuationColor="#e6d9ff"
+          clearcoatRoughness={0.03}
+          attenuationDistance={2.2}
+          attenuationColor="#f2e9ff"
           color="#ffffff"
         />
-      ) : (
-        <meshPhysicalMaterial
-          transmission={0.92}
-          thickness={0.6}
-          roughness={0.12}
-          ior={1.4}
-          clearcoat={1}
-          transparent
-        />
-      )}
-    </mesh>
+        ) : (
+          <meshPhysicalMaterial
+            transmission={0.92}
+            thickness={0.6}
+            roughness={0.12}
+            ior={1.4}
+            flatShading
+            clearcoat={1}
+            transparent
+          />
+        )}
+      </mesh>
+
+      {/* The cut lines. They give the facets an edge to read against when
+          the refraction behind them is dark. */}
+      <lineSegments>
+        <edgesGeometry args={[edges]} />
+        <lineBasicMaterial color="#f2c063" transparent opacity={0.28} toneMapped={false} />
+      </lineSegments>
+    </group>
   );
 }
-
-const RAMP_HEX = ['#6b4a7e', '#b2506a', '#e07a55', '#f2c063', '#b2506a', '#e07a55'];
 
 function Anchor({
   index,
@@ -341,8 +363,8 @@ function Anchor({
         <sphereGeometry args={[0.075, 24, 24]} />
         <meshStandardMaterial
           ref={matRef}
-          color={RAMP_HEX[index]}
-          emissive={RAMP_HEX[index]}
+          color={d.colour}
+          emissive={d.colour}
           emissiveIntensity={hot ? 3.2 : 1.6}
           roughness={0.25}
           toneMapped={false}
@@ -418,13 +440,13 @@ function Scene({ reduced, quality }: { reduced: boolean; quality: 'high' | 'low'
 
   return (
     <>
-      {/* Procedural studio lighting — no external HDR fetch, so the glass
-          still reads as glass offline. */}
-      <Environment resolution={128}>
-        <Lightformer intensity={2.4} position={[0, 4, 2]} scale={[8, 3, 1]} color="#fff0dd" />
-        <Lightformer intensity={1.4} position={[-4, 0, 1]} scale={[3, 6, 1]} color="#8ba6ff" />
-        <Lightformer intensity={1.8} position={[4, -1, 1]} scale={[3, 5, 1]} color="#e07a55" />
-        <Lightformer intensity={0.9} position={[0, -3, -3]} scale={[8, 3, 1]} color="#6b4a7e" />
+      {/* Few, very large, and deliberately low resolution. Flat facets each
+          refract the whole environment, so small bright panels arrive as
+          hard-edged bars — a broad soft field is what reads as glass. */}
+      <Environment resolution={64}>
+        <Lightformer intensity={3.4} position={[0, 6, 4]} scale={[22, 12, 1]} color="#fff2e2" />
+        <Lightformer intensity={2.2} position={[-8, -1, 3]} scale={[14, 16, 1]} color="#9db4ff" />
+        <Lightformer intensity={2.4} position={[8, -2, 2]} scale={[14, 16, 1]} color="#f2a074" />
       </Environment>
 
       <ambientLight intensity={0.35} />

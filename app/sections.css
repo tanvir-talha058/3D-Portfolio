@@ -334,20 +334,58 @@
 
 /* ------------------------------- pipeline ------------------------------- */
 
+/* ------------------------------- method ------------------------------- */
+
+.method-grid {
+  display: grid;
+  gap: clamp(1.75rem, 3.5vw, 3rem);
+  margin-top: clamp(2.5rem, 5vw, 3.5rem);
+  align-items: start;
+}
+
+@media (min-width: 940px) {
+  .method-grid { grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr); }
+}
+
+.method-head {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0 0 1.25rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--paper);
+}
+
+.method-head-tag {
+  font-size: 0.5625rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--r4);
+  border: 1px solid color-mix(in oklab, var(--r4), transparent 70%);
+  border-radius: 999px;
+  padding: 0.2rem 0.5rem;
+}
+
+/* Stacked, not spread across seven cramped columns: a pipeline is read in
+   order, and a vertical list is the shape that reads in order. */
 .pipeline {
   list-style: none;
   margin: 0;
   padding: 0;
   display: grid;
-  gap: 0.6rem;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.35rem;
 }
 
 .pipeline-step {
   position: relative;
   overflow: hidden;
   border-radius: var(--r-sm);
-  padding: 1.1rem 1rem 1.25rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.85rem;
+  padding: 0.8rem 1rem 0.85rem;
   background: rgba(255, 255, 255, 0.035);
   backdrop-filter: blur(18px) saturate(160%);
   -webkit-backdrop-filter: blur(18px) saturate(160%);
@@ -362,17 +400,16 @@
 }
 
 .pipeline-index {
-  display: block;
   font-size: 0.625rem;
   color: var(--faint);
   letter-spacing: 0.14em;
+  font-variant-numeric: tabular-nums;
 }
 
 .pipeline-label {
-  display: block;
-  margin-top: 0.6rem;
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
   font-weight: 500;
+  letter-spacing: -0.01em;
 }
 
 /* Each step is tinted one stop further along the ramp: the row literally
@@ -380,9 +417,9 @@
 .pipeline-heat {
   position: absolute;
   left: 0;
-  right: 0;
+  top: 0;
   bottom: 0;
-  height: 2px;
+  width: 2px;
   background: color-mix(in oklab, var(--r0), var(--r4) calc(var(--t) * 100%));
   opacity: 0.85;
 }
@@ -405,14 +442,42 @@
   display: flex;
   flex-direction: column;
   padding: clamp(1.5rem, 3vw, 2rem);
+  position: relative;
+  overflow: hidden;
 }
+
+/* A hairline of the domain colour along the top edge, brightening on hover. */
+.work-card::after {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 1px;
+  background: linear-gradient(90deg, var(--dom, var(--r3)), transparent 65%);
+  opacity: 0.55;
+  transition: opacity 0.45s var(--ease);
+}
+
+.work-card-root:hover .work-card::after { opacity: 1; }
 
 .work-cat {
   font-size: 0.625rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--r3);
+  color: var(--dom, var(--r3));
   margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* The same dot, in the same colour, as this project's node in the hero
+   field — the two are one map, not two decorations. */
+.work-cat-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--dom, var(--r3));
+  box-shadow: 0 0 10px -1px var(--dom, var(--r3));
 }
 
 .work-title { font-size: clamp(1.5rem, 2.6vw, 1.9rem); margin: 0.7rem 0 0; }
@@ -434,18 +499,41 @@
 
 /* -------------------------------- research -------------------------------- */
 
-.research-grid {
-  display: grid;
-  gap: 1.1rem;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+.research-lede {
+  max-width: 56ch;
+  margin: 1.25rem 0 0;
+  font-size: 1.0625rem;
 }
 
-.research-card {
-  height: 100%;
-  padding: clamp(1.5rem, 3vw, 2rem);
-  display: flex;
-  flex-direction: column;
+.research-layout {
+  display: grid;
+  gap: clamp(1.75rem, 3.5vw, 3rem);
+  margin-top: clamp(2.5rem, 5vw, 3.75rem);
+  align-items: start;
 }
+
+@media (min-width: 1000px) {
+  .research-layout { grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr); }
+  /* The map holds while the record scrolls past it: the diagram is the
+     section's argument, the list is the evidence. */
+  .research-figure { position: sticky; top: 7rem; }
+}
+
+.research-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+}
+
+.research-entry {
+  padding: clamp(1.35rem, 2.5vw, 1.75rem) 0;
+  border-bottom: 1px solid var(--line);
+  position: relative;
+}
+
+.research-entry:first-child { padding-top: 0; }
+.research-entry:last-child { border-bottom: 0; padding-bottom: 0; }
 
 .research-sub {
   font-size: 0.625rem;
@@ -455,24 +543,89 @@
   margin: 0;
 }
 
-.research-title { font-size: 1.45rem; margin: 0.75rem 0 0; }
-.research-detail { margin: 1rem 0 1.75rem; font-size: 0.95rem; }
+.research-title {
+  font-size: clamp(1.35rem, 2.2vw, 1.6rem);
+  margin: 0.5rem 0 0;
+}
+
+.research-detail { margin: 0.75rem 0 0; font-size: 0.95rem; max-width: 52ch; }
 
 .research-result {
-  margin: auto 0 0;
+  margin: 0.9rem 0 0;
   font-size: 0.75rem;
   letter-spacing: 0.08em;
-  padding-top: 1rem;
-  border-top: 1px solid var(--line);
   color: var(--faint);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* A finished result gets a filled marker, an open one a hollow ring — the
+   status is in the mark, not only in the words. */
+.research-result::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  border: 1px solid currentColor;
+}
+
+.research-result[data-done='true']::before {
+  background: currentColor;
 }
 
 .research-result[data-done='true'] { color: var(--r4); }
 
 /* --------------------------------- stack --------------------------------- */
 
-.stack-row { margin: 0; gap: 0.5rem; }
-.chip-lg { font-size: 0.6875rem; padding: 0.55rem 1rem; }
+/* An index, not a wall. The group label sits in its own column and the
+   tools run as a line of type separated by hairlines, which is how a
+   colophon lists what a thing was made with — and it makes the shape of
+   each group visible instead of hiding it in 48 identical pills. */
+.stack-index {
+  margin: clamp(2rem, 4vw, 2.75rem) 0 0;
+  display: grid;
+}
+
+.stack-row-wrap {
+  display: grid;
+  gap: 0.85rem;
+  padding: clamp(1.35rem, 2.5vw, 1.85rem) 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.stack-row-wrap:first-child { padding-top: 0; }
+.stack-row-wrap:last-child { border-bottom: 0; }
+
+@media (min-width: 780px) {
+  .stack-row-wrap {
+    grid-template-columns: 190px minmax(0, 1fr);
+    gap: 2rem;
+    align-items: baseline;
+  }
+}
+
+/* Spacing alone separates the names. A drawn divider between them strands a
+   dangling rule at the end of every wrapped line, which reads as a mistake. */
+.stack-items {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.45rem 1.6rem;
+}
+
+.stack-item {
+  display: inline-flex;
+  align-items: center;
+  font-size: clamp(0.95rem, 1.5vw, 1.125rem);
+  letter-spacing: -0.012em;
+  color: #c3c8d4;
+  transition: color 0.3s var(--ease);
+}
+
+.stack-items:hover .stack-item { color: var(--faint); }
+.stack-items .stack-item:hover { color: var(--gold); }
 
 .principles {
   display: grid;
@@ -679,8 +832,7 @@
 
 /* Grid items must stretch, or `height: 100%` on the card has nothing to
    measure against and the cards end up ragged. */
-.work-grid > .reveal,
-.research-grid > .reveal { height: 100%; }
+.work-grid > .reveal { height: 100%; }
 
 /* --------------------------- button internals --------------------------- */
 
@@ -945,8 +1097,6 @@
    GROUPED STACK
    ================================================================= */
 
-.stack-groups { display: grid; gap: clamp(1.75rem, 3vw, 2.5rem); }
-
 .stack-group-head {
   display: flex;
   align-items: center;
@@ -955,7 +1105,7 @@
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--faint);
-  margin: 0 0 1rem;
+  margin: 0;
 }
 
 .stack-count {
@@ -967,9 +1117,202 @@
   font-variant-numeric: tabular-nums;
 }
 
-.stack-group-head::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: linear-gradient(90deg, var(--line), transparent);
+@media (max-width: 779px) {
+  .stack-group-head::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--line), transparent);
+  }
+}
+
+/* =================================================================
+   ATTENTION MAP  —  research section signature
+   ================================================================= */
+
+.attn {
+  margin: 0;
+  padding: 0;
+  border-radius: var(--r-xl);
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.012));
+  backdrop-filter: blur(24px) saturate(170%);
+  -webkit-backdrop-filter: blur(24px) saturate(170%);
+  border: 1px solid var(--glass-edge);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.32), 0 20px 60px -30px rgba(0, 0, 0, 0.9);
+  overflow: hidden;
+}
+
+/* An explicit height, not flex:1 — r3f's wrapper resolves height:100%
+   against this box, and a flex-sized parent leaves the canvas at its 150px
+   HTML default with the scene fitted to the wrong frame. */
+.attn-canvas {
+  position: relative;
+  width: 100%;
+  height: clamp(320px, 34vw, 420px);
+}
+
+.attn-canvas canvas { display: block; }
+
+/* The token axis sits over the canvas rather than inside it: it has to be
+   readable, selectable, and reachable by keyboard, which canvas text is not. */
+.attn-tokens {
+  margin: 0;
+  padding: 0 0 0.85rem;
+  border-bottom: 1px solid var(--line);
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.22rem;
+}
+
+.attn-token {
+  appearance: none;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 0.5875rem;
+  letter-spacing: 0.02em;
+  padding: 0.2rem 0.34rem;
+  border-radius: 6px;
+  cursor: default;
+  transition: color 0.25s var(--ease), border-color 0.25s var(--ease),
+    background-color 0.25s var(--ease);
+}
+
+.attn-token[data-special='true'] { color: var(--r1); }
+
+.attn-token[data-on='true'] {
+  color: var(--void);
+  background: var(--r4);
+  border-color: var(--r4);
+}
+
+.attn-legend {
+  border-top: 1px solid var(--line);
+  padding: clamp(0.9rem, 2vw, 1.25rem);
+  display: grid;
+  gap: 0.85rem;
+}
+
+.attn-heads {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.4rem;
+}
+
+@media (min-width: 480px) {
+  .attn-heads { grid-template-columns: repeat(4, 1fr); }
+}
+
+.attn-head {
+  appearance: none;
+  cursor: pointer;
+  text-align: left;
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.5rem 0.6rem;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--muted);
+  font-family: inherit;
+  transition: border-color 0.3s var(--ease), background-color 0.3s var(--ease),
+    color 0.3s var(--ease);
+}
+
+.attn-head:hover { border-color: var(--line-strong); color: var(--paper); }
+
+.attn-head[data-on='true'] {
+  border-color: color-mix(in oklab, var(--r3), transparent 45%);
+  background: color-mix(in oklab, var(--r3), transparent 88%);
+  color: var(--paper);
+}
+
+.attn-head-i {
+  font-size: 0.5625rem;
+  letter-spacing: 0.14em;
+  color: var(--faint);
+}
+
+.attn-head[data-on='true'] .attn-head-i { color: var(--r4); }
+
+.attn-head-name {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.attn-note {
+  margin: 0;
+  font-size: 0.75rem;
+  line-height: 1.55;
+  color: var(--faint);
+  min-height: 2.4em;
+}
+
+.attn-note-q { color: var(--r4); }
+.attn-note-k { color: var(--paper); }
+.attn-note-w { color: var(--r3); font-variant-numeric: tabular-nums; }
+
+/* =================================================================
+   LOSS LANDSCAPE  —  the training half of the method
+   ================================================================= */
+
+.descent {
+  margin: 0;
+  padding: 0;
+  border-radius: var(--r-xl);
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.012));
+  backdrop-filter: blur(24px) saturate(170%);
+  -webkit-backdrop-filter: blur(24px) saturate(170%);
+  border: 1px solid var(--glass-edge);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.32), 0 20px 60px -30px rgba(0, 0, 0, 0.9);
+  overflow: hidden;
+}
+
+.descent-canvas {
+  position: relative;
+  width: 100%;
+  height: clamp(300px, 32vw, 400px);
+}
+
+.descent-canvas canvas { display: block; }
+
+.descent-legend {
+  border-top: 1px solid var(--line);
+  padding: clamp(0.9rem, 2vw, 1.25rem);
+  display: grid;
+  gap: 0.85rem;
+}
+
+.descent-readout {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.75rem;
+}
+
+.descent-readout > div { display: flex; align-items: baseline; gap: 0.5rem; }
+
+.descent-readout dt {
+  font-size: 0.5625rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.descent-readout dd {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--r4);
+  font-variant-numeric: tabular-nums;
+}
+
+.descent-note {
+  margin: 0;
+  font-size: 0.75rem;
+  line-height: 1.6;
+  color: var(--faint);
+  max-width: 60ch;
 }

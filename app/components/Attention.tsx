@@ -31,11 +31,11 @@ const FOV = 38;
 /* The page's magma ramp, sampled in linear space so the tiles sit in the
    same colour system as the hero field. */
 const RAMP = [
-  new THREE.Color('#20203a'),
-  new THREE.Color('#4a3566'),
-  new THREE.Color('#b2506a'),
-  new THREE.Color('#e07a55'),
-  new THREE.Color('#f7d489'),
+  new THREE.Color('#181634'),
+  new THREE.Color('#3d3391'),
+  new THREE.Color('#8d7bf2'),
+  new THREE.Color('#6fd6ee'),
+  new THREE.Color('#c6fbef'),
 ];
 
 function rampAt(t: number, out: THREE.Color) {
@@ -149,7 +149,7 @@ function Plate() {
   return (
     <mesh position={[0, 0, -0.02]}>
       <planeGeometry args={[N + 0.5, N + 0.5]} />
-      <meshBasicMaterial color="#0d0e15" transparent opacity={0.85} />
+      <meshBasicMaterial color="#080a14" transparent opacity={0.85} />
     </mesh>
   );
 }
@@ -195,7 +195,7 @@ function Scene({
     <>
       <ambientLight intensity={0.75} />
       <directionalLight position={[4, 6, 8]} intensity={1.1} />
-      <directionalLight position={[-6, -2, 4]} intensity={0.35} color="#8ba6ff" />
+      <directionalLight position={[-6, -2, 4]} intensity={0.35} color="#9db4ff" />
 
       <group ref={group} scale={scale} rotation={[-TILT, 0, 0]}>
         <Plate />

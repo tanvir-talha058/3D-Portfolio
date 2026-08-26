@@ -1,8 +1,11 @@
 import './globals.css';
 import './sections.css';
 import './motion.css';
+/* Loaded last: the centred-alignment layer overrides the section styles. */
+import './align.css';
 import type { Metadata, Viewport } from 'next';
 import { Cursor, ScrollProgress, Specular } from './components/motion';
+import BootMount from './components/BootMount';
 import { Fraunces, Archivo, JetBrains_Mono } from 'next/font/google';
 
 /* Display: Fraunces, with its SOFT and WONK axes exposed so headlines can
@@ -43,7 +46,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#08090c',
+  themeColor: '#05060d',
   colorScheme: 'dark',
 };
 
@@ -59,6 +62,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <span />
           <span />
         </div>
+        <BootMount />
         <ScrollProgress />
         <Cursor />
         <Specular />

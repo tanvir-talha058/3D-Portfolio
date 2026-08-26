@@ -5,17 +5,17 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        bg: '#08090D',
-        panel: '#11131A',
-        border: 'rgba(255,255,255,0.12)',
-        accent: '#6ee7ff',
-        violet: '#8b5cf6',
+        bg: '#05060D',
+        panel: '#0F1220',
+        border: 'rgba(190,215,255,0.14)',
+        accent: '#6fd6ee',
+        violet: '#8d7bf2',
       },
       boxShadow: {
-        glow: '0 0 30px rgba(110, 231, 255, 0.2)',
+        glow: '0 0 30px rgba(111, 214, 238, 0.24)',
       },
       backgroundImage: {
-        grid: 'linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px)',
+        grid: 'linear-gradient(rgba(190,215,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(190,215,255,0.05) 1px, transparent 1px)',
       },
     },
   },

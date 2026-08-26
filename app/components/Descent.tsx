@@ -62,11 +62,11 @@ const LO = -1.4;
 const HI = 2.7;
 
 const RAMP = [
-  new THREE.Color('#171a2b'),
-  new THREE.Color('#3b2f5c'),
-  new THREE.Color('#6b4a7e'),
-  new THREE.Color('#a24d6a'),
-  new THREE.Color('#d9704f'),
+  new THREE.Color('#121430'),
+  new THREE.Color('#2f2a72'),
+  new THREE.Color('#5442b5'),
+  new THREE.Color('#7d78ee'),
+  new THREE.Color('#63cbe8'),
 ];
 
 function rampAt(t: number, out: THREE.Color) {
@@ -124,7 +124,7 @@ function Runner({
     g.setAttribute('position', new THREE.BufferAttribute(positions, 3));
     g.setDrawRange(0, 0);
     const m = new THREE.LineBasicMaterial({
-      color: new THREE.Color('#f2c063'),
+      color: new THREE.Color('#9df3e2'),
       transparent: true,
       opacity: 0.92,
       toneMapped: false,
@@ -230,8 +230,8 @@ function Runner({
       <mesh ref={marble}>
         <sphereGeometry args={[0.11, 20, 20]} />
         <meshStandardMaterial
-          color="#f7d489"
-          emissive="#e07a55"
+          color="#c6fbef"
+          emissive="#6fd6ee"
           emissiveIntensity={1.7}
           roughness={0.3}
           toneMapped={false}
@@ -284,7 +284,7 @@ function Scene({
     <>
       <ambientLight intensity={0.7} />
       <directionalLight position={[3, 5, 7]} intensity={1.15} />
-      <directionalLight position={[-5, -3, 4]} intensity={0.4} color="#8ba6ff" />
+      <directionalLight position={[-5, -3, 4]} intensity={0.4} color="#9db4ff" />
 
       <group ref={tilt} scale={scale} rotation={[-1.0, 0, 0]} position={[0, -0.35, 0]}>
         <group ref={spin} rotation={[0, 0, -0.5]}>
@@ -301,7 +301,7 @@ function Scene({
               a loss landscape, and they keep the slope readable where the
               shading alone would flatten out. */}
           <lineSegments geometry={wire}>
-            <lineBasicMaterial color="#cfd3dc" transparent opacity={0.085} toneMapped={false} />
+            <lineBasicMaterial color="#ccd3e6" transparent opacity={0.085} toneMapped={false} />
           </lineSegments>
 
           <Runner report={report} reduced={reduced} />

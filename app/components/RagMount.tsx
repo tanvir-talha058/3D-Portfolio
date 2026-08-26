@@ -2,11 +2,16 @@
 
 import { useEffect, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
-import { netLayers } from '../data';
+import { STAGES } from './Rag';
 
-const Net = dynamic(() => import('./Net'), { ssr: false, loading: () => null });
+const Rag = dynamic(() => import('./Rag'), { ssr: false, loading: () => null });
 
-export default function NetMount() {
+/**
+ * Mount for the retrieval pipeline. Same contract as the other scenes:
+ * the diagram is the canvas, but its content is the caption below it, so
+ * the section still reads with WebGL off.
+ */
+export default function RagMount() {
   const host = useRef<HTMLDivElement>(null);
   const [ready, setReady] = useState(false);
   const [supported, setSupported] = useState(true);
@@ -32,7 +37,6 @@ export default function NetMount() {
     return () => mq.removeEventListener('change', apply);
   }, []);
 
-  // Only run the propagation loop while the diagram is actually on screen.
   useEffect(() => {
     const el = host.current;
     if (!el || typeof IntersectionObserver === 'undefined') return;
@@ -40,26 +44,25 @@ export default function NetMount() {
       setActive(e.isIntersecting);
       if (e.isIntersecting) setSeen(true);
     }, {
-      rootMargin: '80px',
+      rootMargin: '100px',
     });
     io.observe(el);
     return () => io.disconnect();
   }, []);
 
   return (
-    <figure className="net" ref={host}>
-      <div className="net-canvas">
-        {ready && supported && seen ? <Net reduced={reduced} active={active} /> : null}
+    <figure className="rag" ref={host}>
+      <div className="rag-canvas">
+        {/* Off screen, the clock freezes rather than the canvas unmounting. */}
+        {ready && supported && seen ? <Rag reduced={reduced || !active} /> : null}
       </div>
 
-      {/* The legend is the diagram's real content, so it is text, not
-          rendered into the canvas where it could not be read or selected. */}
-      <figcaption className="net-legend">
-        {netLayers.map((l, i) => (
-          <div key={l.label} className="net-layer">
-            <span className="mono net-layer-i">{String(i + 1).padStart(2, '0')}</span>
-            <span className="net-layer-name">{l.label}</span>
-            <span className="net-layer-note">{l.note}</span>
+      <figcaption className="rag-legend">
+        {STAGES.map((s, i) => (
+          <div key={s.key} className="rag-stage">
+            <span className="mono rag-stage-i">{String(i + 1).padStart(2, '0')}</span>
+            <span className="rag-stage-name">{s.label}</span>
+            <span className="rag-stage-note">{s.note}</span>
           </div>
         ))}
       </figcaption>

@@ -76,11 +76,11 @@ const fragmentShader = /* glsl */ `
 
   // Magma ramp — the same five stops the rest of the page is built from.
   vec3 ramp(float t) {
-    vec3 c0 = vec3(0.180, 0.165, 0.310);
-    vec3 c1 = vec3(0.420, 0.290, 0.494);
-    vec3 c2 = vec3(0.698, 0.314, 0.416);
-    vec3 c3 = vec3(0.878, 0.478, 0.333);
-    vec3 c4 = vec3(0.949, 0.753, 0.388);
+    vec3 c0 = vec3(0.125, 0.102, 0.267);
+    vec3 c1 = vec3(0.329, 0.259, 0.710);
+    vec3 c2 = vec3(0.553, 0.482, 0.949);
+    vec3 c3 = vec3(0.435, 0.839, 0.933);
+    vec3 c4 = vec3(0.616, 0.953, 0.886);
 
     t = clamp(t, 0.0, 1.0);
     if (t < 0.25) return mix(c0, c1, t / 0.25);
@@ -235,7 +235,7 @@ function Points({ hot, reduced }: { hot: number; reduced: boolean }) {
  * The glass core. MeshTransmissionMaterial does real refraction, so the
  * point field genuinely bends through it rather than being faked with alpha.
  */
-function GlassCore({ quality }: { quality: 'high' | 'low' }) {
+function GlassCore({ quality, at }: { quality: 'high' | 'low'; at: [number, number, number] }) {
   const ref = useRef<THREE.Group>(null);
   const edges = useMemo(() => new THREE.IcosahedronGeometry(1, 0), []);
 
@@ -248,7 +248,7 @@ function GlassCore({ quality }: { quality: 'high' | 'low' }) {
   return (
     // Nudged clear of the copy column: at the widest layout the core would
     // otherwise sit on the last word of the headline.
-    <group ref={ref} scale={0.74} position={[0.55, 0, 0]}>
+    <group ref={ref} scale={0.74} position={at}>
       {/* Faceted, not smooth. A subdivided sphere needs a bright environment
           to read as glass at all; twenty flat faces each catch their own
           highlight, so the core still reads as a cut lens on a near-black
@@ -278,7 +278,7 @@ function GlassCore({ quality }: { quality: 'high' | 'low' }) {
           clearcoat={1}
           clearcoatRoughness={0.03}
           attenuationDistance={2.2}
-          attenuationColor="#f2e9ff"
+          attenuationColor="#e6f6ff"
           color="#ffffff"
         />
         ) : (
@@ -298,7 +298,7 @@ function GlassCore({ quality }: { quality: 'high' | 'low' }) {
           the refraction behind them is dark. */}
       <lineSegments>
         <edgesGeometry args={[edges]} />
-        <lineBasicMaterial color="#f2c063" transparent opacity={0.28} toneMapped={false} />
+        <lineBasicMaterial color="#9df3e2" transparent opacity={0.28} toneMapped={false} />
       </lineSegments>
     </group>
   );
@@ -330,10 +330,11 @@ function Anchor({
 
     // A label is only legible once its node has orbited clear of the copy
     // column, so gate it on projected screen position rather than letting it
-    // sit on top of the headline.
+    // sit on top of the headline. The copy is centred, so the gate is on
+    // distance from the centre line, not on x itself.
     ref.current.getWorldPosition(world);
     world.project(camera);
-    const clear = THREE.MathUtils.smoothstep(world.x, gateX, gateX + 0.22);
+    const clear = THREE.MathUtils.smoothstep(Math.abs(world.x), gateX, gateX + 0.22);
 
     if (label.current) label.current.style.opacity = String(hot ? 1 : clear * 0.62);
 
@@ -423,14 +424,21 @@ function Scene({ reduced, quality }: { reduced: boolean; quality: 'high' | 'low'
   const group = useRef<THREE.Group>(null);
   const width = useThree((s) => s.size.width);
 
-  // Wide viewports read as two columns: copy left, field right. Narrow ones
-  // centre the field and let the veil carry legibility instead.
-  const offsetX = width >= 1180 ? 3.15 : width >= 860 ? 1.7 : 0;
+  // The copy is centred, so the field is too: an offset cloud behind
+  // centred text reads as a mistake rather than as a second column.
+  const offsetX = 0;
   const scale = width >= 860 ? 1 : 0.82;
 
-  // NDC x below which a label would sit over the copy. On narrow layouts the
-  // field is behind the text, so labels stay hidden until hovered.
-  const gateX = width >= 1180 ? 0.34 : width >= 860 ? 0.46 : 2;
+  // The refractive solid muddies whatever it sits behind, and centred copy
+  // owns the middle. Wide layouts have margins, so it sits in the right one;
+  // narrow layouts have none, so it drops below the text instead.
+  const corePos: [number, number, number] =
+    width >= 1180 ? [3.1, -1.5, 0] : width >= 860 ? [2.4, -1.8, 0] : [0.55, -2.5, 0];
+
+  // Half-width of the copy column in NDC: a label is legible once its node
+  // has orbited outside that, on either side. Narrow layouts put the copy
+  // across the full width, so labels there stay hidden until hovered.
+  const gateX = width >= 1180 ? 0.5 : width >= 860 ? 0.64 : 2;
 
   useFrame((state, delta) => {
     if (!group.current || reduced) return;
@@ -444,9 +452,9 @@ function Scene({ reduced, quality }: { reduced: boolean; quality: 'high' | 'low'
           refract the whole environment, so small bright panels arrive as
           hard-edged bars — a broad soft field is what reads as glass. */}
       <Environment resolution={64}>
-        <Lightformer intensity={3.4} position={[0, 6, 4]} scale={[22, 12, 1]} color="#fff2e2" />
+        <Lightformer intensity={3.4} position={[0, 6, 4]} scale={[22, 12, 1]} color="#eaf3ff" />
         <Lightformer intensity={2.2} position={[-8, -1, 3]} scale={[14, 16, 1]} color="#9db4ff" />
-        <Lightformer intensity={2.4} position={[8, -2, 2]} scale={[14, 16, 1]} color="#f2a074" />
+        <Lightformer intensity={2.4} position={[8, -2, 2]} scale={[14, 16, 1]} color="#7fe3f0" />
       </Environment>
 
       <ambientLight intensity={0.35} />
@@ -460,7 +468,7 @@ function Scene({ reduced, quality }: { reduced: boolean; quality: 'high' | 'low'
           ))}
           </group>
 
-        <GlassCore quality={quality} />
+        <GlassCore quality={quality} at={corePos} />
       </group>
 
       <Rig reduced={reduced} hot={hot} offsetX={offsetX} />

@@ -14,6 +14,9 @@ export default function DescentMount() {
   const [supported, setSupported] = useState(true);
   const [reduced, setReduced] = useState(false);
   const [active, setActive] = useState(false);
+  // WebGL contexts are a scarce, browser-capped resource: create this one
+  // the first time the figure is approached, then keep it.
+  const [seen, setSeen] = useState(false);
 
   useEffect(() => {
     try {
@@ -34,7 +37,10 @@ export default function DescentMount() {
   useEffect(() => {
     const el = host.current;
     if (!el || typeof IntersectionObserver === 'undefined') return;
-    const io = new IntersectionObserver(([e]) => setActive(e.isIntersecting), {
+    const io = new IntersectionObserver(([e]) => {
+      setActive(e.isIntersecting);
+      if (e.isIntersecting) setSeen(true);
+    }, {
       rootMargin: '80px',
     });
     io.observe(el);
@@ -60,7 +66,7 @@ export default function DescentMount() {
   return (
     <figure className="descent" ref={host}>
       <div className="descent-canvas">
-        {ready && supported ? (
+        {ready && supported && seen ? (
           <DescentScene report={report} reduced={reduced} active={active} />
         ) : null}
       </div>

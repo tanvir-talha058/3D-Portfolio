@@ -5,6 +5,7 @@ import FieldMount from './components/FieldMount';
 import NetMount from './components/NetMount';
 import AttentionMount from './components/AttentionMount';
 import DescentMount from './components/DescentMount';
+import RagMount from './components/RagMount';
 import { Topbar, Reveal, TiltCard, Lift, Sheet } from './components/ui';
 import { Split, Magnet, Count, Wipe } from './components/motion';
 import {
@@ -39,10 +40,14 @@ export default function Home() {
 
           <div className="shell hero-inner">
             <Reveal>
+              {/* Each credential is its own element on purpose: as bare text
+                  nodes they collapse into one anonymous flex item the moment
+                  the separators are hidden, and run together on narrow
+                  screens. */}
               <p className="hero-kicker mono">
-                B.Sc. Computer Science &amp; Engineering
+                <span>B.Sc. Computer Science &amp; Engineering</span>
                 <span className="dot" aria-hidden="true" />
-                Dhaka, Bangladesh
+                <span>Dhaka, Bangladesh</span>
                 <span className="dot" aria-hidden="true" />
                 <span className="live">
                   <span className="live-dot" aria-hidden="true" />
@@ -339,6 +344,12 @@ export default function Home() {
               <h2 className="display h2 band-title" aria-label="Systems I've built">
                 <Split text="Systems I've built" />
               </h2>
+            </Reveal>
+
+            {/* The retrieval stack, rendered rather than described: the
+                shape most of this work shares, before the cases themselves. */}
+            <Reveal delay={140}>
+              <RagMount />
             </Reveal>
 
             <div className="work-grid">

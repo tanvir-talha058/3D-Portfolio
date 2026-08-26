@@ -1,0 +1,194 @@
+/* ---------------------------------------------------------------------
+   Centred alignment.
+
+   The page was set left-aligned and editorial; this layer re-sets it on a
+   centre axis. It is deliberately one file, loaded last, so the whole
+   alignment decision can be read — or reverted — in one place instead of
+   being scattered through the section styles.
+
+   Centring text is the easy half. The half that actually breaks is
+   everything measured from a left edge: width-capped blocks that stay put
+   without auto margins, flex rows that pile up at flex-start, and grids
+   with a rail or index column that only makes sense on the left. Those are
+   handled explicitly below, in that order.
+   --------------------------------------------------------------------- */
+
+body {
+  text-align: center;
+  /* Hanging punctuation pushes quotes and dashes outside the text box,
+     which reads as a broken centre axis rather than as fine typography. */
+  hanging-punctuation: none;
+}
+
+/* ------------------- width-capped blocks: centre them ------------------- */
+
+/* A max-width block with no auto margin stays hard against the left edge
+   however its text is aligned. Every capped block on the page: */
+.hero-title,
+.hero-lede,
+.hero-inner,
+.about-lede,
+.band-title,
+.h2,
+.work-desc,
+.research-detail,
+.contact-title,
+.contact-lede,
+.edu-degree,
+.method-lede,
+.sheet-title,
+.prose-serif {
+  margin-inline: auto;
+}
+
+/* ---------------------- rules that frame a label ---------------------- */
+
+/* The eyebrow's rule ran to the right of the label because the label sat
+   on the left. Centred, it needs one on each side or it reads lopsided. */
+.eyebrow {
+  justify-content: center;
+}
+
+.eyebrow::before {
+  content: '';
+  height: 1px;
+  flex: 1;
+  background: linear-gradient(270deg, var(--line-strong), transparent);
+}
+
+/* ------------------------- rows and clusters ------------------------- */
+
+.hero-kicker,
+.hero-actions,
+.chip-row,
+.contact-actions,
+.contact-meta,
+.stack-items,
+.footer-inner,
+.attn-tokens,
+.attn-legend,
+.work-metrics,
+.cap-item,
+.sheet-actions {
+  justify-content: center;
+}
+
+/* The kicker stacks on narrow screens; centre the stack too, or it turns
+   back into a left-aligned column at the one width it matters most. */
+@media (max-width: 560px) {
+  .hero-kicker {
+    align-items: center;
+  }
+}
+
+/* ------------------- asymmetric two-column grids ------------------- */
+
+/* About, method and research were built as unequal two-column layouts —
+   copy in the wider column, figure in the narrower. Centring the text
+   inside a column that is itself off-centre reads as a mistake rather than
+   as a composition, so on a centre axis they become one column. The
+   symmetric card grids (work, expertise, education) are left alone: they
+   already centre on the page. */
+.about-grid,
+.method-grid,
+.research-layout {
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
+}
+
+/* ------------------- grids with a left-edge column ------------------- */
+
+/* These read left-to-right from a rail or an index: a marker column, then
+   the content. On a centre axis the marker column drags everything off
+   centre, so the two parts stack and centre instead. */
+.timeline-item {
+  grid-template-columns: 1fr;
+  justify-items: center;
+  gap: 0.6rem;
+}
+
+.timeline-rail {
+  flex-direction: row;
+  width: auto;
+}
+
+/* The rail's connecting line runs vertically down a left gutter. Stacked,
+   there is no gutter to run down. */
+.timeline-rail::before {
+  display: none;
+}
+
+@media (min-width: 620px) {
+  .stack-row-wrap {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 0.5rem;
+  }
+}
+
+/* ---------------------------- list markers ---------------------------- */
+
+/* Every marker on the page is drawn from a left edge — absolutely at
+   left: 0, or as a block rule the text starts under. Centred, they strand
+   in the margin while the text walks away from them. Each is either
+   re-centred or dropped, depending on whether it carries meaning. */
+
+/* A rule above a heading: still meaningful, just needs centring. */
+.principle-title::before {
+  margin-inline: auto;
+}
+
+/* A status dot in a flex row: meaningful (filled = done, hollow = open). */
+.research-result {
+  justify-content: center;
+}
+
+/* A decorative dash hanging in the left margin of every bullet. It marked
+   where the line began; centred text has no fixed beginning, and the row
+   gap already separates the items — so it goes. */
+.timeline-details li {
+  padding-left: 0;
+}
+
+.timeline-details li::before {
+  display: none;
+}
+
+.timeline-period {
+  justify-content: center;
+}
+
+/* ----------------------------- legends ----------------------------- */
+
+/* Diagram legends are grids of cells; each cell's content centres on its
+   own column so the row reads as a set of centred captions.
+   (.contact-meta is a flex row, so it is centred with the clusters above —
+   justify-items would do nothing to it.) */
+.net-layer,
+.rag-stage,
+.contact-meta dd,
+.awards li,
+.cap-item {
+  justify-items: center;
+  text-align: center;
+}
+
+/* ------------------------- explicit overrides ------------------------- */
+
+/* Set left in the section styles, which now wins over the inherited
+   centre unless it is named here. */
+.attn-token,
+.attn-cell,
+.sheet-body,
+.sheet-body li {
+  text-align: center;
+}
+
+/* Bulleted lists centre badly: the marker sits in a left gutter that the
+   centred text has walked away from. These lists carry their own markers
+   already, so the browser's can go. */
+.sheet-body ul,
+.sheet-body ol {
+  list-style-position: inside;
+  padding-left: 0;
+}

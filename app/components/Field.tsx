@@ -308,11 +308,13 @@ function Anchor({
   index,
   hot,
   gateX,
+  labelled,
   onHover,
 }: {
   index: number;
   hot: boolean;
   gateX: number;
+  labelled: boolean;
   onHover: (i: number) => void;
 }) {
   const d = domains[index];
@@ -373,11 +375,13 @@ function Anchor({
         />
       </mesh>
 
-      <Html center distanceFactor={9} zIndexRange={[20, 0]}>
-        <span ref={label} className="node-label" data-hot={hot}>
-          {d.label}
-        </span>
-      </Html>
+      {labelled && (
+        <Html center distanceFactor={9} zIndexRange={[20, 0]}>
+          <span ref={label} className="node-label" data-hot={hot}>
+            {d.label}
+          </span>
+        </Html>
+      )}
     </group>
   );
 }
@@ -436,9 +440,16 @@ function Scene({ reduced, quality }: { reduced: boolean; quality: 'high' | 'low'
     width >= 1180 ? [3.1, -1.5, 0] : width >= 860 ? [2.4, -1.8, 0] : [0.55, -2.5, 0];
 
   // Half-width of the copy column in NDC: a label is legible once its node
-  // has orbited outside that, on either side. Narrow layouts put the copy
-  // across the full width, so labels there stay hidden until hovered.
-  const gateX = width >= 1180 ? 0.5 : width >= 860 ? 0.64 : 2;
+  // has orbited outside that, on either side.
+  const gateX = width >= 1180 ? 0.5 : 0.64;
+
+  // Narrow layouts put the copy across the full width, so there is nowhere
+  // for a label to sit and they were gated permanently invisible. Invisible
+  // is not free: drei renders each one into a div that still takes part in
+  // layout, and at 320px those were 430-650px wide and pushing the page
+  // into horizontal scroll. Below the two-column breakpoint they are simply
+  // not rendered.
+  const labelled = width >= 860;
 
   useFrame((state, delta) => {
     if (!group.current || reduced) return;
@@ -464,7 +475,14 @@ function Scene({ reduced, quality }: { reduced: boolean; quality: 'high' | 'low'
         <group ref={group}>
           <Points hot={hot} reduced={reduced} />
           {domains.map((_, i) => (
-            <Anchor key={domains[i].id} index={i} hot={hot === i} gateX={gateX} onHover={setHot} />
+            <Anchor
+              key={domains[i].id}
+              index={i}
+              hot={hot === i}
+              gateX={gateX}
+              labelled={labelled}
+              onHover={setHot}
+            />
           ))}
           </group>
 

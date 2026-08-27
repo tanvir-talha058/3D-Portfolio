@@ -18,7 +18,9 @@
 
   --paper:  #edeff5;
   --muted:  #9aa4bd;
-  --faint:  #666f8a;
+  /* 5.32:1 on --void. The previous #666f8a measured 4.05:1, which
+     fails AA for normal text, and this is a text colour in a dozen places. */
+  --faint:  #78839c;
 
   --line:        rgba(190, 215, 255, 0.10);
   --line-strong: rgba(190, 215, 255, 0.20);
@@ -44,6 +46,9 @@
   --glass-edge:  rgba(190, 215, 255, 0.24);
   --glass-spec:  rgba(255, 255, 255, 0.55);
 
+  /* Small controls were carrying three ad-hoc radii — 6, 7 and 10px — none
+     of them on the 4px base the spacing scale below declares. One token. */
+  --r-xs: 8px;
   --r-sm: 14px;
   --r-md: 22px;
   --r-lg: 30px;
@@ -82,6 +87,18 @@
   --chip-h: 28px;
   --chip-lg-h: 32px;
 
+  /* ---------------------------------------------------------------
+     Grid system. Two tiers: a card wall for content that needs room to
+     say something, and a tile wall for dense named items. The card
+     values are the ones .work-grid and .expertise-grid already used —
+     formalised here so every wall on the page matches rather than each
+     section inventing its own minimum.
+     --------------------------------------------------------------- */
+  --grid-gap:    1rem;
+  --grid-gap-sm: 0.5rem;
+  --grid-card:   300px;
+  --grid-tile:   140px;
+
   --shell:  1240px;
   --gutter: clamp(1.15rem, 4vw, 2.5rem);
 
@@ -102,7 +119,7 @@ body {
   min-height: 100vh;
   background: var(--void);
   color: var(--paper);
-  font-family: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-grotesk), ui-sans-serif, system-ui, sans-serif;
   font-synthesis-weight: none;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -127,29 +144,41 @@ body {
 
 /* --------------------------- type roles --------------------------- */
 
+/* The display face is a didone, and `opsz` is the axis that decides how far
+   its hairlines are allowed to thin. On a near-black ground a thin hairline
+   does not read as delicate, it reads as broken — so optical size is driven
+   from the heading's own size rather than left on `auto`: the largest type
+   gets the finest cut, the smallest gets the sturdiest. Each heading class
+   sets --opsz; nothing else touches font-variation-settings. */
 .display {
   text-wrap: balance;
-  font-family: var(--font-fraunces), ui-serif, Georgia, serif;
-  font-optical-sizing: auto;
-  font-variation-settings: 'SOFT' 0, 'WONK' 1;
-  font-weight: 500;
-  letter-spacing: -0.035em;
-  line-height: 0.98;
+  font-family: var(--font-bodoni);
+  font-optical-sizing: none;
+  font-variation-settings: 'opsz' var(--opsz, 28);
+  /* Poster weight. A didone's contrast is the point, and it widens as the
+     face gets heavier — the stems gain mass while the hairlines stay
+     hairlines. Set light it reads as elegant; set heavy it reads as loud,
+     which is what a hero is for. */
+  font-weight: var(--wght, 700);
+  letter-spacing: -0.022em;
+  line-height: 0.94;
 }
 
 .mono {
   font-family: var(--font-mono), ui-monospace, "SF Mono", Menlo, monospace;
-  font-feature-settings: 'zero' 1;
+  font-variant-numeric: tabular-nums;
 }
 
 /* Section eyebrow: a coordinate, not a decoration. */
 .eyebrow {
   font-family: var(--font-mono), ui-monospace, monospace;
   font-size: 0.6875rem;
-  letter-spacing: 0.18em;
+  font-weight: 600;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
   color: var(--faint);
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
   gap: 0.75rem;
 }
@@ -157,18 +186,19 @@ body {
 .eyebrow::after {
   content: '';
   height: 1px;
-  flex: 1;
   background: linear-gradient(90deg, var(--line-strong), transparent);
 }
 
-.prose-serif {
+/* The reading voice. Deliberately not the display face: a didone at 17px on
+   a dark ground is a stress test, not a paragraph. This is the grotesk, set
+   a touch larger and looser than the UI default so long copy has air. */
+.prose {
   text-wrap: pretty;
-  font-family: var(--font-fraunces), ui-serif, Georgia, serif;
-  font-optical-sizing: auto;
-  font-variation-settings: 'SOFT' 20, 'WONK' 0;
+  font-family: var(--font-grotesk), ui-sans-serif, system-ui, sans-serif;
   font-weight: 400;
-  line-height: 1.62;
-  letter-spacing: -0.005em;
+  font-size: 1.0625rem;
+  line-height: 1.68;
+  letter-spacing: 0.002em;
   color: #ccd3e6;
 }
 
@@ -256,7 +286,8 @@ body {
 .chip {
   font-family: var(--font-mono), ui-monospace, monospace;
   font-size: 0.625rem;
-  letter-spacing: 0.1em;
+  font-weight: 500;
+  letter-spacing: 0.07em;
   text-transform: uppercase;
   color: var(--muted);
   border: 1px solid rgba(255, 255, 255, 0.14);
@@ -313,7 +344,7 @@ body {
 .node-label {
   font-family: var(--font-mono), ui-monospace, monospace;
   font-size: 0.625rem;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.11em;
   text-transform: uppercase;
   white-space: nowrap;
   color: var(--muted);
@@ -339,15 +370,28 @@ body {
 
 /* -------------------------- entrance motion -------------------------- */
 
+/* Content arrives in depth rather than sliding up a flat plane: each block
+   starts tipped away from the viewer and pushed back, then rights itself.
+   The perspective lives on the element itself so a grid of them each get
+   their own vanishing point — one shared perspective on the container would
+   fan the outer cards outward like a deck. */
 .reveal {
   opacity: 0;
-  transform: translateY(18px);
-  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+  transform: perspective(1200px) translate3d(0, 22px, -70px) rotateX(7deg);
+  transform-origin: 50% 100%;
+  transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
+  will-change: transform, opacity;
 }
 
 .reveal[data-shown='true'] {
   opacity: 1;
-  transform: none;
+  transform: perspective(1200px) translate3d(0, 0, 0) rotateX(0deg);
+}
+
+/* Once it has landed, drop will-change so 40+ grid items are not each
+   holding a compositor layer for the rest of the session. */
+.reveal[data-shown='true'] {
+  will-change: auto;
 }
 
 /* --------------------------- case study --------------------------- */
@@ -358,8 +402,8 @@ body {
   z-index: 80;
   background: rgba(6, 7, 10, 0.82);
   backdrop-filter: blur(10px);
-  display: flex;
-  justify-content: flex-end;
+  display: grid;
+  justify-items: end;
   animation: fade 0.25s var(--ease);
 }
 
@@ -394,13 +438,18 @@ body {
 
   .reveal { opacity: 1; transform: none; }
   .tilt-body { transform: none !important; }
+  /* The tile's depth hover and its specular sweep are motion too. */
+  .tile,
+  .tile:hover { transform: none !important; }
+  .tile::after { display: none; }
 }
 
 /* ------------------------ glass controls ------------------------ */
 
 .glass-btn {
   position: relative;
-  display: inline-flex;
+  display: inline-grid;
+  grid-auto-flow: column;
   align-items: center;
   gap: 0.5rem;
   border-radius: 999px;
@@ -454,7 +503,8 @@ body {
   max-width: var(--shell);
   border-radius: 999px;
   padding: 0.6rem 0.7rem 0.6rem 1.35rem;
-  display: flex;
+  display: grid;
+  grid-auto-flow: column;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
@@ -581,7 +631,19 @@ body {
       rgba(5, 6, 13, 0.28) 76%,
       transparent 92%
     ),
-    linear-gradient(180deg, rgba(5, 6, 13, 0.7) 0%, transparent 22%, transparent 66%, var(--void) 100%);
+    /* No bottom stop: the veil is absolutely positioned on the hero, so any
+       alpha it still carries at 100% ends in a hard line against the next
+       section. The field's own mask does the fade out. */
+    linear-gradient(180deg, rgba(5, 6, 13, 0.7) 0%, transparent 24%);
+}
+
+/* The field is opaque where it paints and the page behind it is not, so a
+   hard-edged canvas leaves a visible seam at the bottom of the hero — dark
+   above, aurora below. Fading the canvas out over its last fifth lets the
+   page emerge instead of cutting to it. */
+.field {
+  mask-image: linear-gradient(180deg, #000 0%, #000 78%, transparent 98%);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 78%, transparent 98%);
 }
 
 @media (max-width: 860px) {

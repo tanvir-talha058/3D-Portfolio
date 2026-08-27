@@ -101,6 +101,24 @@ function usePanelTexture() {
   }, []);
 }
 
+/* The canvas cannot hardcode a family name: next/font self-hosts each face
+   under a generated name, so `"Bodoni Moda"` would silently fall through to
+   the system serif. It reads the same custom properties the stylesheet does.
+   Resolved once — the values never change after hydration. */
+let faces: { display: string; mono: string } | null = null;
+
+function typeface(role: 'display' | 'mono') {
+  if (!faces) {
+    const css = getComputedStyle(document.documentElement);
+    const read = (v: string) => css.getPropertyValue(v).trim();
+    faces = {
+      display: `${read('--font-bodoni') || 'Georgia'}, Georgia, ui-serif, serif`,
+      mono: `${read('--font-mono') || 'Menlo'}, ui-monospace, Menlo, monospace`,
+    };
+  }
+  return faces[role];
+}
+
 function paintPanel(
   ctx: CanvasRenderingContext2D,
   w: number,
@@ -147,7 +165,7 @@ function paintPanel(
   // Window chrome bar, so the panel reads as a running machine.
   ctx.fillStyle = 'rgba(190, 215, 255, 0.09)';
   ctx.fillRect(padX, 96, w - padX * 2, 2);
-  ctx.font = `500 ${Math.round(24 * k)}px "JetBrains Mono", ui-monospace, Menlo, monospace`;
+  ctx.font = `500 ${Math.round(24 * k)}px ${typeface('mono')}`;
   ctx.fillStyle = '#666f8a';
   ctx.fillText('tanvir.dev — boot', padX, 76);
 
@@ -161,7 +179,7 @@ function paintPanel(
   const logT = clamp01((t - T.logStart) / (T.logEnd - T.logStart));
   const shown = logT * lines.length;
   const lead = Math.round(46 * k);
-  ctx.font = `400 ${Math.round(27 * k)}px "JetBrains Mono", ui-monospace, Menlo, monospace`;
+  ctx.font = `400 ${Math.round(27 * k)}px ${typeface('mono')}`;
   for (let i = 0; i < lines.length; i += 1) {
     const local = clamp01(shown - i);
     if (local <= 0) continue;
@@ -192,11 +210,11 @@ function paintPanel(
     ctx.fillStyle = 'rgba(190, 215, 255, 0.12)';
     ctx.fillRect(padX, cardY, w - padX * 2, 1);
 
-    ctx.font = `500 ${Math.round(88 * (compact ? 1.35 : 1))}px Fraunces, Georgia, ui-serif, serif`;
+    ctx.font = `600 ${Math.round(88 * (compact ? 1.35 : 1))}px ${typeface('display')}`;
     ctx.fillStyle = '#edeff5';
     ctx.fillText('Tanvir Ahmed', padX, cardY + (compact ? 132 : 126));
 
-    ctx.font = `500 ${Math.round(26 * k)}px "JetBrains Mono", ui-monospace, Menlo, monospace`;
+    ctx.font = `500 ${Math.round(26 * k)}px ${typeface('mono')}`;
     ctx.fillStyle = '#6fd6ee';
     ctx.fillText('A I   /   M L   E N G I N E E R', padX, cardY + (compact ? 190 : 180));
   }

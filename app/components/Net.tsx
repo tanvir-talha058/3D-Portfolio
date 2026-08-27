@@ -74,7 +74,7 @@ const edgeFrag = /* glsl */ `
     float d = vT - uWave;
     float pulse = exp(-(d * d) / 0.012);
 
-    vec3 cold = vec3(0.141, 0.122, 0.322);
+    vec3 cold = vec3(0.329, 0.259, 0.710);
     vec3 hot  = vec3(0.616, 0.953, 0.886);
     vec3 col = mix(cold, hot, pulse);
 
@@ -138,7 +138,7 @@ function Edges({ wave }: { wave: React.MutableRefObject<number> }) {
 
 /* -------------------------------- nodes -------------------------------- */
 
-const COLD = new THREE.Color('#241f52');
+const COLD = new THREE.Color('#5442b5');
 const HOT = new THREE.Color('#9df3e2');
 
 function Nodes({ wave }: { wave: React.MutableRefObject<number> }) {

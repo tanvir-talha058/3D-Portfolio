@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- The site's mark: a node lit inside the dichroic field. Same ramp as
+       the page (--r1 violet -> --r3 cyan -> --r4 aqua) on --void. -->
+  <defs>
+    <linearGradient id="ramp" x1="0" y1="64" x2="64" y2="0">
+      <stop offset="0" stop-color="#5442b5" />
+      <stop offset="0.55" stop-color="#6fd6ee" />
+      <stop offset="1" stop-color="#9df3e2" />
+    </linearGradient>
+    <radialGradient id="core" cx="0.38" cy="0.32" r="0.7">
+      <stop offset="0" stop-color="#ffffff" />
+      <stop offset="0.45" stop-color="#9df3e2" />
+      <stop offset="1" stop-color="#6fd6ee" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <rect width="64" height="64" rx="15" fill="#05060d" />
+  <rect x="0.75" y="0.75" width="62.5" height="62.5" rx="14.25" fill="none"
+        stroke="url(#ramp)" stroke-opacity="0.55" stroke-width="1.5" />
+
+  <!-- orbiting field -->
+  <circle cx="32" cy="32" r="19" fill="none" stroke="url(#ramp)"
+          stroke-opacity="0.35" stroke-width="1.5" />
+  <circle cx="32" cy="32" r="11.5" fill="none" stroke="url(#ramp)"
+          stroke-opacity="0.6" stroke-width="1.5" />
+
+  <!-- the lit node -->
+  <circle cx="32" cy="32" r="13" fill="url(#core)" opacity="0.85" />
+  <circle cx="32" cy="32" r="5" fill="#e8fffb" />
+
+  <!-- anchors on the outer ring -->
+  <circle cx="32" cy="13" r="2.6" fill="#9df3e2" />
+  <circle cx="48.5" cy="41.5" r="2.6" fill="#6fd6ee" />
+  <circle cx="15.5" cy="41.5" r="2.6" fill="#8d7bf2" />
+</svg>

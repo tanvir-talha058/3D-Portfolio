@@ -16,6 +16,15 @@ export type Project = {
   caseStudy: CaseStudy;
 };
 
+/* The canonical origin. Everything that needs an absolute URL — metadataBase,
+   the sitemap, robots — reads it from here so there is one place to change
+   when the domain is settled. */
+export const site = {
+  url: 'https://tanvir.dev',
+  name: 'Tanvir Ahmed',
+  role: 'AI/ML Engineer',
+};
+
 export const nav = [
   { label: 'About', href: '#about' },
   { label: 'Expertise', href: '#expertise' },
@@ -122,12 +131,12 @@ export const awards = [
  * and to the section a visitor should land on when they click it.
  */
 export const domains = [
-  { id: 'language', label: 'Language', href: '#research', colour: '#6b4a7e', pos: [1.75, 0.55, -0.35] as [number, number, number] },
-  { id: 'retrieval', label: 'Retrieval', href: '#work', colour: '#b2506a', pos: [-1.55, 0.95, 0.55] as [number, number, number] },
-  { id: 'vision', label: 'Vision', href: '#work', colour: '#e07a55', pos: [0.35, -1.45, 1.15] as [number, number, number] },
-  { id: 'risk', label: 'Risk', href: '#work', colour: '#f2c063', pos: [-0.85, -0.75, -1.55] as [number, number, number] },
-  { id: 'geospatial', label: 'Geospatial', href: '#work', colour: '#c25f7a', pos: [0.95, 1.35, 0.95] as [number, number, number] },
-  { id: 'automation', label: 'Automation', href: '#experience', pos: [-1.15, -0.25, 1.45] as [number, number, number], colour: '#e8955f' },
+  { id: 'language', label: 'Language', href: '#research', colour: '#5442b5', pos: [1.75, 0.55, -0.35] as [number, number, number] },
+  { id: 'retrieval', label: 'Retrieval', href: '#work', colour: '#8d7bf2', pos: [-1.55, 0.95, 0.55] as [number, number, number] },
+  { id: 'vision', label: 'Vision', href: '#work', colour: '#4fb8e8', pos: [0.35, -1.45, 1.15] as [number, number, number] },
+  { id: 'risk', label: 'Risk', href: '#work', colour: '#9df3e2', pos: [-0.85, -0.75, -1.55] as [number, number, number] },
+  { id: 'geospatial', label: 'Geospatial', href: '#work', colour: '#e08ad2', pos: [0.95, 1.35, 0.95] as [number, number, number] },
+  { id: 'automation', label: 'Automation', href: '#experience', pos: [-1.15, -0.25, 1.45] as [number, number, number], colour: '#6fd6ee' },
 ];
 
 /**
@@ -137,7 +146,7 @@ export const domains = [
  */
 export function domainColour(category: string): string {
   const hit = domains.find((d) => d.label.toLowerCase() === category.toLowerCase());
-  return hit?.colour ?? '#7d7fa8';
+  return hit?.colour ?? '#8a93b8';
 }
 
 export const capabilities = [

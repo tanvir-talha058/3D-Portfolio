@@ -166,7 +166,8 @@ body[data-cursor-state='scene'] .cursor-ring {
 /* --------------------------- magnetic buttons --------------------------- */
 
 .magnet {
-  display: inline-flex;
+  display: inline-grid;
+  grid-auto-flow: column;
   will-change: transform;
   transform: translate3d(var(--mgx, 0px), var(--mgy, 0px), 0);
   transition: transform 0.45s var(--ease);
@@ -215,15 +216,17 @@ body[data-cursor-state='scene'] .cursor-ring {
 
   .brand,
   .attn-token {
-    display: inline-flex;
+    display: inline-grid;
+  grid-auto-flow: column;
     align-items: center;
   }
 
   /* The contact details are standalone links in a definition list, not
-     links inside running prose, so they get the floor too — as inline-flex
+     links inside running prose, so they get the floor too — as inline-grid
      so the padding grows the target without shifting the list's rhythm. */
   .contact-meta a {
-    display: inline-flex;
+    display: inline-grid;
+  grid-auto-flow: column;
     align-items: center;
     min-height: var(--ctl-md);
   }
@@ -231,7 +234,8 @@ body[data-cursor-state='scene'] .cursor-ring {
 
 .chip {
   min-height: var(--chip-h);
-  display: inline-flex;
+  display: inline-grid;
+  grid-auto-flow: column;
   align-items: center;
   padding-block: 0;
   padding-inline: var(--space-3);
@@ -353,4 +357,56 @@ html.booting body {
 
 @media (prefers-reduced-motion: reduce) {
   .boot { display: none; }
+}
+
+/* --------------------------- scene arrival --------------------------- */
+
+/* The diagram canvases are created the first time you scroll near them,
+   which means they otherwise appear at full strength between one frame and
+   the next. Animating the canvas element itself is enough: it does not
+   exist until the scene mounts, so the animation runs exactly once, on
+   arrival, with no state to track. */
+@keyframes scene-in {
+  from { opacity: 0; transform: scale(1.015); }
+  to   { opacity: 1; transform: none; }
+}
+
+.net-canvas canvas,
+.rag-canvas canvas,
+.attn-canvas canvas,
+.descent-canvas canvas {
+  animation: scene-in 900ms var(--ease) both;
+}
+
+/* ---------------------- hero departure ---------------------- */
+
+/* The camera flies forward through the field as the hero scrolls out. The
+   copy has to travel with it or the two read as separate events — the
+   scene receding while a block of text slides over the top of it. --depart
+   is the same 0..1 the camera uses, set by HeroDepart. */
+.hero-inner {
+  transform: translate3d(0, calc(var(--depart, 0) * -4.5rem), 0)
+    scale(calc(1 + var(--depart, 0) * 0.06));
+  opacity: calc(1 - var(--depart, 0));
+  will-change: transform, opacity;
+}
+
+/* The scroll cue is the one thing that should leave immediately — it has
+   done its job the moment you scroll. */
+.scroll-cue {
+  opacity: calc(1 - var(--depart, 0) * 2.4);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .net-canvas canvas,
+  .rag-canvas canvas,
+  .attn-canvas canvas,
+  .descent-canvas canvas {
+    animation: none;
+  }
+
+  .hero-inner {
+    transform: none;
+    opacity: 1;
+  }
 }

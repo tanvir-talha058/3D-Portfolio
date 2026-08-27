@@ -187,6 +187,17 @@ export function Topbar() {
     return () => io.disconnect();
   }, []);
 
+  // An overlay that covers the page closes on Escape — the case sheet
+  // already behaves this way, and the menu should not be the exception.
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [open]);
+
   return (
     <header className="topbar" data-stuck={stuck}>
       <a href="#top" className="brand">
@@ -232,9 +243,6 @@ export function Topbar() {
               {item.label}
             </a>
           ))}
-          <a href="#contact" onClick={() => setOpen(false)}>
-            Contact
-          </a>
         </nav>
       )}
     </header>

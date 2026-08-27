@@ -177,6 +177,46 @@ export function ScrollProgress() {
   );
 }
 
+/* --------------------------- hero departure --------------------------- */
+
+/**
+ * Publishes the hero's exit progress as a CSS variable.
+ *
+ * The WebGL rig already drives the camera forward through the field over
+ * the first 900px of scroll; this puts the same 0..1 on the hero element so
+ * the copy can travel with it. Deliberately the same constant and the same
+ * smoothstep as the rig — if the two curves drift apart the copy stops
+ * feeling attached to the scene.
+ *
+ * Nothing here animates on its own: it only reports scroll position, and
+ * the styling lives in motion.css, so reduced-motion is handled there.
+ */
+export function HeroDepart() {
+  useEffect(() => {
+    const hero = document.querySelector<HTMLElement>('.hero');
+    if (!hero) return;
+
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const p = Math.min(window.scrollY / 900, 1);
+      hero.style.setProperty('--depart', String(p * p * (3 - 2 * p)));
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(update);
+    };
+
+    update();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener('scroll', onScroll);
+    };
+  }, []);
+
+  return null;
+}
+
 /* ---------------------------- split heading ---------------------------- */
 
 /**

@@ -75,7 +75,7 @@ export default function Home() {
             </Reveal>
 
             <Reveal delay={180}>
-              <p className="prose-serif hero-lede">
+              <p className="prose hero-lede">
                 Retrieval, risk, vision, and low-resource language — shipped as production
                 software, not notebooks. Each node in the field marks a domain I work in;
                 open one to see the work behind it.
@@ -117,11 +117,11 @@ export default function Home() {
                 <Split text="A computer science graduate who ships production intelligence." />
               </h2>
                 <div className="about-copy">
-                  <p className="prose-serif">
+                  <p className="prose">
                     I&apos;m a Computer Science graduate and AI/ML engineer focused on building
                     solutions that are practical, scalable, and commercially useful.
                   </p>
-                  <p className="prose-serif">
+                  <p className="prose">
                     My work blends machine learning, automation, product thinking, and data
                     intelligence to solve real operational problems and improve decision-making.
                   </p>
@@ -176,15 +176,21 @@ export default function Home() {
               <Reveal delay={160}>
                 <div className="edu-course">
                   <p className="mono edu-course-head">Relevant coursework</p>
-                  <ul className="edu-course-list">
+                  {/* Thirteen courses read as a transcript in a single
+                      column. On the same tile wall the stack uses, they read
+                      as coverage — which is what a reader is actually
+                      scanning for. Wider tiles: course names are long. */}
+                  <ul className="tile-wall edu-course-list">
                     {education.coursework.map((c) => (
-                      <li key={c}>{c}</li>
+                      <li key={c} className="tile">
+                        {c}
+                      </li>
                     ))}
                   </ul>
 
                   <ul className="awards">
                     {awards.map((a) => (
-                      <li key={a.event} className="award">
+                      <li key={a.event} className="award panel panel-sm">
                         <span className="mono award-place">{a.place}</span>
                         <span className="award-event">
                           {a.event} &middot; {a.category}
@@ -208,7 +214,7 @@ export default function Home() {
               <h2 className="display h2" aria-label="Every system below is the same four steps.">
                 <Split text="Every system below is the same four steps." />
               </h2>
-              <p className="prose-serif expertise-lede">
+              <p className="prose expertise-lede">
                 Signal in, decision out. What changes between a dialect classifier, a fraud
                 monitor, and a banking assistant is what fills each layer.
               </p>
@@ -221,17 +227,19 @@ export default function Home() {
             <div className="expertise-grid">
               {expertise.map((e, i) => (
                 <Reveal key={e.area} delay={i * 90}>
-                  <article className="rowglass expertise-card lit">
-                    <h3 className="expertise-area">{e.area}</h3>
-                    <p className="prose-serif expertise-detail">{e.detail}</p>
-                    <ul className="chip-row">
-                      {e.tools.map((t) => (
-                        <li key={t} className="chip">
-                          {t}
-                        </li>
-                      ))}
-                    </ul>
-                  </article>
+                  <TiltCard className="expertise-card-root" max={6}>
+                    <article className="rowglass expertise-card lit">
+                      <h3 className="expertise-area">{e.area}</h3>
+                      <p className="prose expertise-detail">{e.detail}</p>
+                      <ul className="chip-row">
+                        {e.tools.map((t) => (
+                          <li key={t} className="chip">
+                            {t}
+                          </li>
+                        ))}
+                      </ul>
+                    </article>
+                  </TiltCard>
                 </Reveal>
               ))}
             </div>
@@ -269,7 +277,7 @@ export default function Home() {
 
                     <ul className="timeline-details">
                       {job.details.map((d) => (
-                        <li key={d} className="prose-serif">
+                        <li key={d} className="prose">
                           {d}
                         </li>
                       ))}
@@ -369,7 +377,7 @@ export default function Home() {
                       </Lift>
 
                       <Lift z={16}>
-                        <p className="prose-serif work-desc">{p.description}</p>
+                        <p className="prose work-desc">{p.description}</p>
                       </Lift>
 
                       {p.metrics && (
@@ -427,7 +435,7 @@ export default function Home() {
               </h2>
             </Reveal>
 
-            <p className="prose-serif research-lede">
+            <p className="prose research-lede">
               Most of it is low-resource work: languages and datasets that the
               pretrained models were never really built for. The map is one
               Banglish query read four ways &mdash; the same mechanism every
@@ -441,13 +449,14 @@ export default function Home() {
                 </div>
               </Reveal>
 
-              {/* A publication record is a list, not a card wall. */}
+              {/* One card per paper — four papers are a collection, and as rows the
+                  last one read as a footnote to the third. */}
               <ol className="research-list">
                 {research.map((r, i) => (
                   <Reveal as="li" key={r.title} delay={i * 70} className="research-entry">
                     <p className="mono research-sub">{r.subtitle}</p>
                     <h3 className="display research-title">{r.title}</h3>
-                    <p className="prose-serif research-detail">{r.detail}</p>
+                    <p className="prose research-detail">{r.detail}</p>
                     <p className="research-result mono" data-done={r.done}>
                       {r.result}
                     </p>
@@ -470,33 +479,36 @@ export default function Home() {
               </h2>
             </Reveal>
 
-            {/* An index, not a wall: the group is the left-hand label and
-                the tools run as a line of type, which is how a colophon
-                lists what a thing was made with. */}
-            <dl className="stack-index">
+            {/* A wall per group. Forty-eight tools read as inventory, not as
+                prose, so they get a grid of equal tiles — the group heading
+                carries the count and the tiles carry nothing but the name.
+                (Not a <dl>: the previous markup put Reveal's <div> directly
+                inside one, which is invalid, and the term/definition pairing
+                was never doing any work.) */}
+            <div className="stack-index">
               {stackGroups.map((g, i) => (
-                <Reveal as="div" key={g.group} delay={i * 70} className="stack-row-wrap">
-                  <dt className="mono stack-group-head">
+                <Reveal as="section" key={g.group} delay={i * 70} className="stack-group">
+                  <h3 className="mono stack-group-head">
                     {g.group}
                     <span className="stack-count">{g.items.length}</span>
-                  </dt>
-                  <dd className="stack-items">
+                  </h3>
+                  <ul className="tile-wall">
                     {g.items.map((it) => (
-                      <span key={it} className="stack-item">
+                      <li key={it} className="tile">
                         {it}
-                      </span>
+                      </li>
                     ))}
-                  </dd>
+                  </ul>
                 </Reveal>
               ))}
-            </dl>
+            </div>
 
             <Reveal delay={200}>
               <div className="principles">
                 {principles.map((p) => (
                   <div key={p.title} className="principle">
                     <h3 className="principle-title">{p.title}</h3>
-                    <p className="prose-serif principle-text">{p.text}</p>
+                    <p className="prose principle-text">{p.text}</p>
                   </div>
                 ))}
               </div>
@@ -516,7 +528,7 @@ export default function Home() {
                 >
                   <Split text="Let's build the next intelligent system." />
                 </h2>
-                <p className="prose-serif contact-lede">
+                <p className="prose contact-lede">
                   If you are solving a meaningful problem, building a smarter product, or
                   exploring AI for real-world impact, let&apos;s talk.
                 </p>
@@ -602,17 +614,17 @@ export default function Home() {
           <h2 id="sheet-title" className="display sheet-title">
             {open.title}
           </h2>
-          <p className="prose-serif sheet-lede">{open.description}</p>
+          <p className="prose sheet-lede">{open.description}</p>
 
           <div className="sheet-body">
             <section>
               <h3 className="eyebrow">Problem</h3>
-              <p className="prose-serif">{open.caseStudy.problem}</p>
+              <p className="prose">{open.caseStudy.problem}</p>
             </section>
 
             <section>
               <h3 className="eyebrow">Approach</h3>
-              <p className="prose-serif">{open.caseStudy.approach}</p>
+              <p className="prose">{open.caseStudy.approach}</p>
             </section>
 
             <section>
@@ -629,12 +641,12 @@ export default function Home() {
 
             <section>
               <h3 className="eyebrow">Result</h3>
-              <p className="prose-serif">{open.caseStudy.result}</p>
+              <p className="prose">{open.caseStudy.result}</p>
             </section>
 
             <section>
               <h3 className="eyebrow">What it taught me</h3>
-              <p className="prose-serif">{open.caseStudy.lesson}</p>
+              <p className="prose">{open.caseStudy.lesson}</p>
             </section>
 
             <section>

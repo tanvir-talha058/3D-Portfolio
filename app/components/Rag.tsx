@@ -426,7 +426,14 @@ function Scene({
 
     if (vertical) {
       // A tall stack fills a portrait frame: hold it centred and still.
-      state.camera.position.set(0, 0, 8.6 / Math.min(aspect, 1));
+      //
+      // fov is vertical, so what fits the five stages top to bottom is the
+      // camera distance alone. Deriving that distance from the aspect
+      // ratio meant a shorter frame pulled the camera *in* and cropped the
+      // first and last stage; the floor is the distance that actually
+      // holds the whole stack, and the aspect term only pushes further
+      // back when the frame is narrow enough to need it.
+      state.camera.position.set(0, 0, Math.max(13.6, 8.6 / Math.min(aspect, 1)));
       state.camera.lookAt(0, 0, 0);
     } else {
       // fov is vertical, so a narrow window needs the camera further back.

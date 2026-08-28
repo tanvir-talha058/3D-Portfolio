@@ -1495,9 +1495,17 @@
 }
 
 /* Below this width the pipeline stacks vertically, so the frame has to be
-   tall rather than wide — see place() in Rag.tsx for the matching break. */
+   tall rather than wide — see place() in Rag.tsx for the matching break.
+   The camera fits itself to the frame's aspect in that mode
+   (z = 8.6 / min(aspect, 1)), so a shorter frame simply pulls it in; the
+   diagram is not cropped. On a phone this figure was 1,084px tall — larger
+   than any project card beneath it — so it takes a good deal less. */
 @media (max-width: 779px) {
-  .rag-canvas { height: 580px; }
+  .rag-canvas { height: 520px; }
+}
+
+@media (max-width: 640px) {
+  .rag-canvas { height: 440px; }
 }
 
 .rag-canvas canvas { display: block; }
@@ -1518,7 +1526,10 @@
 
 .rag-stage:last-child { border-bottom: 0; }
 
-@media (min-width: 560px) {
+/* Five stages in one column is 500px of legend under a figure that is
+   already the tallest thing in the section. The names are short enough to
+   pair up from the narrowest phone. */
+@media (min-width: 360px) {
   .rag-legend { grid-template-columns: 1fr 1fr; }
   .rag-stage:nth-child(odd) { border-right: 1px solid var(--line); }
 }
@@ -1725,3 +1736,57 @@
    content-width so the phrase still reads as a phrase. They already clear
    44px vertically, which is the axis a thumb actually misses on. */
 .attn-token { min-height: var(--ctl-md); }
+
+/* ---------------------- mobile: the work wall ----------------------
+   Six project cards are the tallest thing on a phone. The card face was
+   repeating what the case study already says: the stack chips are listed
+   again under "Built with" inside the sheet, and a full-width button is a
+   lot of height to spend telling a reader to tap a card they can already
+   tap. Both come off; the metrics stay, because those numbers appear
+   nowhere else. */
+@media (max-width: 640px) {
+  /* Duplicated by the sheet's "Built with" list — no information is lost
+     by dropping them from the card face at this width. */
+  .work-card .chip-row { display: none; }
+
+  /* The description is the hook, not the whole story; the sheet carries the
+     rest. Three lines, then it hands over. */
+  .work-desc {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* The CTA stops being a full-width button and becomes a quiet cue, while
+     its hit area is stretched over the whole card. The real <button> still
+     owns the click, so the keyboard and screen-reader path is unchanged —
+     the card just stops needing a separate place to press. */
+  .work-cta {
+    margin-top: 0.9rem;
+    padding: 0;
+    background: none;
+    border: 0;
+    box-shadow: none;
+    color: var(--r3);
+    font-size: 0.75rem;
+    justify-self: start;
+  }
+
+  .work-cta::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+  }
+
+  .work-cta:hover,
+  .work-cta:active { transform: none; background: none; }
+
+  /* The stretched hit area is invisible, so the focus ring has to come from
+     the card itself or a keyboard user sees nothing. */
+  .work-card:focus-within {
+    outline: 2px solid var(--gold);
+    outline-offset: 3px;
+  }
+}

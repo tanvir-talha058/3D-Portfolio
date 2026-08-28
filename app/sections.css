@@ -313,6 +313,11 @@
   grid-auto-flow: column;
   align-items: center;
   gap: 0.5rem;
+  /* A grid item of the card, so it is blockified and stretched, and its two
+     auto columns then split the slack — which pushed the NOW badge to the
+     far edge of the card, away from the dates it qualifies. Same fix as
+     .research-result: pack the item to the start. */
+  justify-self: start;
   font-size: 0.6875rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -355,10 +360,10 @@
   position: relative;
   padding-left: 1.35rem;
   font-size: 0.975rem;
-  /* Centred text has no fixed left edge to return to, so a long measure
-     costs more here than it would left-aligned. */
+  /* The measure cap stays; the auto margins do not. They existed to hold a
+     centre axis, and on the left grid they float a short bullet list away
+     from the edge every other line in the card is aligned to. */
   max-width: 68ch;
-  margin-inline: auto;
 }
 
 .timeline-details li::before {
@@ -1849,4 +1854,53 @@
   .research-result { margin-top: 0.7rem; }
   .research-entry .research-result { padding-top: 0.6rem; }
   .research-list { gap: 0.75rem; }
+}
+
+/* -------------------- mobile: the experience timeline --------------------
+   Three roles and eight prose bullets, and almost all of the height is line
+   wrapping. The rail column and its gap take 38px out of a 358px measure —
+   better than a tenth of every line — so at this width the rail narrows to
+   the dot it actually draws, handing the text back the difference. */
+@media (max-width: 640px) {
+  .timeline { gap: 0.85rem; }
+  .timeline-item { grid-template-columns: 12px 1fr; gap: 0.6rem; }
+  .timeline-rail { padding-top: 1.7rem; }
+
+  .timeline-title { margin-top: 0.5rem; font-size: 1.02rem; }
+  .timeline-company { margin-top: 0.25rem; font-size: 0.9rem; }
+
+  .timeline-details { margin-top: 0.9rem; gap: 0.55rem; }
+  .timeline-details li { font-size: 0.9rem; padding-left: 1.05rem; }
+}
+
+/* ------------------ instrument rail: its own measure ------------------
+   The figures in the rail were written to be section-wide, so their
+   legends size themselves from viewport media queries — and the rail is
+   460px inside a 1440px viewport. The network legend was taking the
+   four-column layout meant for a full-width figure and clipping its last
+   layer. Inside the rail they answer to the rail's width instead. */
+@media (min-width: 1024px) {
+  .instrument-rail .net-legend {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .instrument-rail .net-layer {
+    border-bottom: 1px solid var(--line);
+    border-right: 0;
+  }
+
+  .instrument-rail .net-layer:nth-child(odd) {
+    border-right: 1px solid var(--line);
+  }
+
+  .instrument-rail .net-layer:nth-last-child(-n + 2) {
+    border-bottom: 0;
+  }
+
+  /* Three readouts at a 150px floor wrap mid-value in this width. One per
+     row keeps each label attached to the number it names. */
+  .instrument-rail .descent-readout {
+    grid-template-columns: 1fr;
+    gap: 0.35rem;
+  }
 }

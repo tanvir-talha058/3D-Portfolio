@@ -5,6 +5,7 @@ import { Canvas } from '@react-three/fiber';
 import { Scene as FieldScene } from '../Field';
 import { Scene as NetScene } from '../Net';
 import { Scene as DescentScene } from '../Descent';
+import { Scene as RagScene } from '../Rag';
 import { reportDescent } from './telemetry';
 import CameraRig from './CameraRig';
 import { STATIONS, MOUNT_WINDOW, MOUNT_WINDOW_MOBILE } from './stations';
@@ -74,6 +75,15 @@ export default function World({ reduced, quality, onFrame }: Props) {
       {near(2) ? (
         <group position={STATIONS[2].at} scale={STATIONS[2].scale}>
           <DescentScene report={reportDescent} reduced={reduced} />
+        </group>
+      ) : null}
+
+      {/* The retrieval stack is scenery here rather than a figure, so its
+          hover coupling is not wired up: there is nothing to hover behind a
+          scrim. Its stages are named in the caption beside it. */}
+      {near(3) ? (
+        <group position={STATIONS[3].at} scale={STATIONS[3].scale}>
+          <RagScene reduced={reduced} hovered={null} setHovered={() => {}} rig={false} />
         </group>
       ) : null}
     </Canvas>

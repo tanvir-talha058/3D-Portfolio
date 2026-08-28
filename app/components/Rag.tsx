@@ -402,14 +402,21 @@ function Rail({ vertical }: { vertical: boolean }) {
 
 /* -------------------------------- scene -------------------------------- */
 
-function Scene({
+/**
+ * Exported so the shared world can mount it as a station. `rig` is false
+ * there: in the world exactly one camera rig is in charge, and this scene
+ * would otherwise reset the camera to its own framing every frame.
+ */
+export function Scene({
   reduced,
   hovered,
   setHovered,
+  rig = true,
 }: {
   reduced: boolean;
   hovered: number | null;
   setHovered: (i: number | null) => void;
+  rig?: boolean;
 }) {
   const clock = useRef(0);
   const [, force] = useState(0);
@@ -423,6 +430,9 @@ function Scene({
     // The Html labels only need to follow the hover state, not every frame.
     frame.current += 1;
     if (frame.current % 30 === 0) force((n) => n + 1);
+
+    // In the world the camera belongs to the world's rig.
+    if (!rig) return;
 
     if (vertical) {
       // A tall stack fills a portrait frame: hold it centred and still.

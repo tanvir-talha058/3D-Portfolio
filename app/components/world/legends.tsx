@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import { netLayers } from '../../data';
+import { STAGES } from '../Rag';
 import { setDescentTargets } from './telemetry';
 
 /**
@@ -64,6 +65,21 @@ export function DescentReadout() {
         somewhere new, so which minimum it finds is decided before the first
         step — the reason a result has to be reproducible to count.
       </p>
+    </figcaption>
+  );
+}
+
+/** The five stages the retrieval station is showing. */
+export function RagLegend() {
+  return (
+    <figcaption className="rag-legend station-legend">
+      {STAGES.map((st, i) => (
+        <div key={st.key} className="rag-stage">
+          <span className="mono rag-stage-i">{String(i + 1).padStart(2, '0')}</span>
+          <span className="rag-stage-name">{st.label}</span>
+          <span className="rag-stage-note">{st.note}</span>
+        </div>
+      ))}
     </figcaption>
   );
 }

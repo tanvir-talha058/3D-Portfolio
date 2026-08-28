@@ -1,8 +1,7 @@
 'use client';
 
 import { useCallback, useState } from 'react';
-import { NetLegend, DescentReadout } from './components/world/legends';
-import RagMount from './components/RagMount';
+import { NetLegend, DescentReadout, RagLegend } from './components/world/legends';
 import AttentionMount from './components/AttentionMount';
 import { Topbar, Reveal, TiltCard, Lift, Sheet } from './components/ui';
 import { Split, Magnet, Count, Wipe } from './components/motion';
@@ -392,12 +391,11 @@ export default function Home() {
               </h2>
             </Reveal>
 
-            {/* The retrieval stack, rendered rather than described: the
-                shape most of this work shares, before the cases themselves.
-                Inline rather than in the rail — the wall below it needs the
-                full measure, so this section never narrows. */}
+            {/* The retrieval stack renders behind the page as a station in
+                the world — the shape most of this work shares. This names
+                its stages. */}
             <Reveal delay={140}>
-              <RagMount />
+              <RagLegend />
             </Reveal>
 
             <div className="work-grid">

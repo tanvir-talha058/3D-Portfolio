@@ -72,22 +72,17 @@ export const STATIONS: Station[] = [
     scale: 0.72,
   },
   {
-    id: 'attention',
-    anchor: 'research',
-    at: [2, -11, -56],
-    eye: [-0.6, -10.8, -44],
-    look: [0.2, -11, -56],
-    fov: 42,
-    scale: 0.72,
-  },
-  {
     /* The last frame is not a figure but a vantage: the camera climbs and
-       turns back so the whole path it just flew is visible at once. */
+       turns back so the whole path it just flew is visible at once.
+
+       Attention is deliberately not a station. It is an instrument with its
+       own controls — a token sentence you select heads against — and controls
+       belong in the reading column, not behind a scrim. */
     id: 'vantage',
     anchor: 'contact',
     at: [0, 0, 0],
-    eye: [-12, 6, -18],
-    look: [12, -5, -30],
+    eye: [-14, 7, -20],
+    look: [14, -6, -34],
     fov: 55,
     scale: 1,
   },

@@ -632,6 +632,12 @@
   grid-auto-flow: column;
   align-items: center;
   gap: 0.5rem;
+  /* This line is a grid item of the card, and a grid item is blockified —
+     the inline-grid above computes to plain grid, which then stretches to
+     the card's full width and lets its two auto columns split the slack,
+     stranding the marker a hundred pixels from its own text. Packing the
+     item to the start restores the shrink-wrap the inline was there for. */
+  justify-self: start;
 }
 
 /* A finished result gets a filled marker, an open one a hollow ring — the
@@ -1311,14 +1317,20 @@
 
 /* The token axis sits over the canvas rather than inside it: it has to be
    readable, selectable, and reachable by keyboard, which canvas text is not. */
+/* The token axis is a sentence — "[CLS] ami ki tomar account balance
+   dekhte pari ? [SEP]" — so the tokens are set as words that wrap, not as
+   a table of equal cells. Equal columns spaced "?" and "[CLS]" the same,
+   which broke the phrase into a scatter and left each token marooned in
+   the middle of its own cell. */
 .attn-tokens {
   margin: 0;
   padding: 0 0 0.85rem;
   border-bottom: 1px solid var(--line);
   list-style: none;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(64px, 1fr));
-  gap: 0.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 0.15rem;
 }
 
 .attn-token {
@@ -1789,4 +1801,52 @@
     outline: 2px solid var(--gold);
     outline-offset: 3px;
   }
+}
+
+/* ------------------- mobile: the stack + principles -------------------
+   Forty-eight tiles in a uniform grid, where the row is as tall as its
+   tallest label: "Human-Computer Interaction" wraps to three lines and
+   drags two single-word neighbours up to three lines with it. These are
+   labels of varying length, so on a phone they flow as content-sized
+   pills — the same treatment .chip-row already gets — and the wall packs
+   instead of ruling itself into columns. */
+@media (max-width: 640px) {
+  .tile-wall {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .tile {
+    place-items: center;
+    min-height: 0;
+    padding: 0.45rem 0.7rem;
+    font-size: 0.8125rem;
+    border-radius: 999px;
+  }
+
+  /* The lift-and-sweep is a pointer affordance; a wall of 48 pills on a
+     touch screen has no pointer to answer, and each one is a compositor
+     layer waiting for a hover that never comes. */
+  .tile { transform: none; }
+  .tile::after { display: none; }
+
+  /* Four principles, each a rule, a heading and two lines. The gaps
+     between them were sized for a wide column. */
+  .principles { gap: 1.15rem; }
+  .principle-note { margin-top: 0.3rem; }
+}
+
+/* -------------------- mobile: research ---------------------
+   The attention figure and four paper cards were 2,039px between them.
+   Nothing is dropped: the figure's frame comes in, and the cards use the
+   same tightened interior the work cards already got. */
+@media (max-width: 640px) {
+  .attn-canvas { height: 280px; }
+
+  .research-detail { margin-top: 0.6rem; font-size: 0.9rem; }
+  .research-title { margin-top: 0.35rem; }
+  .research-result { margin-top: 0.7rem; }
+  .research-entry .research-result { padding-top: 0.6rem; }
+  .research-list { gap: 0.75rem; }
 }

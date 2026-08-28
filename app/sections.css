@@ -23,10 +23,10 @@
 
 /* ------------------------------ headings ------------------------------ */
 
-/* Optical size, by tier. See .display in globals.css: the bigger the type,
-   the finer the cut it can carry on a dark ground. */
+/* Width, by tier. See .display in globals.css: the bigger the type, the
+   narrower the cut it can carry before the line sprawls. */
 .h2 {
-  --opsz: 44;
+  --wdth: 96;
   --wght: 700;
   font-size: clamp(2.15rem, 5vw, 3.9rem);
   line-height: 0.9;
@@ -124,10 +124,15 @@
   padding-block: 8rem 5rem;
 }
 
+/* The hero is the one block still set on a centre axis: it is a title card
+   floating over the WebGL field, where a shared left edge has nothing to
+   align to. Every other section hangs off the left grid. */
 .hero-inner {
   position: relative;
   z-index: 2;
   max-width: 780px;
+  margin-inline: auto;
+  text-align: center;
 }
 
 .hero-kicker {
@@ -183,13 +188,16 @@
 }
 
 .hero-title {
-  /* The finest cut on the page, at the heaviest weight: maximum distance
-     between hairline and stem. Leading is pulled under 1 so the three lines
-     lock into a single mass rather than reading as a stack of sentences. */
-  --opsz: 96;
+  /* The narrowest cut on the page, at the heaviest weight: three lines of
+     condensed grotesk stacked tight. Leading is pulled under 1 so they lock
+     into a single mass rather than reading as a stack of sentences. */
+  --wdth: 88;
   --wght: 800;
   font-size: clamp(2.9rem, 8.6vw, 6.8rem);
-  letter-spacing: -0.038em;
+  /* The width axis already does the tightening, so tracking stays close to
+     neutral — stacking a condensed cut and heavy negative tracking runs the
+     stems together at the mobile size. */
+  letter-spacing: -0.02em;
   line-height: 0.86;
   margin: 0;
 }
@@ -197,10 +205,9 @@
 /* The one place the ramp touches type — the payload word, nothing else. */
 .hero-title em {
   /* The italic is a separate drawing, not a slant — the one place the page
-     shows the display face's other voice. Held at the roman's weight: this
-     is the payload word, so it changes voice without losing volume. */
+     shows the display face's other voice. Weight and width are inherited from
+     the roman, so the payload word changes voice without losing volume. */
   font-style: italic;
-  font-weight: 800;
   background: linear-gradient(96deg, var(--r4) 0%, var(--r3) 48%, var(--r2) 100%);
   -webkit-background-clip: text;
   background-clip: text;
@@ -223,40 +230,6 @@
 
 @media (max-width: 560px) {
   .hero-actions { grid-auto-flow: row; justify-items: center; }
-}
-
-.scroll-cue {
-  position: absolute;
-  bottom: 1.75rem;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 2;
-  display: grid;
-  justify-items: center;
-  gap: 0.5rem;
-  font-size: 0.5625rem;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: var(--faint);
-}
-
-.scroll-line {
-  width: 1px;
-  height: 44px;
-  background: linear-gradient(180deg, var(--r3), transparent);
-}
-
-/* The heading sizes are fluid; `opsz` is not. On a narrow viewport the hero
-   falls to a third of its desktop size while still wearing the display cut,
-   and the hairlines go with it. Step the axis back down alongside the type
-   so every heading keeps roughly the same apparent stroke weight. */
-@media (max-width: 700px) {
-  .hero-title    { --opsz: 34; }
-  .h2,
-  .contact-title,
-  .sheet-title   { --opsz: 20; }
-  .edu-degree,
-  .work-title    { --opsz: 14; }
 }
 
 /* --------------------------------- about --------------------------------- */
@@ -553,7 +526,7 @@
   box-shadow: 0 0 10px -1px var(--dom, var(--r3));
 }
 
-.work-title { --opsz: 22; --wght: 700; font-size: clamp(1.55rem, 2.7vw, 2rem); margin: 0.7rem 0 0; }
+.work-title { --wdth: 104; --wght: 700; font-size: clamp(1.55rem, 2.7vw, 2rem); margin: 0.7rem 0 0; }
 .work-desc { margin: 1.1rem 0 0; font-size: 0.975rem; }
 
 .chip-row {
@@ -635,10 +608,10 @@
 }
 
 .research-title {
-  /* Smallest heading on the page, so the sturdiest cut — the text end of
-     the axis, where the hairlines are thickest. Held a step lighter than the
-     big headings: at this size 800 turns the counters into slits. */
-  --opsz: 12;
+  /* Smallest heading on the page, so the widest cut — the text end of the
+     axis, where the counters are most open. Held a step lighter than the big
+     headings: at this size 800 closes them up again. */
+  --wdth: 110;
   --wght: 600;
   font-size: clamp(1.35rem, 2.2vw, 1.6rem);
   margin: 0.5rem 0 0;
@@ -797,7 +770,7 @@
 .contact-card { padding: clamp(1.75rem, 5vw, 3.5rem); }
 
 .contact-title {
-  --opsz: 48;
+  --wdth: 94;
   --wght: 800;
   font-size: clamp(2.15rem, 5.4vw, 4.1rem);
   line-height: 0.88;
@@ -903,7 +876,7 @@
 }
 
 .sheet-close { padding: 0.5rem 1rem; font-size: 0.75rem; }
-.sheet-title { --opsz: 40; --wght: 700; font-size: clamp(2.1rem, 5vw, 3.2rem); margin: 1.5rem 0 0; }
+.sheet-title { --wdth: 98; --wght: 700; font-size: clamp(2.1rem, 5vw, 3.2rem); margin: 1.5rem 0 0; }
 .sheet-lede { margin: 1rem 0 0; font-size: 1.05rem; }
 
 .sheet-body {
@@ -1050,7 +1023,7 @@
 }
 
 .edu-degree {
-  --opsz: 26;
+  --wdth: 102;
   --wght: 700;
   font-size: clamp(1.6rem, 3.2vw, 2.35rem);
   margin: 1rem 0 0;
@@ -1562,7 +1535,7 @@
   grid-auto-flow: column;
   align-items: center;
   gap: 0.5rem;
-  font-family: var(--font-grotesk), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-text), ui-sans-serif, system-ui, sans-serif;
   font-size: 0.6875rem;
   font-weight: 500;
   letter-spacing: 0.02em;
@@ -1626,4 +1599,81 @@
   .timeline-card:hover {
     transform: none !important;
   }
+}
+
+/* ----------------------- narrow-viewport heading widths -----------------------
+   The heading sizes are fluid; `wdth` is not. On a narrow viewport every
+   heading falls to a fraction of its desktop size, so the axis steps down
+   alongside the type and each tier keeps roughly the same apparent width.
+   This lives at the end of the file on purpose: the per-tier widths are
+   declared throughout the sections above, and a same-specificity override
+   only wins if it comes last. */
+@media (max-width: 700px) {
+  .hero-title    { --wdth: 86; }
+  .h2,
+  .contact-title,
+  .sheet-title   { --wdth: 96; }
+  .edu-degree,
+  .work-title    { --wdth: 100; }
+}
+
+/* ------------------------- the instrument rail -------------------------
+   One pinned figure beside the middle of the page. The sections it spans
+   give up their right half so the rail has somewhere to sit; the rail is
+   fixed rather than sticky because it has to survive the section
+   boundaries it crosses, and a sticky element is released by its own
+   containing block at every one of them.
+
+   Below 1024px the component does not render at all (see InstrumentRail),
+   so none of this applies and the sections use their full width. */
+@media (min-width: 1024px) {
+  .instrument-rail {
+    position: fixed;
+    top: 50%;
+    right: max(calc((100vw - var(--shell)) / 2), var(--gutter));
+    z-index: 3;
+    width: min(38vw, 460px);
+    transform: translateY(-50%);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.6s var(--ease);
+  }
+
+  /* Only lit while one of the mapped sections owns the viewport. */
+  .instrument-rail[data-showing='true'] { opacity: 1; }
+
+  /* The figure inside is swapped outright on section change, so it fades
+     in from nothing rather than cross-dissolving into the previous one. */
+  .instrument-frame {
+    animation: instrument-in 0.55s var(--ease) both;
+  }
+
+  @keyframes instrument-in {
+    from { opacity: 0; transform: translateY(12px); }
+  }
+
+  /* The canvas is the rail's own business; its legend still needs to read
+     as text, so it keeps pointer events for selection. */
+  .instrument-rail figcaption { pointer-events: auto; }
+
+  /* Three expertise cards in a two-column track leave an orphan slot on the
+     second row. The last card takes the whole row instead, so the section
+     ends on a filled edge rather than a hole. */
+  #expertise .expertise-grid > *:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+
+  /* Only the sections the rail actually spans give up their right half.
+     The card walls keep their full measure — a grid squeezed to 58% width
+     reflows into more rows and ends up taller than it started. */
+  #expertise > .shell,
+  #experience > .shell,
+  #method > .shell {
+    padding-inline-end: min(42vw, 520px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .instrument-frame { animation: none; }
+  .instrument-rail { transition: none; }
 }

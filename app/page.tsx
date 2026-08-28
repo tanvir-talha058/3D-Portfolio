@@ -2,10 +2,9 @@
 
 import { useCallback, useState } from 'react';
 import FieldMount from './components/FieldMount';
-import NetMount from './components/NetMount';
-import AttentionMount from './components/AttentionMount';
-import DescentMount from './components/DescentMount';
+import InstrumentRail from './components/InstrumentRail';
 import RagMount from './components/RagMount';
+import AttentionMount from './components/AttentionMount';
 import { Topbar, Reveal, TiltCard, Lift, Sheet } from './components/ui';
 import { Split, Magnet, Count, Wipe } from './components/motion';
 import {
@@ -33,6 +32,7 @@ export default function Home() {
       <Topbar />
 
       <main id="top">
+        <InstrumentRail />
         {/* ------------------------------ hero ------------------------------ */}
         <section className="hero">
           <FieldMount />
@@ -97,15 +97,10 @@ export default function Home() {
               </div>
             </Reveal>
           </div>
-
-          <div className="scroll-cue mono" aria-hidden="true">
-            Scroll
-            <span className="scroll-line" />
-          </div>
         </section>
 
         {/* ------------------------------ about ------------------------------ */}
-        <section id="about" className="band">
+        <section id="about" className="band band--md">
           <div className="shell">
             <Reveal>
               <p className="eyebrow">About</p>
@@ -144,7 +139,7 @@ export default function Home() {
 
 
         {/* ---------------------------- education ---------------------------- */}
-        <section id="education" className="band">
+        <section id="education" className="band band--joined">
           <div className="shell">
             <Reveal>
               <p className="eyebrow">Education</p>
@@ -205,7 +200,7 @@ export default function Home() {
         </section>
 
         {/* ---------------------------- expertise ---------------------------- */}
-        <section id="expertise" className="band">
+        <section id="expertise" className="band band--md">
           <div className="shell">
             <Reveal>
               <p className="eyebrow">Expertise</p>
@@ -218,10 +213,6 @@ export default function Home() {
                 Signal in, decision out. What changes between a dialect classifier, a fraud
                 monitor, and a banking assistant is what fills each layer.
               </p>
-            </Reveal>
-
-            <Reveal delay={140}>
-              <NetMount />
             </Reveal>
 
             <div className="expertise-grid">
@@ -246,8 +237,57 @@ export default function Home() {
           </div>
         </section>
 
+        {/* ------------------------------ stack ------------------------------ */}
+        <section id="stack" className="band band--joined">
+          <div className="shell">
+            <Reveal>
+              <p className="eyebrow">Stack</p>
+            </Reveal>
+            <Reveal delay={80}>
+              <h2 className="display h2 band-title" aria-label="What I build with">
+                <Split text="What I build with" />
+              </h2>
+            </Reveal>
+
+            {/* A wall per group. Forty-eight tools read as inventory, not as
+                prose, so they get a grid of equal tiles — the group heading
+                carries the count and the tiles carry nothing but the name.
+                (Not a <dl>: the previous markup put Reveal's <div> directly
+                inside one, which is invalid, and the term/definition pairing
+                was never doing any work.) */}
+            <div className="stack-index">
+              {stackGroups.map((g, i) => (
+                <Reveal as="section" key={g.group} delay={i * 70} className="stack-group">
+                  <h3 className="mono stack-group-head">
+                    {g.group}
+                    <span className="stack-count">{g.items.length}</span>
+                  </h3>
+                  <ul className="tile-wall">
+                    {g.items.map((it) => (
+                      <li key={it} className="tile">
+                        {it}
+                      </li>
+                    ))}
+                  </ul>
+                </Reveal>
+              ))}
+            </div>
+
+            <Reveal delay={200}>
+              <div className="principles">
+                {principles.map((p) => (
+                  <div key={p.title} className="principle">
+                    <h3 className="principle-title">{p.title}</h3>
+                    <p className="prose principle-text">{p.text}</p>
+                  </div>
+                ))}
+              </div>
+            </Reveal>
+          </div>
+        </section>
+
         {/* --------------------------- experience --------------------------- */}
-        <section id="experience" className="band">
+        <section id="experience" className="band band--lg">
           <div className="shell">
             <Reveal>
               <p className="eyebrow">Experience</p>
@@ -290,7 +330,7 @@ export default function Home() {
         </section>
 
         {/* ----------------------------- method ----------------------------- */}
-        <section id="method" className="band">
+        <section id="method" className="band band--lg">
           <div className="shell">
             <Reveal>
               <p className="eyebrow">Method</p>
@@ -329,21 +369,12 @@ export default function Home() {
                 </div>
               </Reveal>
 
-              <Reveal delay={200}>
-                <div className="method-col">
-                  <h3 className="method-head">
-                    <span className="mono method-head-tag">Train</span>
-                    Descending the loss
-                  </h3>
-                  <DescentMount />
-                </div>
-              </Reveal>
             </div>
           </div>
         </section>
 
         {/* ------------------------------- work ------------------------------- */}
-        <section id="work" className="band">
+        <section id="work" className="band band--lg">
           <div className="shell">
             <Reveal>
               <p className="eyebrow">Selected work</p>
@@ -355,7 +386,9 @@ export default function Home() {
             </Reveal>
 
             {/* The retrieval stack, rendered rather than described: the
-                shape most of this work shares, before the cases themselves. */}
+                shape most of this work shares, before the cases themselves.
+                Inline rather than in the rail — the wall below it needs the
+                full measure, so this section never narrows. */}
             <Reveal delay={140}>
               <RagMount />
             </Reveal>
@@ -424,7 +457,7 @@ export default function Home() {
         </section>
 
         {/* ----------------------------- research ----------------------------- */}
-        <section id="research" className="band">
+        <section id="research" className="band band--joined">
           <div className="shell">
             <Reveal>
               <p className="eyebrow">Research</p>
@@ -467,54 +500,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ------------------------------ stack ------------------------------ */}
-        <section id="stack" className="band">
-          <div className="shell">
-            <Reveal>
-              <p className="eyebrow">Stack</p>
-            </Reveal>
-            <Reveal delay={80}>
-              <h2 className="display h2 band-title" aria-label="What I build with">
-                <Split text="What I build with" />
-              </h2>
-            </Reveal>
 
-            {/* A wall per group. Forty-eight tools read as inventory, not as
-                prose, so they get a grid of equal tiles — the group heading
-                carries the count and the tiles carry nothing but the name.
-                (Not a <dl>: the previous markup put Reveal's <div> directly
-                inside one, which is invalid, and the term/definition pairing
-                was never doing any work.) */}
-            <div className="stack-index">
-              {stackGroups.map((g, i) => (
-                <Reveal as="section" key={g.group} delay={i * 70} className="stack-group">
-                  <h3 className="mono stack-group-head">
-                    {g.group}
-                    <span className="stack-count">{g.items.length}</span>
-                  </h3>
-                  <ul className="tile-wall">
-                    {g.items.map((it) => (
-                      <li key={it} className="tile">
-                        {it}
-                      </li>
-                    ))}
-                  </ul>
-                </Reveal>
-              ))}
-            </div>
-
-            <Reveal delay={200}>
-              <div className="principles">
-                {principles.map((p) => (
-                  <div key={p.title} className="principle">
-                    <h3 className="principle-title">{p.title}</h3>
-                    <p className="prose principle-text">{p.text}</p>
-                  </div>
-                ))}
-              </div>
-            </Reveal>
-          </div>
-        </section>
 
         {/* ----------------------------- contact ----------------------------- */}
         <section id="contact" className="band band-contact">

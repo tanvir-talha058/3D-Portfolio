@@ -1,46 +1,44 @@
 import './globals.css';
 import './sections.css';
 import './motion.css';
-/* Loaded last: the centred-alignment layer overrides the section styles. */
-import './align.css';
 import type { Metadata, Viewport } from 'next';
 import { Cursor, HeroDepart, ScrollProgress, Specular } from './components/motion';
 import BootMount from './components/BootMount';
 import { site } from './data';
-import { Bodoni_Moda, Schibsted_Grotesk, Azeret_Mono } from 'next/font/google';
+import { Archivo, IBM_Plex_Sans, IBM_Plex_Mono } from 'next/font/google';
 
-/* Display: a didone. The page's whole idea is a dichroic ramp — light split
-   into a spectrum by a thick pane of glass — and a didone is that split in
-   letterform: hairline against stem, thin against thick. Its `opsz` axis is
-   driven per heading size in globals.css so hairlines stay visible on the
-   dark ground instead of thinning out of existence. Italic is loaded for the
-   one payload word in the hero. */
-const bodoni = Bodoni_Moda({
+/* Display: a grotesk cut for headlines, not a text face scaled up. Archivo
+   carries two axes — weight and width — and the page drives both: every
+   heading tier picks a width, so optical correction happens in the letterform
+   rather than in tracking. Set heavy and slightly condensed, it reads as
+   signage and instrument panel, which is the register an engineering
+   portfolio wants. Italic is a separate drawing, used on the one payload
+   word in the hero. */
+const display = Archivo({
   subsets: ['latin'],
   display: 'swap',
   style: ['normal', 'italic'],
-  axes: ['opsz'],
-  variable: '--font-bodoni',
-  /* Google ships no metric override table for this family, so Next cannot
-     size-adjust a fallback for it. Name the fallback explicitly rather than
-     let the build warn on every compile. */
-  adjustFontFallback: false,
-  fallback: ['Georgia', 'ui-serif', 'serif'],
+  axes: ['wdth'],
+  variable: '--font-display',
 });
 
-/* Reading + UI: a news grotesk with real aperture and a distinct lowercase,
-   built to stay legible at caption sizes. It carries the body copy the
-   display face is far too high-contrast to set. */
-const grotesk = Schibsted_Grotesk({
+/* Reading + UI: IBM Plex Sans. A humanist grotesk drawn for a technology
+   company, so it sits beside the mono as one designed system rather than two
+   borrowed families. Large apertures and a distinct lowercase keep it legible
+   at caption sizes on a dark ground. */
+const text = IBM_Plex_Sans({
   subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
   display: 'swap',
-  variable: '--font-grotesk',
+  variable: '--font-text',
 });
 
-/* Utility: every label, metric, and stack chip. Wide and squared-off, so
-   uppercase metadata reads as instrument panel rather than prose. */
-const mono = Azeret_Mono({
+/* Utility: every label, metric, and stack chip. Plex Mono is the sans's own
+   monospaced sibling — same skeleton, same terminals — so uppercase metadata
+   reads as instrumentation without changing voice. */
+const mono = IBM_Plex_Mono({
   subsets: ['latin'],
+  weight: ['400', '500', '600'],
   display: 'swap',
   variable: '--font-mono',
 });
@@ -79,7 +77,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${bodoni.variable} ${grotesk.variable} ${mono.variable}`}>
+    <html lang="en" className={`${display.variable} ${text.variable} ${mono.variable}`}>
       <body>
         <a href="#work" className="skip-link">
           Skip to work

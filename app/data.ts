@@ -30,7 +30,6 @@ export const nav = [
   { label: 'Expertise', href: '#expertise' },
   { label: 'Experience', href: '#experience' },
   { label: 'Work', href: '#work' },
-  { label: 'Research', href: '#research' },
   { label: 'Contact', href: '#contact' },
 ];
 

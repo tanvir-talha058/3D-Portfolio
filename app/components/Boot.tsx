@@ -14,7 +14,7 @@
  * skippable from the first frame.
  */
 
-import { useMemo, useRef, useCallback, useState } from 'react';
+import { useMemo, useRef, useCallback, useState, useEffect } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { RoundedBox, Environment, Lightformer, ContactShadows } from '@react-three/drei';
 import * as THREE from 'three';
@@ -102,8 +102,8 @@ function usePanelTexture() {
 }
 
 /* The canvas cannot hardcode a family name: next/font self-hosts each face
-   under a generated name, so `"Bodoni Moda"` would silently fall through to
-   the system serif. It reads the same custom properties the stylesheet does.
+   under a generated name, so `"Archivo"` would silently fall through to
+   the system sans. It reads the same custom properties the stylesheet does.
    Resolved once — the values never change after hydration. */
 let faces: { display: string; mono: string } | null = null;
 
@@ -112,7 +112,7 @@ function typeface(role: 'display' | 'mono') {
     const css = getComputedStyle(document.documentElement);
     const read = (v: string) => css.getPropertyValue(v).trim();
     faces = {
-      display: `${read('--font-bodoni') || 'Georgia'}, Georgia, ui-serif, serif`,
+      display: `${read('--font-display') || 'Arial'}, "Helvetica Neue", Arial, sans-serif`,
       mono: `${read('--font-mono') || 'Menlo'}, ui-monospace, Menlo, monospace`,
     };
   }
@@ -457,9 +457,26 @@ export default function Boot({ onDone }: { onDone: () => void }) {
 
   // Skipping jumps the clock rather than unmounting mid-frame, so the
   // white-out still plays and the handoff never flickers.
+  //
+  // The clock alone is not enough to guarantee an exit. It advances by
+  // `Math.min(delta, 0.05)` per frame, so its speed is tied to the frame
+  // rate: on a machine rendering below ~20fps the remaining white-out takes
+  // seconds of wall time, and until it lands the overlay is still on top
+  // intercepting every click on the page underneath. So the skip also arms
+  // a real-time deadline — whichever fires first, the intro is over.
+  const skipTimer = useRef<number | null>(null);
   const skip = useCallback(() => {
+    if (skipTimer.current !== null) return;
     if (clock.current < T.through - 0.35) clock.current = T.through - 0.35;
-  }, []);
+    skipTimer.current = window.setTimeout(finish, 700);
+  }, [finish]);
+
+  useEffect(
+    () => () => {
+      if (skipTimer.current !== null) window.clearTimeout(skipTimer.current);
+    },
+    [],
+  );
 
   return (
     <div className={`boot${gone ? ' boot--gone' : ''}`} onClick={skip}>

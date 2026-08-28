@@ -99,6 +99,12 @@
   --grid-card:   300px;
   --grid-tile:   140px;
 
+  /* Band rhythm, fluid. lg = major sections, md = supporting,
+     sm = a block continuing the one above it. */
+  --band-lg: clamp(3.5rem, 7vw, 6rem);
+  --band-md: clamp(2.5rem, 4.5vw, 4rem);
+  --band-sm: clamp(1.5rem, 2.5vw, 2.25rem);
+
   --shell:  1240px;
   --gutter: clamp(1.15rem, 4vw, 2.5rem);
 
@@ -119,7 +125,7 @@ body {
   min-height: 100vh;
   background: var(--void);
   color: var(--paper);
-  font-family: var(--font-grotesk), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-text), ui-sans-serif, system-ui, sans-serif;
   font-synthesis-weight: none;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -144,23 +150,21 @@ body {
 
 /* --------------------------- type roles --------------------------- */
 
-/* The display face is a didone, and `opsz` is the axis that decides how far
-   its hairlines are allowed to thin. On a near-black ground a thin hairline
-   does not read as delicate, it reads as broken — so optical size is driven
-   from the heading's own size rather than left on `auto`: the largest type
-   gets the finest cut, the smallest gets the sturdiest. Each heading class
-   sets --opsz; nothing else touches font-variation-settings. */
+/* The display face is a grotesk with a width axis, and `wdth` is what decides
+   how much horizontal room a heading takes for the same point size. It is
+   driven from the heading's own tier rather than left at 100: the largest type
+   is set condensed so a hero line reads as one mass instead of a sprawl, and
+   the smallest headings are set slightly expanded so their counters stay open
+   at text size. Each heading class sets --wdth and --wght; nothing else
+   touches font-variation-settings. */
 .display {
   text-wrap: balance;
-  font-family: var(--font-bodoni);
+  font-family: var(--font-display), "Helvetica Neue", Arial, sans-serif;
   font-optical-sizing: none;
-  font-variation-settings: 'opsz' var(--opsz, 28);
-  /* Poster weight. A didone's contrast is the point, and it widens as the
-     face gets heavier — the stems gain mass while the hairlines stay
-     hairlines. Set light it reads as elegant; set heavy it reads as loud,
-     which is what a hero is for. */
-  font-weight: var(--wght, 700);
-  letter-spacing: -0.022em;
+  font-variation-settings: 'wght' var(--wght, 700), 'wdth' var(--wdth, 100);
+  /* Variation settings own the weight; font-weight would fight them. */
+  font-weight: 400;
+  letter-spacing: -0.018em;
   line-height: 0.94;
 }
 
@@ -189,12 +193,12 @@ body {
   background: linear-gradient(90deg, var(--line-strong), transparent);
 }
 
-/* The reading voice. Deliberately not the display face: a didone at 17px on
-   a dark ground is a stress test, not a paragraph. This is the grotesk, set
-   a touch larger and looser than the UI default so long copy has air. */
+/* The reading voice. Deliberately not the display face: the poster grotesk
+   is drawn for headlines and turns dense at paragraph size. This is Plex Sans,
+   set a touch larger and looser than the UI default so long copy has air. */
 .prose {
   text-wrap: pretty;
-  font-family: var(--font-grotesk), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-text), ui-sans-serif, system-ui, sans-serif;
   font-weight: 400;
   font-size: 1.0625rem;
   line-height: 1.68;
@@ -211,10 +215,27 @@ body {
   padding-inline: var(--gutter);
 }
 
-/* Single owner of vertical section rhythm — no competing selectors. */
+/* ---------------------------------------------------------------
+   Band rhythm. Spacing is hierarchy, not a constant: a major section
+   gets air, a supporting one gets less, and a block that continues
+   the one above it gets almost none so the two read as a single
+   unit. Every section picks one of these three; nothing sets its own
+   padding-block.
+   --------------------------------------------------------------- */
 .band {
-  padding-block: clamp(4.5rem, 10vw, 8.5rem);
+  --band-pad: var(--band-md);
+  padding-block: var(--band-pad);
   position: relative;
+}
+
+.band--lg { --band-pad: var(--band-lg); }
+.band--sm { --band-pad: var(--band-sm); }
+
+/* A block that belongs to the section above it: no top padding at all,
+   so the pair reads as one continuous idea. */
+.band--joined {
+  --band-pad: var(--band-sm);
+  padding-block-start: 0;
 }
 
 .rule {

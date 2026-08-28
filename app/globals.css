@@ -712,12 +712,14 @@ body {
   inset: 0;
 }
 
-/* Everything the reader reads sits above the world. */
+/* Everything the reader reads sits above the world. The topbar is not
+   listed here on purpose: it is already fixed at z-index 70, and naming it
+   in this rule overrode both — the header stopped being fixed and the hero
+   began swallowing clicks meant for the mobile menu. The footer sits inside
+   main and is lifted with it. */
 body > .aurora { z-index: 0; }
 
-main,
-.topbar,
-.footer {
+main {
   position: relative;
   z-index: 1;
 }

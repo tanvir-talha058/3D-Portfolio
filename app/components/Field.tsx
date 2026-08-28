@@ -350,7 +350,13 @@ function Rig({ reduced, hot, offsetX }: { reduced: boolean; hot: number; offsetX
 
 /* ------------------------------- scene -------------------------------- */
 
-function Scene({ reduced }: { reduced: boolean }) {
+/**
+ * The field itself. Exported so it can be mounted as a station inside the
+ * shared world canvas, where one rig owns the camera — `rig` is false there,
+ * and the internal Rig is skipped rather than fighting the world's camera
+ * for control of the same object.
+ */
+export function Scene({ reduced, rig = true }: { reduced: boolean; rig?: boolean }) {
   const [hot, setHot] = useState(-1);
   const group = useRef<THREE.Group>(null);
   const width = useThree((s) => s.size.width);
@@ -409,7 +415,7 @@ function Scene({ reduced }: { reduced: boolean }) {
 
       </group>
 
-      <Rig reduced={reduced} hot={hot} offsetX={offsetX} />
+      {rig ? <Rig reduced={reduced} hot={hot} offsetX={offsetX} /> : null}
     </>
   );
 }

@@ -4,6 +4,7 @@ import './motion.css';
 import type { Metadata, Viewport } from 'next';
 import { Cursor, HeroDepart, ScrollProgress, Specular } from './components/motion';
 import BootMount from './components/BootMount';
+import WorldMount from './components/world/WorldMount';
 import { site } from './data';
 import { Archivo, IBM_Plex_Sans, IBM_Plex_Mono } from 'next/font/google';
 
@@ -87,6 +88,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <span />
           <span />
         </div>
+        <WorldMount />
         <BootMount />
         <ScrollProgress />
         <HeroDepart />

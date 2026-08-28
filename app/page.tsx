@@ -1,7 +1,6 @@
 'use client';
 
 import { useCallback, useState } from 'react';
-import FieldMount from './components/FieldMount';
 import InstrumentRail from './components/InstrumentRail';
 import RagMount from './components/RagMount';
 import AttentionMount from './components/AttentionMount';
@@ -35,7 +34,6 @@ export default function Home() {
         <InstrumentRail />
         {/* ------------------------------ hero ------------------------------ */}
         <section className="hero">
-          <FieldMount />
           <div className="field-veil" />
 
           <div className="shell hero-inner">

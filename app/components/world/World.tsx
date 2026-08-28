@@ -3,6 +3,9 @@
 import { useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { Scene as FieldScene } from '../Field';
+import { Scene as NetScene } from '../Net';
+import { Scene as DescentScene } from '../Descent';
+import { reportDescent } from './telemetry';
 import CameraRig from './CameraRig';
 import { STATIONS, MOUNT_WINDOW, MOUNT_WINDOW_MOBILE } from './stations';
 
@@ -23,9 +26,12 @@ import { STATIONS, MOUNT_WINDOW, MOUNT_WINDOW_MOBILE } from './stations';
 type Props = {
   reduced: boolean;
   quality: 'high' | 'low';
+  /** Names the station in frame, so the scrim outside the canvas can change
+      with it — the hero needs a different veil from the reading sections. */
+  onFrame: (id: string) => void;
 };
 
-export default function World({ reduced, quality }: Props) {
+export default function World({ reduced, quality, onFrame }: Props) {
   const [station, setStation] = useState(0);
   const low = quality === 'low';
   const windowSize = low ? MOUNT_WINDOW_MOBILE : MOUNT_WINDOW;
@@ -45,11 +51,29 @@ export default function World({ reduced, quality }: Props) {
          hero's domain anchors — take pointer events back. */
       style={{ pointerEvents: 'none' }}
     >
-      <CameraRig reduced={reduced} onStation={setStation} />
+      <CameraRig
+        reduced={reduced}
+        onStation={(i) => {
+          setStation(i);
+          onFrame(STATIONS[i].id);
+        }}
+      />
 
       {near(0) ? (
-        <group position={STATIONS[0].at}>
+        <group position={STATIONS[0].at} scale={STATIONS[0].scale}>
           <FieldScene reduced={reduced} rig={false} />
+        </group>
+      ) : null}
+
+      {near(1) ? (
+        <group position={STATIONS[1].at} scale={STATIONS[1].scale}>
+          <NetScene reduced={reduced} />
+        </group>
+      ) : null}
+
+      {near(2) ? (
+        <group position={STATIONS[2].at} scale={STATIONS[2].scale}>
+          <DescentScene report={reportDescent} reduced={reduced} />
         </group>
       ) : null}
     </Canvas>

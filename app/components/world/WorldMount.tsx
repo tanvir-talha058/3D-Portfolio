@@ -42,6 +42,7 @@ export default function WorldMount() {
   const [supported, setSupported] = useState(true);
   const [reduced, setReduced] = useState(false);
   const [quality, setQuality] = useState<'high' | 'low'>('high');
+  const [frame, setFrame] = useState('field');
 
   useEffect(() => {
     setSupported(detectWebGL());
@@ -62,8 +63,12 @@ export default function WorldMount() {
   }, []);
 
   return (
-    <div className="world" aria-hidden="true">
-      {ready && supported ? <World reduced={reduced} quality={quality} /> : <Fallback />}
+    <div className="world" data-frame={frame} aria-hidden="true">
+      {ready && supported ? (
+        <World reduced={reduced} quality={quality} onFrame={setFrame} />
+      ) : (
+        <Fallback />
+      )}
     </div>
   );
 }

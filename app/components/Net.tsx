@@ -179,7 +179,8 @@ function Nodes({ wave }: { wave: React.MutableRefObject<number> }) {
 
 /* -------------------------------- scene -------------------------------- */
 
-function Scene({ reduced }: { reduced: boolean }) {
+/** Exported so the shared world can mount it as a station. */
+export function Scene({ reduced }: { reduced: boolean }) {
   const wave = useRef(reduced ? 0.5 : 0);
   const group = useRef<THREE.Group>(null);
   const { pointer, size } = useThree();

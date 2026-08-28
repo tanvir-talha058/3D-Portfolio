@@ -673,6 +673,40 @@ body {
 
 .world canvas { display: block; }
 
+/* The scrim. This is what keeps the world a room rather than a pattern
+   printed behind the paragraphs: it sits between the canvas and the page,
+   heaviest down the reading column on the left where the text actually is,
+   and thinnest on the right where the stations are framed. Without it the
+   loss surface and the network render straight through the copy. */
+.world::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      100deg,
+      rgba(5, 6, 13, 0.95) 0%,
+      rgba(5, 6, 13, 0.9) 34%,
+      rgba(5, 6, 13, 0.66) 58%,
+      rgba(5, 6, 13, 0.5) 100%
+    );
+}
+
+/* The hero is the one screen with no reading column beside the world — the
+   copy is centred over it — so its veil is radial and the scrim steps
+   aside for it. */
+.world[data-frame='field']::after {
+  background:
+    radial-gradient(
+      62% 58% at 50% 48%,
+      rgba(5, 6, 13, 0.88),
+      rgba(5, 6, 13, 0.66) 56%,
+      rgba(5, 6, 13, 0.34) 78%,
+      rgba(5, 6, 13, 0.22) 100%
+    );
+}
+
 .world-fallback {
   position: absolute;
   inset: 0;

@@ -243,7 +243,8 @@ function Runner({
 
 /* ------------------------------- scene -------------------------------- */
 
-function Scene({
+/** Exported so the shared world can mount it as a station. */
+export function Scene({
   report,
   reduced,
 }: {

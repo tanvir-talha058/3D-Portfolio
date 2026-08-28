@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useState } from 'react';
-import InstrumentRail from './components/InstrumentRail';
+import { NetLegend, DescentReadout } from './components/world/legends';
 import RagMount from './components/RagMount';
 import AttentionMount from './components/AttentionMount';
 import { Topbar, Reveal, TiltCard, Lift, Sheet } from './components/ui';
@@ -31,7 +31,6 @@ export default function Home() {
       <Topbar />
 
       <main id="top">
-        <InstrumentRail />
         {/* ------------------------------ hero ------------------------------ */}
         <section className="hero">
           <div className="field-veil" />
@@ -213,6 +212,12 @@ export default function Home() {
               </p>
             </Reveal>
 
+            {/* The network itself renders behind the page as a station in the
+                world; this is what it is showing. */}
+            <Reveal delay={140}>
+              <NetLegend />
+            </Reveal>
+
             <div className="expertise-grid">
               {expertise.map((e, i) => (
                 <Reveal key={e.area} delay={i * 90}>
@@ -366,8 +371,12 @@ export default function Home() {
                   </ol>
                 </div>
               </Reveal>
-
             </div>
+
+            {/* Live step and loss from the descent station behind the page. */}
+            <Reveal delay={200}>
+              <DescentReadout />
+            </Reveal>
           </div>
         </section>
 

@@ -27,7 +27,6 @@ function detectWebGL(): boolean {
 function Fallback() {
   return (
     <div className="field" aria-hidden="true">
-      <div className="fallback-core" />
       <div className="fallback-ring fallback-ring--a" />
       <div className="fallback-ring fallback-ring--b" />
     </div>

@@ -14,7 +14,7 @@
 
 import { useMemo, useRef, useState, useCallback } from 'react';
 import { Canvas, useFrame, useThree, extend, type ThreeEvent } from '@react-three/fiber';
-import { Html, Environment, Lightformer, MeshTransmissionMaterial } from '@react-three/drei';
+import { Html, Environment, Lightformer } from '@react-three/drei';
 import * as THREE from 'three';
 import { domains } from '../data';
 
@@ -231,79 +231,6 @@ function Points({ hot, reduced }: { hot: number; reduced: boolean }) {
   );
 }
 
-/**
- * The glass core. MeshTransmissionMaterial does real refraction, so the
- * point field genuinely bends through it rather than being faked with alpha.
- */
-function GlassCore({ quality, at }: { quality: 'high' | 'low'; at: [number, number, number] }) {
-  const ref = useRef<THREE.Group>(null);
-  const edges = useMemo(() => new THREE.IcosahedronGeometry(1, 0), []);
-
-  useFrame((state, delta) => {
-    if (!ref.current) return;
-    ref.current.rotation.y += delta * 0.14;
-    ref.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.2) * 0.16;
-  });
-
-  return (
-    // Nudged clear of the copy column: at the widest layout the core would
-    // otherwise sit on the last word of the headline.
-    <group ref={ref} scale={0.74} position={at}>
-      {/* Faceted, not smooth. A subdivided sphere needs a bright environment
-          to read as glass at all; twenty flat faces each catch their own
-          highlight, so the core still reads as a cut lens on a near-black
-          page — and a crystal over an embedding space is the more honest
-          object anyway. */}
-      <mesh>
-        <icosahedronGeometry args={[1, 0]} />
-        {quality === 'high' ? (
-        <MeshTransmissionMaterial
-          samples={8}
-          resolution={320}
-          transmission={1}
-          /* Thin and lightly aberrated. The heavier settings read as a smoked
-             marble against a near-black page rather than as glass, and they
-             muddy the very field the core is supposed to be bending. */
-          thickness={0.34}
-          roughness={0.04}
-          ior={1.36}
-          chromaticAberration={0.06}
-          /* No distortion terms. Through a sphere they smear the refracted
-             lightformers into horizontal bands, which reads as a rendering
-             artefact rather than as glass. */
-          anisotropy={0}
-          distortion={0}
-          distortionScale={0}
-          temporalDistortion={0}
-          clearcoat={1}
-          clearcoatRoughness={0.03}
-          attenuationDistance={2.2}
-          attenuationColor="#e6f6ff"
-          color="#ffffff"
-        />
-        ) : (
-          <meshPhysicalMaterial
-            transmission={0.92}
-            thickness={0.6}
-            roughness={0.12}
-            ior={1.4}
-            flatShading
-            clearcoat={1}
-            transparent
-          />
-        )}
-      </mesh>
-
-      {/* The cut lines. They give the facets an edge to read against when
-          the refraction behind them is dark. */}
-      <lineSegments>
-        <edgesGeometry args={[edges]} />
-        <lineBasicMaterial color="#9df3e2" transparent opacity={0.28} toneMapped={false} />
-      </lineSegments>
-    </group>
-  );
-}
-
 function Anchor({
   index,
   hot,
@@ -423,7 +350,7 @@ function Rig({ reduced, hot, offsetX }: { reduced: boolean; hot: number; offsetX
 
 /* ------------------------------- scene -------------------------------- */
 
-function Scene({ reduced, quality }: { reduced: boolean; quality: 'high' | 'low' }) {
+function Scene({ reduced }: { reduced: boolean }) {
   const [hot, setHot] = useState(-1);
   const group = useRef<THREE.Group>(null);
   const width = useThree((s) => s.size.width);
@@ -432,12 +359,6 @@ function Scene({ reduced, quality }: { reduced: boolean; quality: 'high' | 'low'
   // centred text reads as a mistake rather than as a second column.
   const offsetX = 0;
   const scale = width >= 860 ? 1 : 0.82;
-
-  // The refractive solid muddies whatever it sits behind, and centred copy
-  // owns the middle. Wide layouts have margins, so it sits in the right one;
-  // narrow layouts have none, so it drops below the text instead.
-  const corePos: [number, number, number] =
-    width >= 1180 ? [3.1, -1.5, 0] : width >= 860 ? [2.4, -1.8, 0] : [0.55, -2.5, 0];
 
   // Half-width of the copy column in NDC: a label is legible once its node
   // has orbited outside that, on either side.
@@ -459,9 +380,9 @@ function Scene({ reduced, quality }: { reduced: boolean; quality: 'high' | 'low'
 
   return (
     <>
-      {/* Few, very large, and deliberately low resolution. Flat facets each
-          refract the whole environment, so small bright panels arrive as
-          hard-edged bars — a broad soft field is what reads as glass. */}
+      {/* Few, very large, and deliberately low resolution. The anchor nodes
+          are standard-material solids, so they sample this for their
+          reflections; without it they render flat against the field. */}
       <Environment resolution={64}>
         <Lightformer intensity={3.4} position={[0, 6, 4]} scale={[22, 12, 1]} color="#eaf3ff" />
         <Lightformer intensity={2.2} position={[-8, -1, 3]} scale={[14, 16, 1]} color="#9db4ff" />
@@ -486,7 +407,6 @@ function Scene({ reduced, quality }: { reduced: boolean; quality: 'high' | 'low'
           ))}
           </group>
 
-        <GlassCore quality={quality} at={corePos} />
       </group>
 
       <Rig reduced={reduced} hot={hot} offsetX={offsetX} />
@@ -516,7 +436,7 @@ export default function Field({
       // the anchors, which re-enable pointer events themselves.
       style={{ pointerEvents: 'auto' }}
     >
-      <Scene reduced={reduced} quality={quality} />
+      <Scene reduced={reduced} />
     </Canvas>
   );
 }

@@ -606,22 +606,6 @@ body {
    clickable because the host itself is inert. */
 .field-host canvas { pointer-events: auto; }
 
-/* No-WebGL / pre-hydration stand-in. Same ramp, no GPU. */
-.fallback-core {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: min(46vmin, 320px);
-  aspect-ratio: 1;
-  transform: translate(-50%, -50%);
-  border-radius: 50%;
-  background:
-    radial-gradient(circle at 34% 30%, rgba(255,255,255,0.55), transparent 42%),
-    conic-gradient(from 210deg, var(--r0), var(--r1), var(--r2), var(--r3), var(--r4), var(--r0));
-  filter: blur(2px);
-  opacity: 0.6;
-}
-
 .fallback-ring {
   position: absolute;
   left: 50%;

@@ -61,9 +61,65 @@ for (const file of FILES) {
   });
 }
 
+/* ------------------------------------------------------------------
+   Second invariant: the tier map the shader reads must list exactly
+   the selectors the stylesheets style, at the same tier.
+
+   The refraction layer finds panes with querySelectorAll over a map in
+   recipes.ts. That map is a second copy of a fact the CSS already
+   states, and a second copy that nobody checks is a second copy that
+   goes stale. So we check it: a pane styled as tier 2 that the map
+   calls tier 3 would refract at the wrong thickness, and a recipe
+   missing from the map would not refract at all, silently.
+   ------------------------------------------------------------------ */
+
+const RECIPE_FILE = 'app/components/world/glass/recipes.ts';
+
+/** Selector -> tier, as the stylesheets declare it. */
+const fromCss = new Map();
+
+for (const file of FILES) {
+  const lines = strip(readFileSync(file, 'utf8')).split('\n');
+  let selector = '';
+  lines.forEach((line) => {
+    const open = line.match(/^([^{}]+)\{\s*$/);
+    if (open) selector = open[1].trim();
+    const m = line.match(/--lens-([123])-blur/);
+    // :root declares the tokens; it is not a pane.
+    if (m && !selector.startsWith(':root') && !/^\s*--lens/.test(line)) {
+      fromCss.set(selector, Number(m[1]));
+    }
+  });
+}
+
+/** Selector -> tier, as recipes.ts declares it. Read with a regex rather
+    than an import: this is a plain Node script and recipes.ts is TS. */
+const fromMap = new Map();
+const src = readFileSync(RECIPE_FILE, 'utf8');
+const body = src.slice(src.indexOf('RECIPES'));
+for (const m of body.matchAll(/'([.#][\w-]+)'\s*:\s*([123])/g)) {
+  fromMap.set(m[1], Number(m[2]));
+}
+
+for (const [sel, tier] of fromCss) {
+  if (!fromMap.has(sel)) {
+    problems.push(RECIPE_FILE + '\n    missing recipe: ' + sel + ' is tier ' + tier + ' in CSS');
+  } else if (fromMap.get(sel) !== tier) {
+    problems.push(
+      RECIPE_FILE + '\n    tier mismatch: ' + sel +
+      ' is ' + tier + ' in CSS, ' + fromMap.get(sel) + ' in the map'
+    );
+  }
+}
+for (const [sel] of fromMap) {
+  if (!fromCss.has(sel)) {
+    problems.push(RECIPE_FILE + '\n    stale recipe: ' + sel + ' is in the map but styles no glass');
+  }
+}
+
 if (problems.length) {
-  console.error('check:glass found ' + problems.length + ' raw glass values\n');
+  console.error('check:glass found ' + problems.length + ' problems\n');
   console.error(problems.join('\n'));
   process.exit(1);
 }
-console.log('check:glass: every glass surface reads its tier tokens');
+console.log('check:glass: tokens honoured, recipe map matches the stylesheets');

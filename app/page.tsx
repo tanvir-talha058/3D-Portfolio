@@ -265,8 +265,14 @@ export default function Home() {
                     <span className="stack-count">{g.items.length}</span>
                   </h3>
                   <ul className="tile-wall">
-                    {g.items.map((it) => (
-                      <li key={it} className="tile">
+                    {g.items.map((it, n) => (
+                      <li
+                        key={it}
+                        className="tile"
+                        /* Position in the wall, so the tiles arrive in
+                           reading order instead of all at once. */
+                        style={{ '--i': n } as React.CSSProperties}
+                      >
                         {it}
                       </li>
                     ))}

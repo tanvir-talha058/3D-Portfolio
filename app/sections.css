@@ -690,10 +690,22 @@
   gap: clamp(1.5rem, 3vw, 2.25rem);
 }
 
+/* Each group takes a place on the same dichroic ramp the camera stations
+   travel, in the order the groups are read. The colour is not decoration:
+   it says which family a tool belongs to, so a tile is identifiable as an
+   AI/ML tool from across the wall without reading it. Foundations sit at
+   the cold, deep end and the abstractions at the hot end, which is the
+   direction the ramp already means everywhere else on the page. */
 .stack-group {
   display: grid;
   gap: 1rem;
+  --tone: var(--r3);
 }
+
+.stack-index > .stack-group:nth-child(1) { --tone: var(--r1); }
+.stack-index > .stack-group:nth-child(2) { --tone: var(--r2); }
+.stack-index > .stack-group:nth-child(3) { --tone: var(--r3); }
+.stack-index > .stack-group:nth-child(4) { --tone: var(--r4); }
 
 /* ---------------------------- tile wall ----------------------------- */
 
@@ -723,7 +735,10 @@
   letter-spacing: -0.005em;
   color: #c2cae0;
   background: linear-gradient(160deg, var(--lens-1-fill-a), var(--lens-1-fill-b));
-  border: 1px solid rgba(190, 215, 255, 0.12);
+  /* A trace of the group's tone at rest, its full strength on hover. At
+     rest it has to stay a hairline: forty-eight saturated outlines would
+     be a colour chart, not a wall. */
+  border: 1px solid color-mix(in oklab, var(--tone, #bed7ff), transparent 86%);
   box-shadow:
     inset 0 1px 0 0 var(--lens-1-spec),
     inset 1px 0 0 0 var(--lens-1-edge-hi),
@@ -750,7 +765,7 @@
   background: linear-gradient(
     115deg,
     transparent 30%,
-    var(--lens-sheen) 48%,
+    color-mix(in oklab, var(--tone, #ffffff) 45%, var(--lens-sheen)) 48%,
     transparent 66%
   );
   transform: translateX(-120%);
@@ -760,10 +775,14 @@
 
 .tile:hover {
   color: var(--paper);
-  background: var(--lens-1-fill-on);
-  border-color: var(--lens-1-edge-on);
+  background: color-mix(in oklab, var(--tone) 14%, var(--lens-1-fill-on));
+  border-color: color-mix(in oklab, var(--tone), transparent 40%);
   transform: perspective(500px) translateZ(18px) rotateX(-7deg);
-  box-shadow: 0 14px 30px -14px rgba(0, 0, 0, 0.9),
+  /* The lift throws the tone onto the wall behind the tile, the way a lit
+     pane spills colour onto what it sits on. */
+  box-shadow:
+    0 14px 30px -14px rgba(0, 0, 0, 0.9),
+    0 10px 26px -16px color-mix(in oklab, var(--tone), transparent 30%),
     inset 0 1px 0 var(--lens-1-spec-on);
 }
 
@@ -1303,8 +1322,9 @@
 
 .stack-count {
   font-size: 0.5625rem;
-  color: var(--r3);
-  border: 1px solid var(--line);
+  color: var(--tone);
+  border: 1px solid color-mix(in oklab, var(--tone), transparent 72%);
+  background: color-mix(in oklab, var(--tone), transparent 92%);
   border-radius: 999px;
   padding: 0.1rem 0.42rem;
   font-variant-numeric: tabular-nums;

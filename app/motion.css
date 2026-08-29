@@ -467,3 +467,41 @@ html.booting body {
     opacity: 1;
   }
 }
+
+
+/* --------------------------- stack wall entry --------------------------- */
+
+/* The wall assembles in reading order rather than appearing whole. --i is
+   the tile's index, set on the element; the delay is capped so a group of
+   fourteen does not take three seconds to finish arriving.
+
+   Reveal already staggers the four groups against each other, so this is
+   the second beat of the same gesture, not a competing one. */
+.tile-wall .tile {
+  opacity: 0;
+  animation: tile-in 0.5s var(--ease) forwards;
+  animation-delay: calc(min(var(--i, 0) * 28ms, 400ms));
+}
+
+/* translate, not transform. An animation with fill-mode forwards outranks a
+   regular declaration, so animating transform here would pin the tile at its
+   final frame and .tile:hover's lift would never apply. The independent
+   translate property leaves transform free for the hover to own. */
+@keyframes tile-in {
+  from {
+    opacity: 0;
+    translate: 0 8px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+/* Reduced motion gets the wall, just not the assembling. */
+@media (prefers-reduced-motion: reduce) {
+  .tile-wall .tile {
+    opacity: 1;
+    animation: none;
+  }
+}

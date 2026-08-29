@@ -17,7 +17,11 @@ const FILES = ['app/globals.css', 'app/sections.css', 'app/motion.css'];
    and .mobile-nav is opaque on purpose (sections.css documents why). */
 const EXEMPT = ['cursor-ring', 'sheet-backdrop', 'mobile-nav'];
 
-const strip = (s) => s.replace(/\/\*[\s\S]*?\*\//g, '');
+/* Blank the comments out rather than deleting them. Deleting shifts every
+   line after a block comment, and this file's whole job is to report a line
+   number you can jump to. */
+const strip = (s) =>
+  s.replace(/\/\*[\s\S]*?\*\//g, (m) => m.replace(/[^\n]/g, ' '));
 
 const problems = [];
 
@@ -39,13 +43,18 @@ for (const file of FILES) {
     /* Any white on a pane, wherever it appears. Checking whole declarations
        is not enough: a multi-line box-shadow puts each inset on its own
        line, and the first version of this guard let every one of them
-       through. A custom property is the one exemption — that is where the
-       literals are supposed to live — as is background-image, which carries
-       the pointer highlight and is driven by --lit rather than by a tier. */
+       through.
+
+       Three exemptions. A custom property is where the literals are
+       supposed to live. background-image carries the pointer highlight,
+       which layers over a tier rather than being one. And anything driven
+       by --lit is that same highlight: its alpha is a function of how close
+       the pointer is, so it cannot be a fixed token. */
     if (
       /rgba\(\s*255,\s*255,\s*255/.test(line) &&
       !/^\s*--/.test(line) &&
-      !/background-image/.test(line)
+      !/background-image/.test(line) &&
+      !/var\(--lit/.test(line)
     ) {
       problems.push(at + '\n    raw glass value: ' + line.trim());
     }

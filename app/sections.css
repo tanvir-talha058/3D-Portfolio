@@ -51,7 +51,7 @@
   height: 22px;
   border-radius: var(--r-xs);
   background: conic-gradient(from 200deg, var(--r0), var(--r1), var(--r2), var(--r3), var(--r4), var(--r0));
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6), 0 0 14px -2px var(--r3);
+  box-shadow: inset 0 1px 0 var(--lens-3-spec-on), 0 0 14px -2px var(--r3);
 }
 
 .brand-name {
@@ -437,17 +437,22 @@
   align-items: baseline;
   gap: 0.75rem;
   padding: 0.8rem 1rem 0.85rem;
-  background: rgba(255, 255, 255, 0.035);
-  backdrop-filter: blur(18px) saturate(160%);
-  -webkit-backdrop-filter: blur(18px) saturate(160%);
-  border: 1px solid rgba(255, 255, 255, 0.11);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.26);
+  background: linear-gradient(160deg, var(--lens-1-fill-a), var(--lens-1-fill-b));
+  backdrop-filter: blur(var(--lens-1-blur)) saturate(var(--lens-1-sat));
+  -webkit-backdrop-filter: blur(var(--lens-1-blur)) saturate(var(--lens-1-sat));
+  border: 1px solid var(--lens-1-edge);
+  box-shadow:
+    var(--lens-1-shadow),
+    inset 0 1px 0 0 var(--lens-1-spec),
+    inset 1px 0 0 0 var(--lens-1-edge-hi),
+    inset -1px 0 0 0 var(--lens-1-edge-lo),
+    inset 0 -1px 0 0 var(--lens-1-edge-lo);
   transition: transform 0.4s var(--ease), border-color 0.4s var(--ease);
 }
 
 .pipeline-step:hover {
   transform: translateY(-3px);
-  border-color: rgba(255, 255, 255, 0.24);
+  border-color: var(--lens-1-edge-on);
 }
 
 .pipeline-index {
@@ -599,9 +604,16 @@
   gap: 0.5rem;
   padding: clamp(1.35rem, 2.5vw, 1.75rem);
   border-radius: var(--r-lg);
-  background: linear-gradient(160deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.012));
-  border: 1px solid var(--glass-edge);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28), 0 20px 60px -34px rgba(0, 0, 0, 0.9);
+  background: linear-gradient(160deg, var(--lens-2-fill-a), var(--lens-2-fill-b));
+  backdrop-filter: blur(var(--lens-2-blur)) saturate(var(--lens-2-sat));
+  -webkit-backdrop-filter: blur(var(--lens-2-blur)) saturate(var(--lens-2-sat));
+  border: 1px solid var(--lens-2-edge);
+  box-shadow:
+    var(--lens-2-shadow),
+    inset 0 1px 0 0 var(--lens-2-spec),
+    inset 1px 0 0 0 var(--lens-2-edge-hi),
+    inset -1px 0 0 0 var(--lens-2-edge-lo),
+    inset 0 -1px 0 0 var(--lens-2-edge-lo);
 }
 
 /* The status line is the card's floor, so every card's marker sits on the
@@ -710,9 +722,12 @@
   font-size: 0.875rem;
   letter-spacing: -0.005em;
   color: #c2cae0;
-  background: rgba(255, 255, 255, 0.04);
+  background: linear-gradient(160deg, var(--lens-1-fill-a), var(--lens-1-fill-b));
   border: 1px solid rgba(190, 215, 255, 0.12);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  box-shadow:
+    inset 0 1px 0 0 var(--lens-1-spec),
+    inset 1px 0 0 0 var(--lens-1-edge-hi),
+    inset -1px 0 0 0 var(--lens-1-edge-lo);
   transition: color 0.3s var(--ease), border-color 0.3s var(--ease),
     background-color 0.3s var(--ease), transform 0.3s var(--ease);
 }
@@ -735,7 +750,7 @@
   background: linear-gradient(
     115deg,
     transparent 30%,
-    rgba(255, 255, 255, 0.16) 48%,
+    var(--lens-sheen) 48%,
     transparent 66%
   );
   transform: translateX(-120%);
@@ -745,11 +760,11 @@
 
 .tile:hover {
   color: var(--paper);
-  background: rgba(255, 255, 255, 0.07);
-  border-color: var(--glass-edge);
+  background: var(--lens-1-fill-on);
+  border-color: var(--lens-1-edge-on);
   transform: perspective(500px) translateZ(18px) rotateX(-7deg);
   box-shadow: 0 14px 30px -14px rgba(0, 0, 0, 0.9),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    inset 0 1px 0 var(--lens-1-spec-on);
 }
 
 .tile:hover::after {
@@ -924,8 +939,8 @@
   gap: 0.75rem;
   padding: 0.75rem 1rem;
   border-radius: var(--r-sm);
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(160deg, var(--lens-1-fill-a), var(--lens-1-fill-b));
+  border: 1px solid var(--lens-1-edge);
   font-size: 0.925rem;
 }
 
@@ -1156,11 +1171,16 @@
   margin: clamp(2.5rem, 5vw, 4rem) 0 0;
   padding: 0;
   border-radius: var(--r-xl);
-  background: linear-gradient(160deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.012));
-  backdrop-filter: blur(24px) saturate(170%);
-  -webkit-backdrop-filter: blur(24px) saturate(170%);
+  background: linear-gradient(160deg, var(--lens-2-fill-a), var(--lens-2-fill-b));
+  backdrop-filter: blur(var(--lens-2-blur)) saturate(var(--lens-2-sat));
+  -webkit-backdrop-filter: blur(var(--lens-2-blur)) saturate(var(--lens-2-sat));
   border: 1px solid var(--glass-edge);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.32), 0 20px 60px -30px rgba(0, 0, 0, 0.9);
+  box-shadow:
+    var(--lens-2-shadow),
+    inset 0 1px 0 0 var(--lens-2-spec),
+    inset 1px 0 0 0 var(--lens-2-edge-hi),
+    inset -1px 0 0 0 var(--lens-2-edge-lo),
+    inset 0 -1px 0 0 var(--lens-2-edge-lo);
   overflow: hidden;
 }
 
@@ -1306,11 +1326,16 @@
   margin: 0;
   padding: 0;
   border-radius: var(--r-xl);
-  background: linear-gradient(160deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.012));
-  backdrop-filter: blur(24px) saturate(170%);
-  -webkit-backdrop-filter: blur(24px) saturate(170%);
+  background: linear-gradient(160deg, var(--lens-2-fill-a), var(--lens-2-fill-b));
+  backdrop-filter: blur(var(--lens-2-blur)) saturate(var(--lens-2-sat));
+  -webkit-backdrop-filter: blur(var(--lens-2-blur)) saturate(var(--lens-2-sat));
   border: 1px solid var(--glass-edge);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.32), 0 20px 60px -30px rgba(0, 0, 0, 0.9);
+  box-shadow:
+    var(--lens-2-shadow),
+    inset 0 1px 0 0 var(--lens-2-spec),
+    inset 1px 0 0 0 var(--lens-2-edge-hi),
+    inset -1px 0 0 0 var(--lens-2-edge-lo),
+    inset 0 -1px 0 0 var(--lens-2-edge-lo);
   overflow: hidden;
 }
 
@@ -1392,7 +1417,7 @@
   padding: 0.5rem 0.6rem;
   border-radius: var(--r-xs);
   border: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--lens-1-fill-b);
   color: var(--muted);
   font-family: inherit;
   transition: border-color 0.3s var(--ease), background-color 0.3s var(--ease),
@@ -1441,11 +1466,16 @@
   margin: 0;
   padding: 0;
   border-radius: var(--r-xl);
-  background: linear-gradient(160deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.012));
-  backdrop-filter: blur(24px) saturate(170%);
-  -webkit-backdrop-filter: blur(24px) saturate(170%);
+  background: linear-gradient(160deg, var(--lens-2-fill-a), var(--lens-2-fill-b));
+  backdrop-filter: blur(var(--lens-2-blur)) saturate(var(--lens-2-sat));
+  -webkit-backdrop-filter: blur(var(--lens-2-blur)) saturate(var(--lens-2-sat));
   border: 1px solid var(--glass-edge);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.32), 0 20px 60px -30px rgba(0, 0, 0, 0.9);
+  box-shadow:
+    var(--lens-2-shadow),
+    inset 0 1px 0 0 var(--lens-2-spec),
+    inset 1px 0 0 0 var(--lens-2-edge-hi),
+    inset -1px 0 0 0 var(--lens-2-edge-lo),
+    inset 0 -1px 0 0 var(--lens-2-edge-lo);
   overflow: hidden;
 }
 
@@ -1503,11 +1533,16 @@
   margin: clamp(2.5rem, 5vw, 4rem) 0 clamp(2rem, 4vw, 3rem);
   padding: 0;
   border-radius: var(--r-xl);
-  background: linear-gradient(160deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.012));
-  backdrop-filter: blur(24px) saturate(170%);
-  -webkit-backdrop-filter: blur(24px) saturate(170%);
+  background: linear-gradient(160deg, var(--lens-2-fill-a), var(--lens-2-fill-b));
+  backdrop-filter: blur(var(--lens-2-blur)) saturate(var(--lens-2-sat));
+  -webkit-backdrop-filter: blur(var(--lens-2-blur)) saturate(var(--lens-2-sat));
   border: 1px solid var(--glass-edge);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.32), 0 20px 60px -30px rgba(0, 0, 0, 0.9);
+  box-shadow:
+    var(--lens-2-shadow),
+    inset 0 1px 0 0 var(--lens-2-spec),
+    inset 1px 0 0 0 var(--lens-2-edge-hi),
+    inset -1px 0 0 0 var(--lens-2-edge-lo),
+    inset 0 -1px 0 0 var(--lens-2-edge-lo);
   overflow: hidden;
 }
 
@@ -1578,13 +1613,16 @@
   letter-spacing: 0.02em;
   white-space: nowrap;
   color: var(--muted);
-  background: rgba(255, 255, 255, 0.06);
+  background: linear-gradient(160deg, var(--lens-1-fill-a), var(--lens-1-fill-b));
   border: 1px solid var(--glass-edge);
   border-radius: 999px;
   padding: 0.32rem 0.7rem;
-  backdrop-filter: blur(18px) saturate(180%);
-  -webkit-backdrop-filter: blur(18px) saturate(180%);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.34);
+  backdrop-filter: blur(var(--lens-1-blur)) saturate(var(--lens-1-sat));
+  -webkit-backdrop-filter: blur(var(--lens-1-blur)) saturate(var(--lens-1-sat));
+  box-shadow:
+    inset 0 1px 0 0 var(--lens-1-spec),
+    inset 1px 0 0 0 var(--lens-1-edge-hi),
+    inset -1px 0 0 0 var(--lens-1-edge-lo);
   pointer-events: none;
   transition: color 0.3s var(--ease), background-color 0.3s var(--ease),
     border-color 0.3s var(--ease);
@@ -1622,7 +1660,7 @@
   transform: perspective(900px) translateZ(26px) rotateX(-3deg);
   border-color: var(--line-strong);
   box-shadow: 0 30px 60px -28px rgba(0, 0, 0, 0.95),
-    inset 0 1px 0 rgba(255, 255, 255, 0.34);
+    inset 0 1px 0 var(--lens-2-spec-on);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1665,9 +1703,12 @@
   border-radius: var(--r-lg);
   border: 1px solid var(--glass-edge);
   background: linear-gradient(160deg, rgba(10, 12, 20, 0.72), rgba(10, 12, 20, 0.52));
-  backdrop-filter: blur(20px) saturate(160%);
-  -webkit-backdrop-filter: blur(20px) saturate(160%);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(var(--lens-2-blur)) saturate(var(--lens-2-sat));
+  -webkit-backdrop-filter: blur(var(--lens-2-blur)) saturate(var(--lens-2-sat));
+  box-shadow:
+    inset 0 1px 0 0 var(--lens-2-spec),
+    inset 1px 0 0 0 var(--lens-2-edge-hi),
+    inset -1px 0 0 0 var(--lens-2-edge-lo);
   overflow: hidden;
 }
 

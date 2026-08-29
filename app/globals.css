@@ -69,8 +69,13 @@
      is the lensing, and it is done with inset shadows rather than a
      gradient border because eight of these surfaces already own a
      ::before or ::after of their own.
+     These blurs are lower than a pure CSS design would want. The world
+     behind each pane is refracted before the pane blurs it, and blur is
+     exactly the operation that undoes refraction: at 32px the rim
+     dispersion smears back into a grey haze. The tiers keep their
+     proportions; they just start lower.
      --------------------------------------------------------------- */
-  --lens-1-blur:    16px;
+  --lens-1-blur:    11px;
   --lens-1-sat:     165%;
   --lens-1-fill-a:  color-mix(in oklab, var(--glass-tint) 5%, rgba(255, 255, 255, 0.045));
   --lens-1-fill-b:  rgba(255, 255, 255, 0.015);
@@ -83,7 +88,7 @@
   --lens-1-edge-on: rgba(190, 215, 255, 0.24);
   --lens-1-spec-on: rgba(255, 255, 255, 0.38);
 
-  --lens-2-blur:    24px;
+  --lens-2-blur:    16px;
   --lens-2-sat:     175%;
   --lens-2-fill-a:  color-mix(in oklab, var(--glass-tint) 7%, rgba(255, 255, 255, 0.055));
   --lens-2-fill-b:  rgba(255, 255, 255, 0.015);
@@ -96,7 +101,7 @@
   --lens-2-edge-on: rgba(190, 215, 255, 0.32);
   --lens-2-spec-on: rgba(255, 255, 255, 0.48);
 
-  --lens-3-blur:    32px;
+  --lens-3-blur:    22px;
   --lens-3-sat:     185%;
   --lens-3-fill-a:  color-mix(in oklab, var(--glass-tint) 8%, rgba(255, 255, 255, 0.075));
   --lens-3-fill-b:  rgba(255, 255, 255, 0.020);
@@ -727,6 +732,11 @@ body {
        raised to compensate so they still read as panes. */
     --lens-1-blur: 0px;
     --lens-1-fill-a: rgba(255, 255, 255, 0.070);
+    /* These sit close to the base values now that the base came down for
+       refraction, and that is deliberate. The composite never mounts below
+       900px, so a phone has no bending to let through and no reason to give
+       up blur for it. Tiers 2 and 3 stay as frosted here as they ever were;
+       they simply no longer have as far to fall. */
     --lens-2-blur: 14px;
     --lens-3-blur: 20px;
   }

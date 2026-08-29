@@ -738,7 +738,7 @@
   /* A trace of the group's tone at rest, its full strength on hover. At
      rest it has to stay a hairline: forty-eight saturated outlines would
      be a colour chart, not a wall. */
-  border: 1px solid color-mix(in oklab, var(--tone, #bed7ff), transparent 86%);
+  border: 1px solid color-mix(in oklab, var(--tone, #bed7ff), transparent 74%);
   box-shadow:
     inset 0 1px 0 0 var(--lens-1-spec),
     inset 1px 0 0 0 var(--lens-1-edge-hi),
@@ -1308,9 +1308,13 @@
    GROUPED STACK
    ================================================================= */
 
+/* Label, count, rule — the same three-part idiom as .eyebrow. It was
+   grid-auto-flow: column with two children, which gave the count an equal
+   share of the row and stretched a pill holding one digit to 516px. The
+   count is sized by its content; the rule takes the slack. */
 .stack-group-head {
   display: grid;
-  grid-auto-flow: column;
+  grid-template-columns: auto auto 1fr;
   align-items: center;
   gap: 0.75rem;
   font-size: 0.625rem;
@@ -1318,6 +1322,18 @@
   text-transform: uppercase;
   color: var(--faint);
   margin: 0;
+}
+
+/* The rule carries the group's tone, so the heading and the wall under it
+   read as one family before a single tile is looked at. */
+.stack-group-head::after {
+  content: '';
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    color-mix(in oklab, var(--tone), transparent 55%),
+    transparent
+  );
 }
 
 .stack-count {
@@ -1330,13 +1346,7 @@
   font-variant-numeric: tabular-nums;
 }
 
-@media (max-width: 779px) {
-  .stack-group-head::after {
-    content: '';
-    height: 1px;
-    background: linear-gradient(90deg, var(--line), transparent);
-  }
-}
+
 
 /* =================================================================
    ATTENTION MAP  —  research section signature
@@ -1645,8 +1655,14 @@
     inset -1px 0 0 0 var(--lens-1-edge-lo);
   pointer-events: none;
   transition: color 0.3s var(--ease), background-color 0.3s var(--ease),
-    border-color 0.3s var(--ease);
+    border-color 0.3s var(--ease), opacity 0.45s var(--ease);
 }
+
+/* These labels belong to the retrieval station. They are positioned in the
+   world layer, which is fixed, so once the camera has travelled on they keep
+   tracking points that are no longer in front of anything — and end up
+   sitting on top of the next band's copy. Fade them with their station. */
+.world:not([data-frame='rag']) .rag-label { opacity: 0; }
 
 .rag-label[data-hot='true'] {
   color: var(--void);

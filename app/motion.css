@@ -144,7 +144,14 @@ body[data-cursor-state='scene'] .cursor-ring {
    position comes from JS as --mx/--my; the fallback is the static sheen. */
 .panel::after,
 .rowglass::after,
-.net::after {
+.research-entry::after,
+.net::after,
+.attn::after,
+.descent::after,
+.rag::after,
+.station-legend::after,
+.glass-btn::after,
+.topbar::after {
   content: '';
   position: absolute;
   inset: 0;
@@ -160,8 +167,42 @@ body[data-cursor-state='scene'] .cursor-ring {
   transition: background 0.18s linear;
 }
 
+/* The highlight is an ::after at z-index -1, so its host has to own a
+   stacking context. .topbar and .glass-btn are left out of the position
+   half deliberately — the header is fixed and the button is already
+   relative, and resetting either would move it. */
 .rowglass,
-.net { position: relative; isolation: isolate; }
+.research-entry,
+.net,
+.attn,
+.descent,
+.rag,
+.station-legend { position: relative; isolation: isolate; }
+
+.topbar,
+.glass-btn { isolation: isolate; }
+
+/* No pointer, no chase: the highlight falls back to the static sheen. */
+@media (prefers-reduced-motion: reduce) {
+  .panel::after,
+  .rowglass::after,
+  .research-entry::after,
+  .net::after,
+  .attn::after,
+  .descent::after,
+  .rag::after,
+  .station-legend::after,
+  .glass-btn::after,
+  .topbar::after {
+    background: radial-gradient(
+      120% 90% at 12% 0%,
+      var(--lens-sheen),
+      var(--lens-sheen-fade) 42%,
+      transparent 70%
+    );
+    transition: none;
+  }
+}
 
 /* --------------------------- magnetic buttons --------------------------- */
 

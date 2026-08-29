@@ -478,7 +478,13 @@ export function Specular() {
     const update = () => {
       raf = 0;
       const hit = document.elementFromPoint(px, py) as HTMLElement | null;
-      const pane = hit?.closest?.('.panel, .rowglass, .net') as HTMLElement | null;
+      /* Every tier-2 and tier-3 pane. Tier 1 is left out on purpose: those
+         appear in walls of twenty or more, and a highlight chasing the
+         pointer across a wall of chips reads as noise, not as material. */
+      const pane = hit?.closest?.(
+        '.panel, .rowglass, .research-entry, .net, .attn, .descent, .rag, ' +
+          '.station-legend, .glass-btn, .topbar',
+      ) as HTMLElement | null;
 
       if (pane !== last) {
         clear(last);

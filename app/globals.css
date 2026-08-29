@@ -38,13 +38,56 @@
      that need to travel across the spectrum rather than along it. */
   --iris:  #e08ad2;
 
-  /* Apple-glass surface system */
-  --glass-blur:  28px;
-  --glass-sat:   180%;
-  --glass-fill:  rgba(255, 255, 255, 0.055);
-  --glass-fill-2:rgba(255, 255, 255, 0.015);
+  /* ---------------------------------------------------------------
+     Glass, as one material at three elevations. A pane differs from
+     another pane along exactly one axis: how far it floats above the
+     world canvas. Every property below moves monotonically across the
+     three tiers, which is what makes panes at the same tier read as
+     the same depth and the same temperature.
+
+     1 inset    - chips, tiles, small instrument labels. Nearly flush.
+     2 raised   - cards, rows, panels. The default; most of the page.
+     3 floating - topbar, sheet, buttons. Clears the page entirely.
+
+     edge-hi and edge-lo light the border directionally: the top-left
+     of a pane catches the light and the bottom-right falls away. That
+     is the lensing, and it is done with inset shadows rather than a
+     gradient border because eight of these surfaces already own a
+     ::before or ::after of their own.
+     --------------------------------------------------------------- */
+  --lens-1-blur:    16px;
+  --lens-1-sat:     165%;
+  --lens-1-fill-a:  rgba(255, 255, 255, 0.045);
+  --lens-1-fill-b:  rgba(255, 255, 255, 0.015);
+  --lens-1-edge:    rgba(190, 215, 255, 0.14);
+  --lens-1-edge-hi: rgba(255, 255, 255, 0.16);
+  --lens-1-edge-lo: rgba(255, 255, 255, 0.04);
+  --lens-1-spec:    rgba(255, 255, 255, 0.28);
+  --lens-1-shadow:  0 6px 18px -10px rgba(0, 0, 0, 0.75);
+
+  --lens-2-blur:    24px;
+  --lens-2-sat:     175%;
+  --lens-2-fill-a:  rgba(255, 255, 255, 0.055);
+  --lens-2-fill-b:  rgba(255, 255, 255, 0.015);
+  --lens-2-edge:    rgba(190, 215, 255, 0.20);
+  --lens-2-edge-hi: rgba(255, 255, 255, 0.24);
+  --lens-2-edge-lo: rgba(255, 255, 255, 0.06);
+  --lens-2-spec:    rgba(255, 255, 255, 0.40);
+  --lens-2-shadow:  0 16px 50px -18px rgba(0, 0, 0, 0.85);
+
+  --lens-3-blur:    32px;
+  --lens-3-sat:     185%;
+  --lens-3-fill-a:  rgba(255, 255, 255, 0.075);
+  --lens-3-fill-b:  rgba(255, 255, 255, 0.020);
+  --lens-3-edge:    rgba(190, 215, 255, 0.28);
+  --lens-3-edge-hi: rgba(255, 255, 255, 0.34);
+  --lens-3-edge-lo: rgba(255, 255, 255, 0.08);
+  --lens-3-spec:    rgba(255, 255, 255, 0.55);
+  --lens-3-shadow:  0 24px 64px -22px rgba(0, 0, 0, 0.92);
+
+  /* Retained: --glass-edge is still referenced as a plain hairline colour
+     by rules that are not panes (hover borders, the sheet's left edge). */
   --glass-edge:  rgba(190, 215, 255, 0.24);
-  --glass-spec:  rgba(255, 255, 255, 0.55);
 
   /* Small controls were carrying three ad-hoc radii — 6, 7 and 10px — none
      of them on the 4px base the spacing scale below declares. One token. */

@@ -5,7 +5,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "check:glass": "node scripts/check-glass.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^9.114.3",

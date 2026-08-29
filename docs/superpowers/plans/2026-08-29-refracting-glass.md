@@ -864,7 +864,7 @@ void main() {
      a gradient goes wrong at small radii, where the corners of a chip are
      only a few pixels across and a one-pixel step spans the whole curve. */
   vec2 s = sign(bestP);
-  vec2 q = abs(bestP) - (bestHalf - bestR);
+  vec2 q = abs(bestP) - (bestHs - bestR);
   vec2 g = (q.x > 0.0 && q.y > 0.0)
     ? normalize(max(q, vec2(1e-4)))
     : (q.x > q.y ? vec2(1.0, 0.0) : vec2(0.0, 1.0));

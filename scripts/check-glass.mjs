@@ -35,9 +35,17 @@ for (const file of FILES) {
     if (/backdrop-filter/.test(line) && /\d+px|\d+%/.test(line)) {
       problems.push(at + '\n    raw blur/saturate: ' + line.trim());
     }
+
+    /* Any white on a pane, wherever it appears. Checking whole declarations
+       is not enough: a multi-line box-shadow puts each inset on its own
+       line, and the first version of this guard let every one of them
+       through. A custom property is the one exemption — that is where the
+       literals are supposed to live — as is background-image, which carries
+       the pointer highlight and is driven by --lit rather than by a tier. */
     if (
-      /^\s*(background|border|box-shadow)\s*:/.test(line) &&
-      /rgba\(255,\s*255,\s*255/.test(line)
+      /rgba\(\s*255,\s*255,\s*255/.test(line) &&
+      !/^\s*--/.test(line) &&
+      !/background-image/.test(line)
     ) {
       problems.push(at + '\n    raw glass value: ' + line.trim());
     }

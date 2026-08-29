@@ -182,6 +182,18 @@ body[data-cursor-state='scene'] .cursor-ring {
 .topbar,
 .glass-btn { isolation: isolate; }
 
+/* The figure panes are the largest blurred surfaces on the page and they sit
+   directly over a live canvas. contain: paint keeps their painting inside
+   their own box without touching geometry — which matters here, because
+   CameraRig measures the anchored sections to build the camera path and
+   anything that changes a reported height desyncs it. That rules out
+   content-visibility on the bands themselves. */
+.net,
+.attn,
+.descent,
+.rag,
+.station-legend { contain: paint; }
+
 /* No pointer, no chase: the highlight falls back to the static sheen. */
 @media (prefers-reduced-motion: reduce) {
   .panel::after,

@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Registered so it can be transitioned. An unregistered custom property is
+   an untyped string to the animation engine, and the tint would snap between
+   stations instead of travelling along the ramp. */
+@property --glass-tint {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #5442b5;
+}
+
 /* ---------------------------------------------------------------
    Tokens. Prismatic Abyss: the accent scale is a dichroic ramp —
    the spectrum a thick pane of glass throws when light passes
@@ -38,6 +47,12 @@
      that need to travel across the spectrum rather than along it. */
   --iris:  #e08ad2;
 
+  /* The wash a pane borrows from the world behind it. Which value it holds
+     is set by the active station, below. Held to a low percentage in the
+     tier fills: it tints the pane, never the copy. */
+  --glass-tint: var(--r1);
+  transition: --glass-tint 1.4s var(--ease);
+
   /* ---------------------------------------------------------------
      Glass, as one material at three elevations. A pane differs from
      another pane along exactly one axis: how far it floats above the
@@ -57,7 +72,7 @@
      --------------------------------------------------------------- */
   --lens-1-blur:    16px;
   --lens-1-sat:     165%;
-  --lens-1-fill-a:  rgba(255, 255, 255, 0.045);
+  --lens-1-fill-a:  color-mix(in oklab, var(--glass-tint) 5%, rgba(255, 255, 255, 0.045));
   --lens-1-fill-b:  rgba(255, 255, 255, 0.015);
   --lens-1-edge:    rgba(190, 215, 255, 0.14);
   --lens-1-edge-hi: rgba(255, 255, 255, 0.16);
@@ -70,7 +85,7 @@
 
   --lens-2-blur:    24px;
   --lens-2-sat:     175%;
-  --lens-2-fill-a:  rgba(255, 255, 255, 0.055);
+  --lens-2-fill-a:  color-mix(in oklab, var(--glass-tint) 7%, rgba(255, 255, 255, 0.055));
   --lens-2-fill-b:  rgba(255, 255, 255, 0.015);
   --lens-2-edge:    rgba(190, 215, 255, 0.20);
   --lens-2-edge-hi: rgba(255, 255, 255, 0.24);
@@ -83,7 +98,7 @@
 
   --lens-3-blur:    32px;
   --lens-3-sat:     185%;
-  --lens-3-fill-a:  rgba(255, 255, 255, 0.075);
+  --lens-3-fill-a:  color-mix(in oklab, var(--glass-tint) 8%, rgba(255, 255, 255, 0.075));
   --lens-3-fill-b:  rgba(255, 255, 255, 0.020);
   --lens-3-edge:    rgba(190, 215, 255, 0.28);
   --lens-3-edge-hi: rgba(255, 255, 255, 0.34);
@@ -167,6 +182,20 @@
   --gutter: clamp(1.15rem, 4vw, 2.5rem);
 
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Each station lends its own place on the ramp to the glass in front of it,
+   so a pane read beside the network reads periwinkle and the same pane read
+   beside retrieval reads aqua. In scroll order; the frame is published on
+   the root by WorldMount. */
+:root[data-frame='field']   { --glass-tint: var(--r1); }
+:root[data-frame='net']     { --glass-tint: var(--r2); }
+:root[data-frame='descent'] { --glass-tint: var(--r3); }
+:root[data-frame='rag']     { --glass-tint: var(--r4); }
+:root[data-frame='vantage'] { --glass-tint: var(--iris); }
+
+@media (prefers-reduced-motion: reduce) {
+  :root { transition: none; }
 }
 
 * { box-sizing: border-box; }

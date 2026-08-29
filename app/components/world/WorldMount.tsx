@@ -62,6 +62,13 @@ export default function WorldMount() {
     return () => mq.removeEventListener('change', apply);
   }, []);
 
+  /* The panes are not inside .world, so the active station has to reach them
+     from the root. Tint is then pure CSS: no per-frame style writes, and the
+     transition on --glass-tint does the interpolating. */
+  useEffect(() => {
+    document.documentElement.dataset.frame = frame;
+  }, [frame]);
+
   return (
     <div className="world" data-frame={frame} aria-hidden="true">
       {ready && supported ? (

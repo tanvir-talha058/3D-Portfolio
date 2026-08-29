@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import dynamic from 'next/dynamic';
 import { Canvas } from '@react-three/fiber';
 import { Scene as FieldScene } from '../Field';
 import { Scene as NetScene } from '../Net';
@@ -9,6 +10,8 @@ import { Scene as RagScene } from '../Rag';
 import { reportDescent } from './telemetry';
 import CameraRig from './CameraRig';
 import { STATIONS, MOUNT_WINDOW, MOUNT_WINDOW_MOBILE } from './stations';
+
+const GlassComposite = dynamic(() => import('./glass/GlassComposite'), { ssr: false });
 
 /**
  * One canvas, one camera, one world.
@@ -37,6 +40,12 @@ export default function World({ reduced, quality, onFrame }: Props) {
   const low = quality === 'low';
   const windowSize = low ? MOUNT_WINDOW_MOBILE : MOUNT_WINDOW;
 
+  /* Refraction is an enhancement, and enhancements are the first thing to
+     go: not on the low tier, not under reduced motion, and not once it has
+     told us it cannot run. The CSS glass is the floor in all three cases. */
+  const [glassOk, setGlassOk] = useState(true);
+  const wantGlass = glassOk && !low && !reduced;
+
   const near = (i: number) => Math.abs(i - station) <= windowSize;
 
   return (
@@ -59,6 +68,8 @@ export default function World({ reduced, quality, onFrame }: Props) {
           onFrame(STATIONS[i].id);
         }}
       />
+
+      {wantGlass ? <GlassComposite onFail={() => setGlassOk(false)} /> : null}
 
       {near(0) ? (
         <group position={STATIONS[0].at} scale={STATIONS[0].scale}>

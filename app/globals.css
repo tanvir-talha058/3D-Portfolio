@@ -143,6 +143,20 @@
   --step-6:  clamp(2.986rem, 2.613rem + 1.864vw, 4.292rem);
   --step-7:  clamp(3.583rem, 3.074rem + 2.545vw, 5.364rem);
 
+  /* ---------------------------------------------------------------
+     Utility label sizes. These sit below the reading ramp on purpose:
+     they are instrument markings — eyebrows, counts, stage indices,
+     readout keys — set in uppercase mono with wide tracking, which
+     carries a small size far better than lowercase copy would.
+
+     They stop shrinking on a phone. 9px is legible on a desktop panel
+     at desk distance and is not legible in the hand, and the tracking
+     that rescues it at 10px cannot rescue it at 9.
+     --------------------------------------------------------------- */
+  --label-xs: 0.5625rem;  /*  9px */
+  --label-sm: 0.625rem;   /* 10px */
+  --label-md: 0.6875rem;  /* 11px */
+
   /* Spacing on a strict 4px base. */
   --space-1: 0.25rem;   /*  4 */
   --space-2: 0.5rem;    /*  8 */
@@ -263,7 +277,7 @@ body {
 /* Section eyebrow: a coordinate, not a decoration. */
 .eyebrow {
   font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 0.6875rem;
+  font-size: var(--label-md);
   font-weight: 600;
   letter-spacing: 0.13em;
   text-transform: uppercase;
@@ -395,7 +409,7 @@ body {
 
 .chip {
   font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 0.625rem;
+  font-size: var(--label-sm);
   font-weight: 500;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -458,7 +472,7 @@ body {
 /* Anchor labels rendered into the WebGL scene via drei <Html>. */
 .node-label {
   font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 0.625rem;
+  font-size: var(--label-sm);
   letter-spacing: 0.11em;
   text-transform: uppercase;
   white-space: nowrap;
@@ -703,6 +717,11 @@ body {
    scene is simplified anyway, so trade blur for opaque fills. */
 @media (max-width: 640px) {
   :root {
+    /* Every utility label meets the 11px floor in the hand. The ramp
+       above is unchanged; only these markings move. */
+    --label-xs: var(--label-md);
+    --label-sm: var(--label-md);
+
     /* Tier 1 loses its blur outright: those surfaces appear in walls of
        twenty or more and are the cheapest to make opaque. The fill is
        raised to compensate so they still read as panes. */

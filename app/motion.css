@@ -389,7 +389,7 @@ html.booting body {
   bottom: clamp(1.15rem, 4vw, 2.5rem);
   height: var(--chip-lg-h);
   padding-inline: 0.95rem;
-  font-size: 0.625rem;
+  font-size: var(--label-sm);
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--muted);

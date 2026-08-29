@@ -39,6 +39,7 @@ function readTint(target: THREE.Color) {
 export default function GlassComposite({ onFail }: Props) {
   const { gl, scene, camera, size, viewport } = useThree();
   const failed = useRef(false);
+  const frames = useRef(0);
 
   const material = useMemo(() => createGlassMaterial(), []);
   const registry = useMemo(() => createRegistry(), []);
@@ -125,6 +126,7 @@ export default function GlassComposite({ onFail }: Props) {
     if (failed.current) return;
 
     let count = 0;
+    if (process.env.NODE_ENV !== 'production') frames.current += 1;
     try {
       count = registry.update(Math.min(dt, 0.1), viewport.dpr);
     } catch {
@@ -135,6 +137,16 @@ export default function GlassComposite({ onFail }: Props) {
 
     /* No glass on screen: the composite would be a fullscreen pass that
        changes nothing. Draw the world straight out instead. */
+    /* Development only, and on the documentElement rather than on window,
+       because that is the one channel every automation harness can read:
+       page globals are invisible to a driver that evaluates in an isolated
+       world, but the DOM is shared. Reads "<frames>:<panes>", so a stalled
+       layer, an idle one and a working one are three different answers
+       rather than one silence. */
+    if (process.env.NODE_ENV !== 'production') {
+      document.documentElement.dataset.glass = frames.current + ':' + count;
+    }
+
     if (count === 0) {
       gl.setRenderTarget(null);
       gl.render(scene, camera);

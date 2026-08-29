@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import dynamic from 'next/dynamic';
 import { Canvas } from '@react-three/fiber';
 import { Scene as FieldScene } from '../Field';
 import { Scene as NetScene } from '../Net';
@@ -10,8 +9,11 @@ import { Scene as RagScene } from '../Rag';
 import { reportDescent } from './telemetry';
 import CameraRig from './CameraRig';
 import { STATIONS, MOUNT_WINDOW, MOUNT_WINDOW_MOBILE } from './stations';
-
-const GlassComposite = dynamic(() => import('./glass/GlassComposite'), { ssr: false });
+/* Imported directly rather than through next/dynamic. This module is itself
+   only ever reached through WorldMount's dynamic import, so a second lazy
+   boundary inside it splits a chunk that is already lazy and adds a mount
+   path that can fail on its own. */
+import GlassComposite from './glass/GlassComposite';
 
 /**
  * One canvas, one camera, one world.

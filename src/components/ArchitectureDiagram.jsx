@@ -1,58 +1,115 @@
 import React from 'react';
-import { ArrowRight, Cpu, Database, Server, Sparkles, Layers } from 'lucide-react';
+import { ArrowRight, Layers } from 'lucide-react';
 
 export default function ArchitectureDiagram({ nodes = [] }) {
   if (!nodes || nodes.length === 0) return null;
 
   return (
-    <div style={{ margin: '1.5rem 0', padding: '1.25rem', background: 'rgba(0, 0, 0, 0.35)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-md)' }}>
-      <div style={{ fontSize: '0.8rem', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', color: 'var(--text-dim)', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+    <div
+      style={{
+        margin: '1.5rem 0',
+        padding: '1.25rem',
+        background: 'var(--bg-surface-elevated)',
+        border: '1px solid var(--border-subtle)',
+        borderRadius: 'var(--radius-md)'
+      }}
+    >
+      <div
+        style={{
+          fontSize: '0.8rem',
+          fontFamily: 'var(--font-mono)',
+          textTransform: 'uppercase',
+          color: 'var(--text-dim)',
+          marginBottom: '1rem',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.45rem'
+        }}
+      >
         <Layers size={14} color="var(--cyan)" />
         <span>End-to-End System Pipeline & Data Flow</span>
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', overflowX: 'auto', paddingBottom: '0.5rem' }} className="architecture-scroll-row">
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.55rem',
+          overflowX: 'auto',
+          paddingBottom: '0.65rem',
+          paddingInline: '0.5rem'
+        }}
+        className="architecture-scroll-row"
+      >
         {nodes.map((node, idx) => (
           <React.Fragment key={idx}>
             <div
+              className="pipeline-stage"
               style={{
                 flexShrink: 0,
-                background: 'rgba(15, 22, 36, 0.85)',
+                background: 'var(--bg-card)',
                 border: '1px solid var(--border-medium)',
                 borderRadius: 'var(--radius-sm)',
-                padding: '0.75rem 1rem',
-                minWidth: '130px',
+                padding: '0.65rem 0.85rem',
+                minWidth: '115px',
                 textAlign: 'center',
-                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
-                transition: 'all 0.2s ease'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = 'var(--cyan)';
-                e.currentTarget.style.transform = 'translateY(-2px)';
-                e.currentTarget.style.boxShadow = '0 0 15px rgba(0, 240, 255, 0.3)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = 'var(--border-medium)';
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.3)';
+                boxShadow: 'var(--shadow-sm)',
+                animationDelay: `${idx * 0.09}s`,
+                // Angled away from the viewer, each stage a little further
+                // back than the last, so the row reads as a receding pipeline.
+                '--stage-rot': '-20deg',
+                '--stage-z': `${idx * -10}px`
               }}
             >
-              <div style={{ fontSize: '0.7rem', fontFamily: 'var(--font-mono)', color: 'var(--cyan)', marginBottom: '0.2rem' }}>
+              <div
+                style={{
+                  fontSize: '0.68rem',
+                  fontFamily: 'var(--font-mono)',
+                  color: 'var(--cyan)',
+                  marginBottom: '0.2rem'
+                }}
+              >
                 STAGE 0{idx + 1}
               </div>
-              <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-main)' }}>
+              <div style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--text-main)' }}>
                 {node}
               </div>
             </div>
 
             {idx < nodes.length - 1 && (
-              <div style={{ color: 'var(--cyan)', opacity: 0.6, flexShrink: 0, display: 'flex', alignItems: 'center' }}>
-                <ArrowRight size={16} />
+              <div
+                className="pipeline-arrow"
+                style={{
+                  color: 'var(--cyan)',
+                  flexShrink: 0,
+                  display: 'flex',
+                  alignItems: 'center',
+                  animationDelay: `${idx * 0.22}s`
+                }}
+              >
+                <ArrowRight size={15} />
               </div>
             )}
           </React.Fragment>
         ))}
       </div>
+
+      <style>{`
+        .architecture-scroll-row::-webkit-scrollbar {
+          height: 5px;
+        }
+        .architecture-scroll-row::-webkit-scrollbar-track {
+          background: rgba(255, 255, 255, 0.03);
+          border-radius: 4px;
+        }
+        .architecture-scroll-row::-webkit-scrollbar-thumb {
+          background: var(--border-medium);
+          border-radius: 4px;
+        }
+        .architecture-scroll-row::-webkit-scrollbar-thumb:hover {
+          background: var(--cyan);
+        }
+      `}</style>
     </div>
   );
 }

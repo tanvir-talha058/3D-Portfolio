@@ -1,6 +1,6 @@
 import React from 'react';
 
-export function GithubIcon({ size = 18, color = "currentColor", ...props }) {
+export function GithubIcon({ size = 18, color = 'currentColor', ...props }) {
   return (
     <svg
       width={size}
@@ -19,7 +19,7 @@ export function GithubIcon({ size = 18, color = "currentColor", ...props }) {
   );
 }
 
-export function LinkedinIcon({ size = 18, color = "currentColor", ...props }) {
+export function LinkedinIcon({ size = 18, color = 'currentColor', ...props }) {
   return (
     <svg
       width={size}

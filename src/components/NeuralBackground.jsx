@@ -1,7 +1,20 @@
 import React, { useEffect, useRef } from 'react';
+import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
+import { useTheme } from '../contexts/ThemeContext';
 
-export default function NeuralBackground({ isLightMode }) {
+export default function NeuralBackground({ onEasterEgg }) {
   const canvasRef = useRef(null);
+  const clickCountRef = useRef(0);
+  // A ref so the click handler always calls the latest callback without the
+  // main effect (and the whole particle system it sets up) needing to
+  // re-run whenever the parent re-renders with a new inline function.
+  const onEasterEggRef = useRef(onEasterEgg);
+  const prefersReducedMotion = usePrefersReducedMotion();
+  const { isLightMode } = useTheme();
+
+  useEffect(() => {
+    onEasterEggRef.current = onEasterEgg;
+  }, [onEasterEgg]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -177,28 +190,57 @@ export default function NeuralBackground({ isLightMode }) {
     };
 
     const handleClick = (e) => {
-      // Create a shockwave and burst particles
+      clickCountRef.current += 1;
+      // Every 10th click gets a bigger burst as a small easter egg.
+      const isBigBurst = clickCountRef.current % 10 === 0;
+
       shockwaves.push({
         x: e.clientX,
         y: e.clientY,
         radius: 5,
-        alpha: 0.8,
-        force: 6
+        alpha: isBigBurst ? 1 : 0.8,
+        force: isBigBurst ? 14 : 6
       });
 
-      for (let i = 0; i < 6; i++) {
+      const burstCount = isBigBurst ? 28 : 6;
+      for (let i = 0; i < burstCount; i++) {
         particles.push(new Particle(e.clientX, e.clientY, true));
+      }
+
+      if (isBigBurst) {
+        onEasterEggRef.current?.();
       }
     };
 
     initDimensions();
     createParticles();
+
+    if (prefersReducedMotion) {
+      // Draw a single static frame instead of running a continuous animation loop.
+      connectParticles();
+      for (const p of particles) p.draw();
+      window.addEventListener('resize', handleResize);
+      return () => window.removeEventListener('resize', handleResize);
+    }
+
     render();
+
+    // The canvas is fixed to the viewport (always "on screen" while the page
+    // is open), so the only off-screen case worth guarding is a backgrounded
+    // browser tab — resume from where render() already re-schedules itself.
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        cancelAnimationFrame(animationFrameId);
+      } else {
+        render();
+      }
+    };
 
     window.addEventListener('resize', handleResize);
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('mouseleave', handleMouseLeave);
     window.addEventListener('click', handleClick);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
 
     return () => {
       cancelAnimationFrame(animationFrameId);
@@ -206,8 +248,9 @@ export default function NeuralBackground({ isLightMode }) {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseleave', handleMouseLeave);
       window.removeEventListener('click', handleClick);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
-  }, [isLightMode]);
+  }, [isLightMode, prefersReducedMotion]);
 
   return (
     <canvas

@@ -14,21 +14,23 @@
   --bg-card-hover: rgba(22, 30, 46, 0.92);
   --terminal-bg: #0b0f19;
   --terminal-row-bg: rgba(255, 255, 255, 0.025);
-  
+
   /* Hairline Borders */
   --border-subtle: rgba(255, 255, 255, 0.08);
   --border-medium: rgba(255, 255, 255, 0.16);
   --border-accent: rgba(56, 189, 248, 0.4);
-  
+
   /* Executive Palette */
   --cyan: #38bdf8;
   --cyan-dim: #0284c7;
   --cyan-glow: rgba(56, 189, 248, 0.15);
   --violet: #6366f1;
   --emerald: #10b981;
+  --emerald-light: #34d399;
   --amber: #f59e0b;
   --rose: #f43f5e;
-  
+  --red-light: #f87171;
+
   /* Gradients */
   --grad-cyan-violet: linear-gradient(135deg, #e0f2fe 0%, #38bdf8 50%, #818cf8 100%);
   --grad-primary-btn: linear-gradient(135deg, #38bdf8 0%, #6366f1 100%);
@@ -43,7 +45,7 @@
   --text-main: #f8fafc;
   --text-muted: #94a3b8;
   --text-dim: #64748b;
-  
+
   /* Layout & Spacing */
   --container-max: 1220px;
   --nav-height: 68px;
@@ -51,17 +53,17 @@
   --radius-md: 12px;
   --radius-lg: 18px;
   --radius-full: 9999px;
-  
+
   /* Shadows */
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
   --shadow-md: 0 8px 24px -6px rgba(0, 0, 0, 0.5);
   --shadow-lg: 0 16px 36px -10px rgba(0, 0, 0, 0.65);
   --shadow-cyan: 0 0 25px rgba(56, 189, 248, 0.15);
-  
+
   /* Transitions */
   --trans-fast: 0.16s ease;
   --trans-smooth: 0.28s cubic-bezier(0.16, 1, 0.3, 1);
-  
+
   /* Ambient Lighting */
   --glow-1: rgba(56, 189, 248, 0.06);
   --glow-2: rgba(99, 102, 241, 0.06);
@@ -79,21 +81,23 @@ body.light-mode {
   --bg-card-hover: #ffffff;
   --terminal-bg: #ffffff;
   --terminal-row-bg: #f8fafc;
-  
+
   /* Hairline Borders */
   --border-subtle: rgba(15, 23, 42, 0.08);
   --border-medium: rgba(15, 23, 42, 0.13);
   --border-accent: rgba(37, 99, 235, 0.35);
-  
+
   /* Creative Accents */
   --cyan: #2563eb;
   --cyan-dim: #1d4ed8;
   --cyan-glow: rgba(37, 99, 235, 0.15);
   --violet: #4f46e5;
   --emerald: #059669;
+  --emerald-light: #34d399;
   --amber: #d97706;
   --rose: #e11d48;
-  
+  --red-light: #f87171;
+
   /* Gradients */
   --grad-cyan-violet: linear-gradient(135deg, #0f172a 0%, #1e40af 55%, #4f46e5 100%);
   --grad-primary-btn: linear-gradient(135deg, #2563eb 0%, #4338ca 100%);
@@ -103,13 +107,13 @@ body.light-mode {
   --text-main: #090d16;
   --text-muted: #475569;
   --text-dim: #64748b;
-  
+
   /* Crisp Shadows */
   --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.04), 0 1px 2px rgba(15, 23, 42, 0.02);
   --shadow-md: 0 4px 20px -2px rgba(15, 23, 42, 0.06), 0 2px 6px -1px rgba(15, 23, 42, 0.03);
   --shadow-lg: 0 16px 36px -4px rgba(15, 23, 42, 0.08), 0 6px 12px -2px rgba(15, 23, 42, 0.04);
   --shadow-cyan: 0 6px 24px -4px rgba(37, 99, 235, 0.15);
-  
+
   /* Ambient Lighting */
   --glow-1: rgba(37, 99, 235, 0.05);
   --glow-2: rgba(79, 70, 229, 0.05);
@@ -117,13 +121,16 @@ body.light-mode {
 }
 
 /* Base resets & overflow defense */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-html, body {
+html,
+body {
   max-width: 100%;
   overflow-x: hidden;
   position: relative;
@@ -141,7 +148,9 @@ body {
   font-family: var(--font-body);
   line-height: 1.65;
   -webkit-font-smoothing: antialiased;
-  transition: background-color 0.28s ease, color 0.28s ease;
+  transition:
+    background-color 0.28s ease,
+    color 0.28s ease;
 }
 
 /* Creative Architecture Dot-Matrix Pattern in Day Mode */
@@ -212,7 +221,12 @@ body.light-mode::before {
 }
 
 /* Typography */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-heading);
   font-weight: 700;
   line-height: 1.25;
@@ -250,6 +264,12 @@ section {
 @media (max-width: 768px) {
   section {
     padding: 3.5rem 0 !important;
+  }
+
+  /* #hero needs extra top offset to clear the fixed navbar; the rule above
+     would otherwise tuck its content underneath it on mobile. */
+  #hero {
+    padding-top: calc(var(--nav-height) + 1.5rem) !important;
   }
 }
 
@@ -421,7 +441,8 @@ body.light-mode dialog::backdrop {
 }
 
 @keyframes pulseDot {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
     opacity: 1;
     box-shadow: 0 0 8px var(--emerald);
@@ -434,8 +455,13 @@ body.light-mode dialog::backdrop {
 }
 
 @keyframes blinkCursor {
-  0%, 100% { border-color: var(--cyan); }
-  50% { border-color: transparent; }
+  0%,
+  100% {
+    border-color: var(--cyan);
+  }
+  50% {
+    border-color: transparent;
+  }
 }
 
 @keyframes slideInToast {
@@ -447,4 +473,705 @@ body.light-mode dialog::backdrop {
     opacity: 1;
     transform: translateY(0) scale(1);
   }
+}
+
+/* ==========================================================================
+   Motion System
+   Shared keyframes, entrance animations and micro-interactions. Everything
+   here is switched off wholesale by the reduced-motion block below.
+   ========================================================================== */
+
+@keyframes revealUp {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 26px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes revealDown {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -22px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes revealLeft {
+  from {
+    opacity: 0;
+    transform: translate3d(-30px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes revealRight {
+  from {
+    opacity: 0;
+    transform: translate3d(30px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes popIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.75);
+  }
+  65% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Diagonal light sweep used on primary CTAs. */
+@keyframes shimmerSweep {
+  0% {
+    transform: translateX(-150%) skewX(-18deg);
+  }
+  100% {
+    transform: translateX(280%) skewX(-18deg);
+  }
+}
+
+@keyframes gradientPan {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes floatY {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+/* Very slow parallax drift for the fixed ambient light blobs. */
+@keyframes driftGlow {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(40px, -30px, 0) scale(1.12);
+  }
+  100% {
+    transform: translate3d(-25px, 25px, 0) scale(0.95);
+  }
+}
+
+@keyframes growLine {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes underlineGrow {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes ringPulse {
+  0% {
+    box-shadow:
+      0 0 15px var(--cyan-glow),
+      0 0 0 0 rgba(56, 189, 248, 0.4);
+  }
+  70% {
+    box-shadow:
+      0 0 15px var(--cyan-glow),
+      0 0 0 13px rgba(56, 189, 248, 0);
+  }
+  100% {
+    box-shadow:
+      0 0 15px var(--cyan-glow),
+      0 0 0 0 rgba(56, 189, 248, 0);
+  }
+}
+
+/* Sun <-> Moon swap in the theme toggle. */
+@keyframes iconSwap {
+  from {
+    opacity: 0;
+    transform: rotate(-120deg) scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Entrance utilities — add an inline animation-delay to stagger a group.
+   -------------------------------------------------------------------------- */
+.anim-up,
+.anim-down,
+.anim-left,
+.anim-right,
+.anim-pop {
+  animation-duration: 0.75s;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  animation-fill-mode: both;
+}
+
+.anim-up {
+  animation-name: revealUp;
+}
+.anim-down {
+  animation-name: revealDown;
+}
+.anim-left {
+  animation-name: revealLeft;
+}
+.anim-right {
+  animation-name: revealRight;
+}
+.anim-pop {
+  animation-name: popIn;
+  animation-duration: 0.55s;
+}
+
+.float-slow {
+  animation: floatY 6s ease-in-out infinite;
+}
+
+/* Loading spinner (used by the Playground inference buttons). */
+.spin {
+  animation: spin 0.9s linear infinite;
+  transform-origin: 50% 50%;
+}
+
+/* --------------------------------------------------------------------------
+   Micro-interactions
+   -------------------------------------------------------------------------- */
+
+/* Animated headline gradient. */
+.gradient-text {
+  background-size: 220% auto;
+  animation: gradientPan 9s ease-in-out infinite;
+}
+
+/* Tactile press feedback on every button. */
+.btn:active {
+  transform: translateY(0) scale(0.97);
+  transition-duration: 0.06s;
+}
+
+.btn-primary {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Light sweep across the primary CTA: idles slowly, snaps on hover. */
+.btn-animated::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 45%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+  animation: shimmerSweep 4.5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.btn-animated:hover::after {
+  animation-duration: 1.1s;
+}
+
+.btn-primary:hover {
+  box-shadow:
+    0 10px 28px var(--cyan-glow),
+    0 0 0 1px var(--border-accent);
+}
+
+.hover-lift {
+  transition: all var(--trans-smooth);
+}
+
+/* Plain glass cards get a lift; spotlight cards drive their own 3D tilt
+   through inline transforms, and cards opting into a specific hover-lift-*
+   variant below supply their own transform, so both are excluded here to
+   avoid fighting over the `transform` property. */
+.glass-card:not(.spotlight-card):not(.hover-lift-accent):not(.hover-slide-accent):hover {
+  transform: translateY(-4px);
+}
+
+.tech-tag:hover {
+  transform: translateY(-2px) scale(1.04);
+}
+
+.section-tag {
+  transition: all var(--trans-smooth);
+}
+
+.section-tag:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-accent);
+  box-shadow:
+    var(--shadow-sm),
+    0 0 18px var(--cyan-glow);
+}
+
+.theme-toggle-icon {
+  animation: iconSwap 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Drifting ambient light. */
+.ambient-glow-1 {
+  animation: driftGlow 26s ease-in-out infinite alternate;
+}
+
+.ambient-glow-2 {
+  animation: driftGlow 34s ease-in-out infinite alternate-reverse;
+}
+
+/* --------------------------------------------------------------------------
+   Navigation
+   -------------------------------------------------------------------------- */
+.nav-link {
+  position: relative;
+}
+
+/* Hover underline that wipes in from the left. */
+.nav-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 2px;
+  border-radius: var(--radius-full);
+  background: var(--cyan);
+  opacity: 0.45;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--trans-smooth);
+}
+
+.nav-link:hover::after {
+  transform: scaleX(1);
+}
+
+.nav-link:hover {
+  color: var(--cyan);
+}
+
+/* The active-section marker draws itself in whenever it moves to a new link. */
+.nav-underline {
+  transform-origin: left;
+  animation: underlineGrow 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* --------------------------------------------------------------------------
+   Reading progress bar (sits directly under the fixed navbar)
+   -------------------------------------------------------------------------- */
+.scroll-progress-track {
+  position: fixed;
+  top: var(--nav-height);
+  left: 0;
+  right: 0;
+  height: 2px;
+  z-index: 101;
+  pointer-events: none;
+  background: transparent;
+}
+
+.scroll-progress-bar {
+  height: 100%;
+  width: 100%;
+  transform-origin: left;
+  transform: scaleX(0);
+  background: var(--grad-primary-btn);
+  box-shadow: 0 0 12px var(--cyan-glow);
+  transition:
+    transform 0.12s linear,
+    box-shadow 0.25s ease;
+}
+
+/* Brief glow when the active section changes, fired from ScrollProgress's
+   useActiveSection subscription. */
+.scroll-progress-pulse {
+  box-shadow:
+    0 0 20px var(--cyan-glow),
+    0 0 6px var(--cyan);
+}
+
+/* --------------------------------------------------------------------------
+   Experience timeline
+   -------------------------------------------------------------------------- */
+.timeline-line {
+  transform-origin: top;
+  animation: growLine 1.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.timeline-node {
+  animation: ringPulse 3s ease-out infinite;
+  transition: transform var(--trans-smooth);
+}
+
+.timeline-node:hover {
+  transform: scale(1.12) rotate(-6deg);
+}
+
+/* --------------------------------------------------------------------------
+   Modals — the native <dialog> elements fade and scale in with their backdrop
+   -------------------------------------------------------------------------- */
+@keyframes modalIn {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes backdropIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+dialog[open] {
+  animation: modalIn 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+dialog[open]::backdrop {
+  animation: backdropIn 0.3s ease;
+}
+
+/* --------------------------------------------------------------------------
+   Small directional affordances
+   -------------------------------------------------------------------------- */
+@keyframes nudgeUp {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+.scroll-top-btn {
+  transition: all var(--trans-smooth);
+}
+
+.scroll-top-btn:hover {
+  transform: translateY(-3px);
+  border-color: var(--cyan);
+  color: var(--cyan);
+}
+
+.scroll-top-btn:hover svg {
+  animation: nudgeUp 0.7s ease-in-out infinite;
+}
+
+/* "Deep Dive" arrow leans into the click. */
+.open-project-modal svg {
+  transition: transform var(--trans-smooth);
+}
+
+.open-project-modal:hover svg {
+  transform: translateX(3px);
+}
+
+/* --------------------------------------------------------------------------
+   Pointer light — a soft glow trailing the cursor, above the neural canvas
+   but behind every interactive layer.
+   -------------------------------------------------------------------------- */
+.cursor-glow {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 420px;
+  height: 420px;
+  margin: -210px 0 0 -210px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--cyan-glow) 0%, transparent 68%);
+  filter: blur(28px);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 0;
+  transition: opacity 0.4s ease;
+}
+
+body.light-mode .cursor-glow {
+  opacity: 0;
+  filter: blur(36px);
+}
+
+/* --------------------------------------------------------------------------
+   Loading skeleton for the lazily-loaded Playground chunk
+   -------------------------------------------------------------------------- */
+@keyframes skeletonSweep {
+  0% {
+    background-position: -320px 0;
+  }
+  100% {
+    background-position: 320px 0;
+  }
+}
+
+.skeleton-block {
+  border-radius: var(--radius-md);
+  background: var(--bg-surface-elevated);
+  background-image: linear-gradient(90deg, transparent 0%, var(--cyan-glow) 45%, transparent 90%);
+  background-repeat: no-repeat;
+  background-size: 320px 100%;
+  border: 1px solid var(--border-subtle);
+  animation: skeletonSweep 1.4s ease-in-out infinite;
+}
+
+/* --------------------------------------------------------------------------
+   Architecture diagram — a packet travelling down the pipeline
+   -------------------------------------------------------------------------- */
+@keyframes flowPulse {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: translateX(-3px);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(3px);
+  }
+}
+
+.pipeline-arrow {
+  animation: flowPulse 1.8s ease-in-out infinite;
+}
+
+/* Pipeline stages sit angled away from the viewer so the row reads as
+   receding into depth, and swing forward to face you on hover.
+
+   `animation-fill-mode: backwards` matters here: a filled-forwards
+   animation keeps applying its final transform forever, which silently
+   overrides any :hover transform (CSS animations outrank normal
+   declarations). Backwards applies the from-state before the animation
+   starts and then hands `transform` back to the rules below. The resting
+   angle is a per-stage custom property so one keyframe covers them all.
+   Each stage carries its own perspective() rather than sharing one on the
+   row, because that row is `overflow-x: auto` and overflow forces flat. */
+@keyframes popIn3d {
+  0% {
+    opacity: 0;
+    transform: perspective(900px) rotateY(var(--stage-rot, 0deg)) translateZ(-70px) scale(0.85);
+  }
+  100% {
+    opacity: 1;
+    transform: perspective(900px) rotateY(var(--stage-rot, 0deg)) translateZ(var(--stage-z, 0px));
+  }
+}
+
+.pipeline-stage {
+  animation-name: popIn3d;
+  animation-duration: 0.55s;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  animation-fill-mode: backwards;
+  transform: perspective(900px) rotateY(var(--stage-rot, 0deg)) translateZ(var(--stage-z, 0px));
+  transition:
+    transform var(--trans-smooth),
+    border-color var(--trans-smooth),
+    box-shadow var(--trans-smooth);
+}
+
+/* --------------------------------------------------------------------------
+   Mobile navigation drawer
+   -------------------------------------------------------------------------- */
+@keyframes menuDrop {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.mobile-menu-panel {
+  animation: menuDrop 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* --------------------------------------------------------------------------
+   Toast exit (the entrance lives with the other keyframes above)
+   -------------------------------------------------------------------------- */
+@keyframes slideOutToast {
+  from {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(28px) scale(0.94);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Keyboard focus ring — visible, and it announces itself
+   -------------------------------------------------------------------------- */
+@keyframes focusRing {
+  from {
+    outline-color: transparent;
+    outline-offset: 8px;
+  }
+  to {
+    outline-color: var(--cyan);
+    outline-offset: 3px;
+  }
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+  animation: focusRing 0.25s ease-out;
+}
+
+/* --------------------------------------------------------------------------
+   Card depth (true 3D)
+
+   Spotlight cards opt into a real 3D space so their contents can sit at
+   different depths and parallax against each other as the card tilts.
+   `backdrop-filter` forces `transform-style: flat` on an element (verified
+   in Chrome — a translateZ child renders with no Z-pop), so spotlight cards
+   drop the blur they inherit from .glass-card and compensate with a more
+   opaque background in dark mode, where the blur was actually doing
+   something. In light mode .glass-card is already fully opaque, so nothing
+   changes there.
+   -------------------------------------------------------------------------- */
+.spotlight-card {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+body:not(.light-mode) .spotlight-card {
+  background: rgba(16, 22, 34, 0.88);
+}
+
+/* Any wrapper between the card and a depth layer would otherwise flatten it
+   back down (transform-style defaults to `flat`), so ancestors that actually
+   contain a depth layer opt into the shared 3D space too. Browsers without
+   :has() simply render the card flat — no depth, nothing broken. */
+.spotlight-card *:has(.depth-near, .depth-mid, .depth-far) {
+  transform-style: preserve-3d;
+}
+
+/* Depth layers for content inside a spotlight card. Kept small — at
+   perspective 1000px, translateZ(24px) is only ~2.5% of apparent scale, so
+   text stays crisp and layout doesn't visibly shift at rest. */
+.depth-near {
+  transform: translateZ(26px);
+}
+
+.depth-mid {
+  transform: translateZ(15px);
+}
+
+.depth-far {
+  transform: translateZ(6px);
+}
+
+/* --------------------------------------------------------------------------
+   Shared card hover-lift/slide — the transform is fixed per class, but the
+   accent border color is caller-supplied via the --hover-accent custom
+   property (falls back to --border-accent) so one class covers every tone.
+   -------------------------------------------------------------------------- */
+.hover-lift-accent,
+.hover-slide-accent {
+  transition:
+    transform var(--trans-smooth),
+    border-color var(--trans-smooth);
+}
+
+.hover-lift-accent:hover {
+  transform: translateY(-3px);
+  border-color: var(--hover-accent, var(--border-accent));
+}
+
+.hover-slide-accent:hover {
+  transform: translateX(4px);
+  border-color: var(--hover-accent, var(--border-accent));
+}
+
+.theme-toggle-btn:hover {
+  border-color: var(--cyan);
+  transform: scale(1.05);
+}
+
+/* Straighten up and step toward the viewer out of the receding row. */
+.pipeline-stage:hover {
+  border-color: var(--cyan);
+  transform: perspective(900px) rotateY(0deg) translateZ(26px);
+  box-shadow: 0 0 15px var(--cyan-glow);
+}
+
+/* Reduced Motion Respect */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Screen-reader-only text: kept out of the visual layout but still announced. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }

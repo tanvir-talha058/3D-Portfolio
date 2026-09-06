@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# No production domain exists yet, so the sitemap reference (and the
+# sitemap.xml file itself) are omitted rather than pointing at one that
+# doesn't resolve. Once deployed, regenerate sitemap.xml with the real
+# domain and add:
+# Sitemap: https://<domain>/sitemap.xml

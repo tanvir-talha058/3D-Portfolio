@@ -40,7 +40,7 @@ class CyberAudioEngine {
 
       osc.start();
       osc.stop(this.ctx.currentTime + duration);
-    } catch (e) {
+    } catch {
       // AudioContext unavailable or autoplay blocked
     }
   }
@@ -66,7 +66,9 @@ class CyberAudioEngine {
 
       osc.start();
       osc.stop(this.ctx.currentTime + 0.12);
-    } catch (e) {}
+    } catch {
+      /* AudioContext unavailable or autoplay blocked */
+    }
   }
 
   playSuccess() {
@@ -92,7 +94,9 @@ class CyberAudioEngine {
         osc.start(this.ctx.currentTime + idx * 0.05);
         osc.stop(this.ctx.currentTime + idx * 0.05 + 0.18);
       });
-    } catch (e) {}
+    } catch {
+      /* AudioContext unavailable or autoplay blocked */
+    }
   }
 
   playWhoosh() {
@@ -116,11 +120,20 @@ class CyberAudioEngine {
 
       osc.start();
       osc.stop(this.ctx.currentTime + 0.08);
-    } catch (e) {}
+    } catch {
+      /* AudioContext unavailable or autoplay blocked */
+    }
   }
 }
 
 export const cyberAudio = new CyberAudioEngine();
+
+// Stable module-level references (not recreated per render/hook-instance) so
+// they can safely be included in a consuming component's effect deps.
+const playBeep = (f, t, d) => cyberAudio.playBeep(f, t, d);
+const playLaser = () => cyberAudio.playLaser();
+const playSuccess = () => cyberAudio.playSuccess();
+const playWhoosh = () => cyberAudio.playWhoosh();
 
 export function useCyberSound() {
   const [soundEnabled, setSoundEnabled] = useState(() => {
@@ -133,21 +146,22 @@ export function useCyberSound() {
     localStorage.setItem('tanvir_sound_fx', soundEnabled);
   }, [soundEnabled]);
 
+  // Not an updater function, so calling playSuccess() here (rather than
+  // inside setSoundEnabled's updater) is safe from StrictMode's
+  // double-invocation of updater functions in development.
   const toggleSound = useCallback(() => {
-    setSoundEnabled((prev) => {
-      const next = !prev;
-      cyberAudio.enabled = next;
-      if (next) cyberAudio.playSuccess();
-      return next;
-    });
-  }, []);
+    const next = !soundEnabled;
+    cyberAudio.enabled = next;
+    setSoundEnabled(next);
+    if (next) cyberAudio.playSuccess();
+  }, [soundEnabled]);
 
   return {
     soundEnabled,
     toggleSound,
-    playBeep: (f, t, d) => cyberAudio.playBeep(f, t, d),
-    playLaser: () => cyberAudio.playLaser(),
-    playSuccess: () => cyberAudio.playSuccess(),
-    playWhoosh: () => cyberAudio.playWhoosh()
+    playBeep,
+    playLaser,
+    playSuccess,
+    playWhoosh
   };
 }

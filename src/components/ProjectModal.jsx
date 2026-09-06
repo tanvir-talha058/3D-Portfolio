@@ -1,35 +1,25 @@
 import React, { useEffect, useRef } from 'react';
-import { 
-  X, 
-  ExternalLink, 
-  Sparkles, 
-  Layers, 
-  Cpu, 
-  ShieldCheck, 
-  ArrowRight,
-  Workflow
-} from 'lucide-react';
+import { X, ExternalLink } from 'lucide-react';
 import { GithubIcon } from './Icons';
 import ArchitectureDiagram from './ArchitectureDiagram';
+import IconButton from './IconButton';
 
 export default function ProjectModal({ project, onClose }) {
   const dialogRef = useRef(null);
 
   useEffect(() => {
+    if (!project) return undefined;
     const dialog = dialogRef.current;
-    if (!dialog) return;
+    if (!dialog) return undefined;
 
-    if (project) {
-      if (!dialog.open) {
-        dialog.showModal();
-        document.body.style.overflow = 'hidden';
-      }
-    } else {
-      if (dialog.open) {
-        dialog.close();
-        document.body.style.overflow = '';
-      }
-    }
+    if (!dialog.open) dialog.showModal();
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      if (dialog.open) dialog.close();
+    };
   }, [project]);
 
   const handleBackdropClick = (e) => {
@@ -49,8 +39,8 @@ export default function ProjectModal({ project, onClose }) {
         border: 'none',
         background: 'transparent',
         padding: '1rem',
-        maxWidth: '880px',
-        width: 'min(94vw, 880px)',
+        maxWidth: '960px',
+        width: 'min(94vw, 960px)',
         margin: 'auto',
         outline: 'none',
         maxHeight: '92vh',
@@ -69,47 +59,59 @@ export default function ProjectModal({ project, onClose }) {
         }}
       >
         {/* Close button */}
-        <button
-          type="button"
+        <IconButton
+          icon={<X size={18} />}
           onClick={onClose}
           aria-label="Close modal"
-          style={{
-            position: 'absolute',
-            top: '1.25rem',
-            right: '1.25rem',
-            width: '36px',
-            height: '36px',
-            borderRadius: '50%',
-            background: 'var(--bg-surface-elevated)',
-            border: '1px solid var(--border-medium)',
-            color: 'var(--text-muted)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            cursor: 'pointer',
-            zIndex: 10
-          }}
-        >
-          <X size={18} />
-        </button>
+          style={{ position: 'absolute', top: '1.25rem', right: '1.25rem', zIndex: 10 }}
+        />
 
         {/* Header tags */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.75rem',
+            marginBottom: '1rem',
+            flexWrap: 'wrap'
+          }}
+        >
           <div className="section-tag" style={{ margin: 0 }}>
             <span>{project.badge || 'Engineering'}</span>
           </div>
           {project.metrics && (
-            <span style={{ fontSize: '0.82rem', color: 'var(--cyan)', fontFamily: 'var(--font-mono)', fontWeight: 600 }}>
+            <span
+              style={{
+                fontSize: '0.82rem',
+                color: 'var(--cyan)',
+                fontFamily: 'var(--font-mono)',
+                fontWeight: 600
+              }}
+            >
               {project.metrics}
             </span>
           )}
         </div>
 
         {/* Title */}
-        <h2 style={{ fontSize: 'clamp(1.5rem, 3vw, 2.2rem)', fontWeight: 800, marginBottom: '0.85rem', color: 'var(--text-main)' }}>
+        <h2
+          style={{
+            fontSize: 'clamp(1.5rem, 3vw, 2.2rem)',
+            fontWeight: 800,
+            marginBottom: '0.85rem',
+            color: 'var(--text-main)'
+          }}
+        >
           {project.title}
         </h2>
-        <p style={{ fontSize: '1.02rem', color: 'var(--text-muted)', lineHeight: 1.65, marginBottom: '1.75rem' }}>
+        <p
+          style={{
+            fontSize: '1.02rem',
+            color: 'var(--text-muted)',
+            lineHeight: 1.65,
+            marginBottom: '1.75rem'
+          }}
+        >
           {project.summary || project.description || project.longDesc}
         </p>
 
@@ -122,7 +124,15 @@ export default function ProjectModal({ project, onClose }) {
 
         {/* Problem vs Solution Case Study */}
         {(project.problem || project.solution) && (
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1.25rem', marginBottom: '2rem' }} className="case-study-grid">
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr',
+              gap: '1.25rem',
+              marginBottom: '2rem'
+            }}
+            className="case-study-grid"
+          >
             {project.problem && (
               <div
                 style={{
@@ -132,7 +142,15 @@ export default function ProjectModal({ project, onClose }) {
                   border: '1px solid var(--border-subtle)'
                 }}
               >
-                <h4 style={{ fontSize: '0.88rem', fontFamily: 'var(--font-mono)', color: '#f87171', marginBottom: '0.5rem', textTransform: 'uppercase' }}>
+                <h4
+                  style={{
+                    fontSize: '0.88rem',
+                    fontFamily: 'var(--font-mono)',
+                    color: 'var(--red-light)',
+                    marginBottom: '0.5rem',
+                    textTransform: 'uppercase'
+                  }}
+                >
                   The Challenge:
                 </h4>
                 <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>
@@ -150,7 +168,15 @@ export default function ProjectModal({ project, onClose }) {
                   border: '1px solid rgba(52, 211, 153, 0.3)'
                 }}
               >
-                <h4 style={{ fontSize: '0.88rem', fontFamily: 'var(--font-mono)', color: '#34d399', marginBottom: '0.5rem', textTransform: 'uppercase' }}>
+                <h4
+                  style={{
+                    fontSize: '0.88rem',
+                    fontFamily: 'var(--font-mono)',
+                    color: 'var(--emerald-light)',
+                    marginBottom: '0.5rem',
+                    textTransform: 'uppercase'
+                  }}
+                >
                   The Engineering Solution:
                 </h4>
                 <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>
@@ -169,8 +195,20 @@ export default function ProjectModal({ project, onClose }) {
             </h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
               {project.highlights.map((h, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.65rem', fontSize: '0.92rem', color: 'var(--text-muted)', lineHeight: 1.55 }}>
-                  <span style={{ color: 'var(--cyan)', marginTop: '0.15rem', flexShrink: 0 }}>✦</span>
+                <div
+                  key={i}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'flex-start',
+                    gap: '0.65rem',
+                    fontSize: '0.92rem',
+                    color: 'var(--text-muted)',
+                    lineHeight: 1.55
+                  }}
+                >
+                  <span style={{ color: 'var(--cyan)', marginTop: '0.15rem', flexShrink: 0 }}>
+                    ✦
+                  </span>
                   <span>{h}</span>
                 </div>
               ))}
@@ -186,7 +224,11 @@ export default function ProjectModal({ project, onClose }) {
             </h3>
             <div style={{ display: 'flex', gap: '0.45rem', flexWrap: 'wrap' }}>
               {project.tech.map((t, i) => (
-                <span key={i} className="tech-tag" style={{ fontSize: '0.82rem', padding: '0.3rem 0.75rem' }}>
+                <span
+                  key={i}
+                  className="tech-tag"
+                  style={{ fontSize: '0.82rem', padding: '0.3rem 0.75rem' }}
+                >
                   {t}
                 </span>
               ))}
@@ -195,7 +237,10 @@ export default function ProjectModal({ project, onClose }) {
         )}
 
         {/* Modal Footer Links */}
-        <div style={{ display: 'flex', gap: '0.85rem', flexWrap: 'wrap' }} className="project-modal-ctas">
+        <div
+          style={{ display: 'flex', gap: '0.85rem', flexWrap: 'wrap' }}
+          className="project-modal-ctas"
+        >
           {project.github && (
             <a
               href={project.github}

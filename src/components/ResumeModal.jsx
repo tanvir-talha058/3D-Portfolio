@@ -1,32 +1,24 @@
 import React, { useEffect, useRef } from 'react';
-import { 
-  X, 
-  Download, 
-  ExternalLink, 
-  FileText, 
-  Sparkles,
-  Maximize2
-} from 'lucide-react';
+import { X, Download, ExternalLink, FileText } from 'lucide-react';
 import { portfolioData } from '../data/portfolioData';
+import IconButton from './IconButton';
 
 export default function ResumeModal({ isOpen, onClose }) {
   const dialogRef = useRef(null);
 
   useEffect(() => {
+    if (!isOpen) return undefined;
     const dialog = dialogRef.current;
-    if (!dialog) return;
+    if (!dialog) return undefined;
 
-    if (isOpen) {
-      if (!dialog.open) {
-        dialog.showModal();
-        document.body.style.overflow = 'hidden';
-      }
-    } else {
-      if (dialog.open) {
-        dialog.close();
-        document.body.style.overflow = '';
-      }
-    }
+    if (!dialog.open) dialog.showModal();
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      if (dialog.open) dialog.close();
+    };
   }, [isOpen]);
 
   const handleBackdropClick = (e) => {
@@ -36,6 +28,8 @@ export default function ResumeModal({ isOpen, onClose }) {
   };
 
   if (!isOpen) return null;
+
+  const pdfUrl = portfolioData?.personal?.resumeUrl || '/updated_resume_by_Tanvir.pdf';
 
   return (
     <dialog
@@ -69,16 +63,44 @@ export default function ResumeModal({ isOpen, onClose }) {
         }}
       >
         {/* Header Bar */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: '1rem', borderBottom: '1px solid var(--border-subtle)', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.75rem' }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            paddingBottom: '1rem',
+            borderBottom: '1px solid var(--border-subtle)',
+            marginBottom: '1rem',
+            flexWrap: 'wrap',
+            gap: '0.75rem'
+          }}
+        >
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-            <div style={{ width: '36px', height: '36px', borderRadius: 'var(--radius-sm)', background: 'rgba(56, 189, 248, 0.1)', color: 'var(--cyan)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div
+              style={{
+                width: '36px',
+                height: '36px',
+                borderRadius: 'var(--radius-sm)',
+                background: 'rgba(56, 189, 248, 0.1)',
+                color: 'var(--cyan)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+            >
               <FileText size={18} />
             </div>
             <div>
               <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--text-main)' }}>
-                Tanvir Ahmed — Curriculum Vitae
+                {portfolioData.personal.name} — Curriculum Vitae
               </h3>
-              <p style={{ fontSize: '0.76rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
+              <p
+                style={{
+                  fontSize: '0.76rem',
+                  color: 'var(--text-dim)',
+                  fontFamily: 'var(--font-mono)'
+                }}
+              >
                 AI/ML Engineer & Researcher • Updated 2026
               </p>
             </div>
@@ -86,7 +108,7 @@ export default function ResumeModal({ isOpen, onClose }) {
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <a
-              href={portfolioData.personal.resume}
+              href={pdfUrl}
               download="Tanvir_Ahmed_AI_ML_Resume.pdf"
               className="btn btn-outline btn-sm"
               title="Download PDF file"
@@ -96,7 +118,7 @@ export default function ResumeModal({ isOpen, onClose }) {
             </a>
 
             <a
-              href={portfolioData.personal.resume}
+              href={pdfUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="btn btn-primary btn-sm"
@@ -106,25 +128,12 @@ export default function ResumeModal({ isOpen, onClose }) {
               <span>Full Tab</span>
             </a>
 
-            <button
-              type="button"
+            <IconButton
+              icon={<X size={16} />}
+              size={34}
               onClick={onClose}
               aria-label="Close resume preview"
-              style={{
-                width: '34px',
-                height: '34px',
-                borderRadius: '50%',
-                background: 'var(--bg-surface-elevated)',
-                border: '1px solid var(--border-medium)',
-                color: 'var(--text-muted)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer'
-              }}
-            >
-              <X size={16} />
-            </button>
+            />
           </div>
         </div>
 
@@ -141,8 +150,8 @@ export default function ResumeModal({ isOpen, onClose }) {
           }}
         >
           <iframe
-            src={`${portfolioData.personal.resume}#toolbar=0&navpanes=0`}
-            title="Tanvir Ahmed Resume PDF"
+            src={`${pdfUrl}#toolbar=0&navpanes=0`}
+            title={`${portfolioData.personal.name} Resume PDF`}
             style={{ width: '100%', height: '100%', border: 'none' }}
           />
         </div>

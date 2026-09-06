@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, Suspense, lazy } from 'react';
 import NeuralBackground from './components/NeuralBackground';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
@@ -6,40 +6,47 @@ import About from './components/About';
 import Experience from './components/Experience';
 import Skills from './components/Skills';
 import Projects from './components/Projects';
-import Research from './components/Research';
-import Playground from './components/Playground';
-import Education from './components/Education';
 import Contact from './components/Contact';
 import ProjectModal from './components/ProjectModal';
 import RecruiterModal from './components/RecruiterModal';
 import ResumeModal from './components/ResumeModal';
 import CommandCenter from './components/CommandCenter';
+import ScrollProgress from './components/ScrollProgress';
+import CursorGlow from './components/CursorGlow';
+import SectionSkeleton from './components/SectionSkeleton';
 import Toast from './components/Toast';
-import { ArrowUp, Mail, Sparkles, Briefcase, Eye, Command, Terminal, Zap } from 'lucide-react';
+import { ArrowUp, Briefcase, Eye, Command } from 'lucide-react';
 import { GithubIcon, LinkedinIcon } from './components/Icons';
 import { portfolioData } from './data/portfolioData';
-import { useCyberSound } from './hooks/useCyberSound';
+import { useSound } from './contexts/SoundContext';
+import { useTheme } from './contexts/ThemeContext';
+
+const Playground = lazy(() => import('./components/Playground'));
+const Research = lazy(() => import('./components/Research'));
+const Education = lazy(() => import('./components/Education'));
 
 export default function App() {
   const [selectedProject, setSelectedProject] = useState(null);
   const [recruiterOpen, setRecruiterOpen] = useState(false);
   const [resumeOpen, setResumeOpen] = useState(false);
   const [commandCenterOpen, setCommandCenterOpen] = useState(false);
-  const [isLightMode, setIsLightMode] = useState(() => {
-    return localStorage.getItem('portfolio_theme') === 'light';
-  });
+  const [playgroundTab, setPlaygroundTab] = useState('3dvector');
   const [toasts, setToasts] = useState([]);
-  const { playWhoosh, playSuccess } = useCyberSound();
+  const [showFloatingBar, setShowFloatingBar] = useState(false);
+  const { playWhoosh } = useSound();
+  const { isLightMode, toggleTheme } = useTheme();
 
+  // Keep the floating AI Hub pill hidden until the user scrolls down
   useEffect(() => {
-    if (isLightMode) {
-      document.body.classList.add('light-mode');
-      localStorage.setItem('portfolio_theme', 'light');
-    } else {
-      document.body.classList.remove('light-mode');
-      localStorage.setItem('portfolio_theme', 'dark');
-    }
-  }, [isLightMode]);
+    const handleScroll = () => {
+      const heroEl = document.getElementById('hero');
+      const threshold = heroEl ? Math.max(300, heroEl.offsetHeight * 0.4) : 400;
+      setShowFloatingBar(window.scrollY > threshold);
+    };
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // Global Keyboard Shortcut: Ctrl+K / Cmd+K for AI Command Center
   useEffect(() => {
@@ -53,21 +60,54 @@ export default function App() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  const toggleTheme = () => {
-    setIsLightMode((prev) => {
-      const next = !prev;
-      addToast(next ? "Switched to Day Mode (Light)" : "Switched to Night Mode (Dark)", next ? "Sun" : "Moon");
-      return next;
-    });
-  };
-
-  const addToast = (message, icon = 'Sparkles') => {
-    const id = Date.now();
+  const addToast = useCallback((message, icon = 'Sparkles') => {
+    const id = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
     setToasts((prev) => [...prev, { id, message, icon }]);
+    // Flag the toast first so it can play its exit before being unmounted.
+    setTimeout(() => {
+      setToasts((prev) => prev.map((t) => (t.id === id ? { ...t, exiting: true } : t)));
+    }, 2700);
     setTimeout(() => {
       setToasts((prev) => prev.filter((t) => t.id !== id));
     }, 3000);
-  };
+  }, []);
+
+  const handleEasterEgg = useCallback(() => {
+    addToast('Neural burst unlocked — nice clicking!', 'Sparkles');
+  }, [addToast]);
+
+  const handleToggleTheme = useCallback(() => {
+    const next = !isLightMode;
+    toggleTheme();
+    addToast(
+      next ? 'Switched to Day Mode (Light)' : 'Switched to Night Mode (Dark)',
+      next ? 'Sun' : 'Moon'
+    );
+  }, [isLightMode, toggleTheme, addToast]);
+
+  const openRecruiter = useCallback(() => {
+    playWhoosh();
+    setRecruiterOpen(true);
+  }, [playWhoosh]);
+  const openResume = useCallback(() => {
+    playWhoosh();
+    setResumeOpen(true);
+  }, [playWhoosh]);
+  const openCommandCenter = useCallback(() => {
+    playWhoosh();
+    setCommandCenterOpen(true);
+  }, [playWhoosh]);
+
+  const handleTriggerInference = useCallback((tab) => {
+    const tabMap = {
+      rag: 'rag',
+      fraud: 'fraud',
+      vision: 'vision',
+      '3d': '3dvector'
+    };
+    const target = tabMap[tab] || tab;
+    setPlaygroundTab(target);
+  }, []);
 
   const scrollToTop = () => {
     playWhoosh();
@@ -77,38 +117,47 @@ export default function App() {
   return (
     <div style={{ position: 'relative', minHeight: '100vh', background: 'var(--bg-dark)' }}>
       {/* Dynamic Backgrounds */}
-      <NeuralBackground isLightMode={isLightMode} />
+      <NeuralBackground isLightMode={isLightMode} onEasterEgg={handleEasterEgg} />
       <div className="ambient-glow-1" />
       <div className="ambient-glow-2" />
+      <CursorGlow />
 
       {/* Navigation */}
+      <ScrollProgress />
       <Navbar
-        onOpenRecruiter={() => { playWhoosh(); setRecruiterOpen(true); }}
-        onOpenResume={() => { playWhoosh(); setResumeOpen(true); }}
-        onOpenCommandCenter={() => { playWhoosh(); setCommandCenterOpen(true); }}
-        isLightMode={isLightMode}
-        onToggleTheme={toggleTheme}
+        onOpenRecruiter={openRecruiter}
+        onOpenResume={openResume}
+        onOpenCommandCenter={openCommandCenter}
+        onToggleTheme={handleToggleTheme}
       />
 
       {/* Main Content Sections */}
       <main>
-        <Hero
-          onOpenRecruiter={() => { playWhoosh(); setRecruiterOpen(true); }}
-          onOpenResume={() => { playWhoosh(); setResumeOpen(true); }}
-          isLightMode={isLightMode}
-        />
+        <Hero onOpenRecruiter={openRecruiter} onOpenResume={openResume} />
         <About />
         <Experience />
         <Skills />
-        <Projects onSelectProject={(project) => { playWhoosh(); setSelectedProject(project); }} />
-        <Research onToast={addToast} />
-        <Playground />
-        <Education />
+        <Projects
+          onSelectProject={(project) => {
+            playWhoosh();
+            setSelectedProject(project);
+          }}
+        />
+        <Suspense fallback={<SectionSkeleton />}>
+          <Research onToast={addToast} />
+        </Suspense>
+        <Suspense fallback={<SectionSkeleton />}>
+          <Playground activeTab={playgroundTab} onTabChange={setPlaygroundTab} />
+        </Suspense>
+        <Suspense fallback={<SectionSkeleton />}>
+          <Education />
+        </Suspense>
         <Contact onToast={addToast} />
       </main>
 
       {/* Floating Futuristic AI Command Hub Floating Pill (Bottom-Right) */}
       <div
+        className="floating-action-bar"
         style={{
           position: 'fixed',
           bottom: '24px',
@@ -116,15 +165,16 @@ export default function App() {
           zIndex: 90,
           display: 'flex',
           alignItems: 'center',
-          gap: '0.5rem'
+          gap: '0.5rem',
+          opacity: showFloatingBar ? 1 : 0,
+          pointerEvents: showFloatingBar ? 'auto' : 'none',
+          transform: showFloatingBar ? 'translateY(0)' : 'translateY(12px)',
+          transition: 'opacity 0.25s ease, transform 0.25s ease'
         }}
       >
         <button
           type="button"
-          onClick={() => {
-            playWhoosh();
-            setCommandCenterOpen(true);
-          }}
+          onClick={openCommandCenter}
           style={{
             display: 'inline-flex',
             alignItems: 'center',
@@ -142,12 +192,22 @@ export default function App() {
             backdropFilter: 'blur(16px)',
             transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)'
           }}
-          className="cyber-pill-hover"
+          className="cyber-pill-hover ai-hub-btn"
           title="Open AI Command Hub (Ctrl+K / ⌘K)"
+          aria-label="Open AI Command Hub"
         >
-          <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--cyan)', boxShadow: '0 0 10px var(--cyan)', animation: 'pulseDot 1.8s infinite' }} />
+          <span
+            style={{
+              width: '8px',
+              height: '8px',
+              borderRadius: '50%',
+              background: 'var(--cyan)',
+              boxShadow: '0 0 10px var(--cyan)',
+              animation: 'pulseDot 1.8s infinite'
+            }}
+          />
           <Command size={14} />
-          <span>⌘K AI Hub</span>
+          <span className="ai-hub-label">⌘K AI Hub</span>
         </button>
 
         <button
@@ -167,6 +227,7 @@ export default function App() {
             boxShadow: 'var(--shadow-md)',
             backdropFilter: 'blur(12px)'
           }}
+          className="scroll-top-btn"
           title="Scroll to top"
           aria-label="Scroll to top"
         >
@@ -175,22 +236,51 @@ export default function App() {
       </div>
 
       {/* Footer */}
-      <footer style={{ background: 'var(--bg-surface)', borderTop: '1px solid var(--border-subtle)', padding: '4rem 0 2rem', position: 'relative', zIndex: 1 }}>
+      <footer
+        style={{
+          background: 'var(--bg-surface)',
+          borderTop: '1px solid var(--border-subtle)',
+          padding: '4rem 0 2rem',
+          position: 'relative',
+          zIndex: 1
+        }}
+      >
         <div className="container">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1.5rem', paddingBottom: '2rem', borderBottom: '1px solid var(--border-subtle)' }}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              flexWrap: 'wrap',
+              gap: '1.5rem',
+              paddingBottom: '2rem',
+              borderBottom: '1px solid var(--border-subtle)'
+            }}
+          >
             <div>
-              <div style={{ fontFamily: 'var(--font-heading)', fontSize: '1.35rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '0.35rem' }}>
+              <div
+                style={{
+                  fontFamily: 'var(--font-heading)',
+                  fontSize: '1.35rem',
+                  fontWeight: 800,
+                  color: 'var(--text-main)',
+                  marginBottom: '0.35rem'
+                }}
+              >
                 {portfolioData.personal.name} <span style={{ color: 'var(--cyan)' }}>.ai</span>
               </div>
               <p style={{ fontSize: '0.9rem', color: 'var(--text-dim)', maxWidth: '400px' }}>
-                AI/ML Engineer & Researcher at upay (UCB Fintech) • Multilingual RAG • Computer Vision • Low-Latency AI Systems.
+                AI/ML Engineer & Researcher at upay (UCB Fintech) • Multilingual RAG • Computer
+                Vision • Low-Latency AI Systems.
               </p>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+            <div
+              style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '0.85rem' }}
+            >
               <button
                 type="button"
-                onClick={() => { playWhoosh(); setRecruiterOpen(true); }}
+                onClick={openRecruiter}
                 className="btn btn-outline btn-sm"
                 style={{ fontSize: '0.8rem' }}
               >
@@ -200,7 +290,7 @@ export default function App() {
 
               <button
                 type="button"
-                onClick={() => { playWhoosh(); setResumeOpen(true); }}
+                onClick={openResume}
                 className="btn btn-outline btn-sm"
                 style={{ fontSize: '0.8rem' }}
               >
@@ -230,12 +320,25 @@ export default function App() {
             </div>
           </div>
 
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '1.5rem', fontSize: '0.85rem', color: 'var(--text-dim)', flexWrap: 'wrap', gap: '1rem' }}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              paddingTop: '1.5rem',
+              fontSize: '0.85rem',
+              color: 'var(--text-dim)',
+              flexWrap: 'wrap',
+              gap: '1rem'
+            }}
+          >
             <div>
               © {new Date().getFullYear()} {portfolioData.personal.name}. All rights reserved.
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-              <span>Engineered with React 19, Three.js 3D WebGL & Native Web Audio Synthesizer</span>
+              <span>
+                Engineered with React 19, Three.js 3D WebGL & Native Web Audio Synthesizer
+              </span>
             </div>
           </div>
         </div>
@@ -247,15 +350,12 @@ export default function App() {
         onClose={() => setCommandCenterOpen(false)}
         onOpenRecruiter={() => setRecruiterOpen(true)}
         onOpenResume={() => setResumeOpen(true)}
-        isLightMode={isLightMode}
-        toggleTheme={toggleTheme}
+        toggleTheme={handleToggleTheme}
+        onTriggerInference={handleTriggerInference}
       />
 
       {/* Project Detail Modal */}
-      <ProjectModal
-        project={selectedProject}
-        onClose={() => setSelectedProject(null)}
-      />
+      <ProjectModal project={selectedProject} onClose={() => setSelectedProject(null)} />
 
       {/* Recruiter 1-Page Cheat Sheet Modal */}
       <RecruiterModal
@@ -265,10 +365,7 @@ export default function App() {
       />
 
       {/* In-Page Resume PDF Viewer Modal */}
-      <ResumeModal
-        isOpen={resumeOpen}
-        onClose={() => setResumeOpen(false)}
-      />
+      <ResumeModal isOpen={resumeOpen} onClose={() => setResumeOpen(false)} />
 
       {/* Toast Notifications */}
       <Toast toasts={toasts} />
@@ -278,6 +375,25 @@ export default function App() {
           transform: translateY(-3px) scale(1.04);
           border-color: var(--cyan) !important;
           box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5), 0 0 25px var(--cyan-glow) !important;
+        }
+
+        /* Collapse the AI Hub pill to an icon-only button on mobile so it
+           doesn't overlap page content (its full label is quite wide relative
+           to a narrow viewport). */
+        @media (max-width: 768px) {
+          .floating-action-bar {
+            bottom: 16px !important;
+            right: 16px !important;
+          }
+          .ai-hub-btn {
+            width: 40px;
+            height: 40px;
+            padding: 0 !important;
+            justify-content: center;
+          }
+          .ai-hub-label {
+            display: none;
+          }
         }
       `}</style>
     </div>

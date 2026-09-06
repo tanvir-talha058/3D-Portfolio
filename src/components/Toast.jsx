@@ -1,18 +1,24 @@
 import React from 'react';
-import { CheckCircle2, Sparkles, Mail, BookOpen, Send } from 'lucide-react';
+import { Sparkles, Mail, BookOpen, Send } from 'lucide-react';
 
 export default function Toast({ toasts }) {
   const getIcon = (type) => {
     switch (type) {
-      case 'Mail': return <Mail size={16} color="var(--cyan)" />;
-      case 'BookOpen': return <BookOpen size={16} color="#c084fc" />;
-      case 'Send': return <Send size={16} color="#34d399" />;
-      default: return <Sparkles size={16} color="var(--cyan)" />;
+      case 'Mail':
+        return <Mail size={16} color="var(--cyan)" />;
+      case 'BookOpen':
+        return <BookOpen size={16} color="#c084fc" />;
+      case 'Send':
+        return <Send size={16} color="var(--emerald-light)" />;
+      default:
+        return <Sparkles size={16} color="var(--cyan)" />;
     }
   };
 
   return (
     <div
+      role="status"
+      aria-live="polite"
       style={{
         position: 'fixed',
         bottom: '2rem',
@@ -39,7 +45,9 @@ export default function Toast({ toasts }) {
             display: 'flex',
             alignItems: 'center',
             gap: '0.65rem',
-            animation: 'slideInToast 0.3s ease forwards',
+            animation: toast.exiting
+              ? 'slideOutToast 0.3s cubic-bezier(0.4, 0, 1, 1) forwards'
+              : 'slideInToast 0.3s ease forwards',
             pointerEvents: 'auto'
           }}
         >

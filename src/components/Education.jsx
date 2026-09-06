@@ -1,15 +1,18 @@
 import React from 'react';
-import { GraduationCap, Award, Trophy, Sparkles, BookOpen, Calendar, MapPin } from 'lucide-react';
+import { GraduationCap, Trophy, Calendar, MapPin } from 'lucide-react';
 import { portfolioData } from '../data/portfolioData';
+import Reveal from './Reveal';
+import ScrambleText from './ScrambleText';
+import PillBadge from './PillBadge';
 
 export default function Education() {
   return (
     <section id="education">
       <div className="container">
-        <div className="section-header">
+        <Reveal className="section-header" variant="up" blur>
           <div className="section-tag">
             <GraduationCap size={13} />
-            <span>Academic Background</span>
+            <ScrambleText text="Academic Background" />
           </div>
           <h2 className="section-title">
             Education & <span className="gradient-text">Recognitions</span>
@@ -17,13 +20,23 @@ export default function Education() {
           <p className="section-subtitle">
             Strong foundations in computer systems, mathematics, and algorithmic problem-solving.
           </p>
-        </div>
+        </Reveal>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '2.5rem' }} className="edu-grid">
-          
+        <div
+          style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '2.5rem' }}
+          className="edu-grid"
+        >
           {/* Left: Degrees */}
-          <div>
-            <h3 style={{ fontSize: '1.45rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+          <Reveal variant="left">
+            <h3
+              style={{
+                fontSize: '1.45rem',
+                marginBottom: '1.5rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.6rem'
+              }}
+            >
               <GraduationCap size={20} color="var(--cyan)" />
               <span>Academic Credentials</span>
             </h3>
@@ -32,44 +45,57 @@ export default function Education() {
               {portfolioData.education.map((item, idx) => (
                 <div
                   key={idx}
-                  className="glass-card"
-                  style={{
-                    padding: '1.75rem',
-                    transition: 'all 0.25s ease'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = 'var(--border-accent)';
-                    e.currentTarget.style.transform = 'translateY(-3px)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = 'var(--border-subtle)';
-                    e.currentTarget.style.transform = 'translateY(0)';
-                  }}
+                  className="glass-card hover-lift-accent"
+                  style={{ padding: '1.75rem' }}
                 >
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '0.4rem' }}>
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'flex-start',
+                      flexWrap: 'wrap',
+                      gap: '0.5rem',
+                      marginBottom: '0.4rem'
+                    }}
+                  >
                     <h4 style={{ fontSize: '1.2rem', color: 'var(--text-main)' }}>
                       {item.institution}
                     </h4>
-                    <span
+                    <PillBadge
+                      as="span"
+                      size="xs"
+                      mono
                       style={{
-                        fontFamily: 'var(--font-mono)',
-                        fontSize: '0.75rem',
-                        padding: '0.2rem 0.6rem',
-                        borderRadius: 'var(--radius-full)',
                         background: 'rgba(0, 240, 255, 0.1)',
                         color: 'var(--cyan)',
                         border: '1px solid rgba(0, 240, 255, 0.25)'
                       }}
                     >
                       {item.badge}
-                    </span>
+                    </PillBadge>
                   </div>
 
-                  <div style={{ fontSize: '0.98rem', fontWeight: 600, color: 'var(--cyan)', marginBottom: '0.6rem' }}>
+                  <div
+                    style={{
+                      fontSize: '0.98rem',
+                      fontWeight: 600,
+                      color: 'var(--cyan)',
+                      marginBottom: '0.6rem'
+                    }}
+                  >
                     {item.degree}
                   </div>
 
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', fontSize: '0.82rem', color: 'var(--text-dim)', marginBottom: '0.85rem' }}>
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '1rem',
+                      fontSize: '0.82rem',
+                      color: 'var(--text-dim)',
+                      marginBottom: '0.85rem'
+                    }}
+                  >
                     <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
                       <Calendar size={13} /> {item.period}
                     </span>
@@ -79,7 +105,15 @@ export default function Education() {
                   </div>
 
                   {item.coursework && (
-                    <div style={{ fontSize: '0.85rem', color: 'var(--text-dim)', lineHeight: 1.55, paddingTop: '0.75rem', borderTop: '1px solid var(--border-subtle)' }}>
+                    <div
+                      style={{
+                        fontSize: '0.85rem',
+                        color: 'var(--text-dim)',
+                        lineHeight: 1.55,
+                        paddingTop: '0.75rem',
+                        borderTop: '1px solid var(--border-subtle)'
+                      }}
+                    >
                       <strong style={{ color: 'var(--text-muted)' }}>Relevant Coursework: </strong>
                       {item.coursework}
                     </div>
@@ -87,11 +121,19 @@ export default function Education() {
                 </div>
               ))}
             </div>
-          </div>
+          </Reveal>
 
           {/* Right: Awards & Honors */}
-          <div>
-            <h3 style={{ fontSize: '1.45rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+          <Reveal variant="right" delay={140}>
+            <h3
+              style={{
+                fontSize: '1.45rem',
+                marginBottom: '1.5rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.6rem'
+              }}
+            >
               <Trophy size={20} color="var(--amber)" />
               <span>Honors & Achievements</span>
             </h3>
@@ -100,21 +142,13 @@ export default function Education() {
               {portfolioData.awards.map((award, idx) => (
                 <div
                   key={idx}
-                  className="glass-card"
+                  className="glass-card hover-lift-accent"
                   style={{
                     padding: '1.75rem',
                     display: 'flex',
                     alignItems: 'flex-start',
                     gap: '1.25rem',
-                    transition: 'all 0.25s ease'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = 'var(--amber)';
-                    e.currentTarget.style.transform = 'translateY(-3px)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = 'var(--border-subtle)';
-                    e.currentTarget.style.transform = 'translateY(0)';
+                    '--hover-accent': 'var(--amber)'
                   }}
                 >
                   <div
@@ -134,21 +168,35 @@ export default function Education() {
                   </div>
 
                   <div>
-                    <h4 style={{ fontSize: '1.1rem', color: 'var(--text-main)', marginBottom: '0.25rem' }}>
+                    <h4
+                      style={{
+                        fontSize: '1.1rem',
+                        color: 'var(--text-main)',
+                        marginBottom: '0.25rem'
+                      }}
+                    >
                       {award.title}
                     </h4>
-                    <div style={{ fontSize: '0.84rem', color: 'var(--cyan)', fontFamily: 'var(--font-mono)', marginBottom: '0.5rem' }}>
+                    <div
+                      style={{
+                        fontSize: '0.84rem',
+                        color: 'var(--cyan)',
+                        fontFamily: 'var(--font-mono)',
+                        marginBottom: '0.5rem'
+                      }}
+                    >
                       {award.category} • {award.organization}
                     </div>
-                    <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)', lineHeight: 1.55 }}>
+                    <p
+                      style={{ fontSize: '0.88rem', color: 'var(--text-muted)', lineHeight: 1.55 }}
+                    >
                       {award.desc}
                     </p>
                   </div>
                 </div>
               ))}
             </div>
-          </div>
-
+          </Reveal>
         </div>
       </div>
 

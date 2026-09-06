@@ -1,36 +1,123 @@
 import React, { useEffect, useRef, useState } from 'react';
-import * as THREE from 'three';
-import { Layers, Rotate3d, Search, Sparkles } from 'lucide-react';
+import {
+  BufferGeometry,
+  GridHelper,
+  Group,
+  Line,
+  LineBasicMaterial,
+  Mesh,
+  MeshBasicMaterial,
+  PerspectiveCamera,
+  Raycaster,
+  Scene,
+  SphereGeometry,
+  Vector2,
+  Vector3,
+  WebGLRenderer
+} from 'three';
+import { Rotate3d } from 'lucide-react';
+import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 
 const EMBEDDING_POINTS = [
   // Bangla Banking Cluster (Cyan)
-  { label: 'upay Add Money (বিকাশ/কার্ড)', cluster: 'FinTech Intent', color: 0x38bdf8, pos: [-3.5, 2.0, 1.5] },
-  { label: 'Merchant Payment QR (পেমেন্ট)', cluster: 'FinTech Intent', color: 0x38bdf8, pos: [-2.8, 3.2, 0.8] },
-  { label: 'Bill Pay DESCO & DPDC', cluster: 'FinTech Intent', color: 0x38bdf8, pos: [-4.2, 1.5, 2.2] },
-  { label: 'Mobile Recharge (গ্রামীনফোন)', cluster: 'FinTech Intent', color: 0x38bdf8, pos: [-3.0, 1.8, -1.0] },
+  {
+    label: 'upay Add Money (বিকাশ/কার্ড)',
+    cluster: 'FinTech Intent',
+    color: 0x38bdf8,
+    pos: [-3.5, 2.0, 1.5]
+  },
+  {
+    label: 'Merchant Payment QR (পেমেন্ট)',
+    cluster: 'FinTech Intent',
+    color: 0x38bdf8,
+    pos: [-2.8, 3.2, 0.8]
+  },
+  {
+    label: 'Bill Pay DESCO & DPDC',
+    cluster: 'FinTech Intent',
+    color: 0x38bdf8,
+    pos: [-4.2, 1.5, 2.2]
+  },
+  {
+    label: 'Mobile Recharge (গ্রামীনফোন)',
+    cluster: 'FinTech Intent',
+    color: 0x38bdf8,
+    pos: [-3.0, 1.8, -1.0]
+  },
 
   // NLP / Transformer Core Cluster (Violet)
   { label: 'Bangla-BERT Base', cluster: 'NLP Models', color: 0x818cf8, pos: [3.2, 1.8, 2.5] },
-  { label: 'Multilingual RoBERTa (XLM-R)', cluster: 'NLP Models', color: 0x818cf8, pos: [4.0, 2.5, 1.2] },
+  {
+    label: 'Multilingual RoBERTa (XLM-R)',
+    cluster: 'NLP Models',
+    color: 0x818cf8,
+    pos: [4.0, 2.5, 1.2]
+  },
   { label: 'Cross-Encoder Reranker', cluster: 'NLP Models', color: 0x818cf8, pos: [2.5, 3.5, 3.0] },
-  { label: 'Qdrant Hybrid Vector Index', cluster: 'NLP Models', color: 0x818cf8, pos: [3.8, 0.8, 2.0] },
+  {
+    label: 'Qdrant Hybrid Vector Index',
+    cluster: 'NLP Models',
+    color: 0x818cf8,
+    pos: [3.8, 0.8, 2.0]
+  },
 
   // Computer Vision & Security Cluster (Emerald)
-  { label: 'YOLOv8 Real-time Detection', cluster: 'Vision AI', color: 0x34d399, pos: [1.0, -3.5, -2.0] },
-  { label: 'MediaPipe 21 Hand Landmarks', cluster: 'Vision AI', color: 0x34d399, pos: [0.2, -4.2, -1.2] },
-  { label: 'CNN Crop Leaf Classifier', cluster: 'Vision AI', color: 0x34d399, pos: [2.2, -3.0, -3.2] },
-  { label: 'Deepfake Spectral Artifacts', cluster: 'Vision AI', color: 0x34d399, pos: [-1.2, -3.8, -2.5] },
+  {
+    label: 'YOLOv8 Real-time Detection',
+    cluster: 'Vision AI',
+    color: 0x34d399,
+    pos: [1.0, -3.5, -2.0]
+  },
+  {
+    label: 'MediaPipe 21 Hand Landmarks',
+    cluster: 'Vision AI',
+    color: 0x34d399,
+    pos: [0.2, -4.2, -1.2]
+  },
+  {
+    label: 'CNN Crop Leaf Classifier',
+    cluster: 'Vision AI',
+    color: 0x34d399,
+    pos: [2.2, -3.0, -3.2]
+  },
+  {
+    label: 'Deepfake Spectral Artifacts',
+    cluster: 'Vision AI',
+    color: 0x34d399,
+    pos: [-1.2, -3.8, -2.5]
+  },
 
   // FinTech Risk & Anomaly Cluster (Amber / Rose)
-  { label: 'Isolation Forest Anomaly', cluster: 'Fraud Engine', color: 0xf59e0b, pos: [-2.5, -1.5, 3.5] },
-  { label: 'Hourly Velocity Deviation', cluster: 'Fraud Engine', color: 0xf59e0b, pos: [-1.8, -2.2, 4.2] },
-  { label: 'IMEI Fingerprint Change', cluster: 'Fraud Engine', color: 0xf43f5e, pos: [-3.2, -0.8, 4.0] },
-  { label: 'ISO8583 Gateway Validation', cluster: 'Fraud Engine', color: 0xf59e0b, pos: [-1.0, -1.0, 3.0] }
+  {
+    label: 'Isolation Forest Anomaly',
+    cluster: 'Fraud Engine',
+    color: 0xf59e0b,
+    pos: [-2.5, -1.5, 3.5]
+  },
+  {
+    label: 'Hourly Velocity Deviation',
+    cluster: 'Fraud Engine',
+    color: 0xf59e0b,
+    pos: [-1.8, -2.2, 4.2]
+  },
+  {
+    label: 'IMEI Fingerprint Change',
+    cluster: 'Fraud Engine',
+    color: 0xf43f5e,
+    pos: [-3.2, -0.8, 4.0]
+  },
+  {
+    label: 'ISO8583 Gateway Validation',
+    cluster: 'Fraud Engine',
+    color: 0xf59e0b,
+    pos: [-1.0, -1.0, 3.0]
+  }
 ];
 
 export default function VectorSpace3D() {
   const mountRef = useRef(null);
   const [hoveredNode, setHoveredNode] = useState(null);
+  const prefersReducedMotion = usePrefersReducedMotion();
 
   useEffect(() => {
     const container = mountRef.current;
@@ -39,11 +126,11 @@ export default function VectorSpace3D() {
     const width = container.clientWidth > 0 ? container.clientWidth : 600;
     const height = 400;
 
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
+    const scene = new Scene();
+    const camera = new PerspectiveCamera(45, width / height, 0.1, 1000);
     camera.position.set(0, 0, 16);
 
-    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    const renderer = new WebGLRenderer({ alpha: true, antialias: true });
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
 
@@ -52,38 +139,45 @@ export default function VectorSpace3D() {
     }
     container.appendChild(renderer.domElement);
 
-    const group = new THREE.Group();
+    const group = new Group();
     scene.add(group);
 
     // Coordinate Grid GridHelper
-    const grid = new THREE.GridHelper(14, 14, 0x38bdf8, 0x1e293b);
+    const grid = new GridHelper(14, 14, 0x38bdf8, 0x1e293b);
     grid.position.y = -5;
     group.add(grid);
 
     // Draw Vector Nodes as Spheres & Glow
     const nodeMeshes = [];
+    const disposables = [];
     EMBEDDING_POINTS.forEach((pt, index) => {
-      const geo = new THREE.SphereGeometry(0.35, 16, 16);
-      const mat = new THREE.MeshBasicMaterial({ color: pt.color });
-      const mesh = new THREE.Mesh(geo, mat);
+      const geo = new SphereGeometry(0.35, 16, 16);
+      const mat = new MeshBasicMaterial({ color: pt.color });
+      const mesh = new Mesh(geo, mat);
       mesh.position.set(...pt.pos);
       mesh.userData = { ...pt, index };
       group.add(mesh);
       nodeMeshes.push(mesh);
+      disposables.push(geo, mat);
 
       // Connecting lines to cluster center
-      const lineGeo = new THREE.BufferGeometry().setFromPoints([
-        new THREE.Vector3(...pt.pos),
-        new THREE.Vector3(pt.pos[0] * 0.2, pt.pos[1] * 0.2, pt.pos[2] * 0.2)
+      const lineGeo = new BufferGeometry().setFromPoints([
+        new Vector3(...pt.pos),
+        new Vector3(pt.pos[0] * 0.2, pt.pos[1] * 0.2, pt.pos[2] * 0.2)
       ]);
-      const lineMat = new THREE.LineBasicMaterial({ color: pt.color, transparent: true, opacity: 0.25 });
-      const line = new THREE.Line(lineGeo, lineMat);
+      const lineMat = new LineBasicMaterial({
+        color: pt.color,
+        transparent: true,
+        opacity: 0.25
+      });
+      const line = new Line(lineGeo, lineMat);
       group.add(line);
+      disposables.push(lineGeo, lineMat);
     });
 
     // Raycaster for mouse hovering
-    const raycaster = new THREE.Raycaster();
-    const mouse = new THREE.Vector2(-100, -100);
+    const raycaster = new Raycaster();
+    const mouse = new Vector2(-100, -100);
 
     let isDragging = false;
     let prevMouse = { x: 0, y: 0 };
@@ -123,11 +217,11 @@ export default function VectorSpace3D() {
     window.addEventListener('touchmove', onPointerMove, { passive: true });
     window.addEventListener('touchend', onPointerUp);
 
-    let animId;
+    let animId = null;
     const animate = () => {
       animId = requestAnimationFrame(animate);
 
-      if (!isDragging) {
+      if (!isDragging && !prefersReducedMotion) {
         rotY += 0.002;
       }
 
@@ -146,6 +240,38 @@ export default function VectorSpace3D() {
       renderer.render(scene, camera);
     };
 
+    // Pause the render loop while the canvas is scrolled out of view or the
+    // tab is backgrounded — cheap to resume, no state is lost. `inViewport`
+    // is the single source of truth both listeners read/write so they never
+    // fight over restarting the loop.
+    let inViewport = true;
+    const syncLoop = () => {
+      const shouldRun = inViewport && !document.hidden;
+      if (shouldRun && animId === null) {
+        animate();
+      } else if (!shouldRun && animId !== null) {
+        cancelAnimationFrame(animId);
+        animId = null;
+      }
+    };
+
+    // Environments without IntersectionObserver (very old browsers, jsdom in
+    // tests) just skip the off-screen pause — the tab-visibility pause below
+    // still applies.
+    const visibilityObserver =
+      typeof IntersectionObserver === 'undefined'
+        ? null
+        : new IntersectionObserver(
+            ([entry]) => {
+              inViewport = entry.isIntersecting;
+              syncLoop();
+            },
+            { threshold: 0 }
+          );
+    visibilityObserver?.observe(container);
+
+    document.addEventListener('visibilitychange', syncLoop);
+
     animate();
 
     const onResize = () => {
@@ -160,29 +286,65 @@ export default function VectorSpace3D() {
 
     return () => {
       cancelAnimationFrame(animId);
+      visibilityObserver?.disconnect();
+      document.removeEventListener('visibilitychange', syncLoop);
       window.removeEventListener('resize', onResize);
       container.removeEventListener('mousedown', onPointerDown);
       window.removeEventListener('mousemove', onPointerMove);
       window.removeEventListener('mouseup', onPointerUp);
+      container.removeEventListener('touchstart', onPointerDown);
+      window.removeEventListener('touchmove', onPointerMove);
+      window.removeEventListener('touchend', onPointerUp);
+
+      grid.geometry.dispose();
+      grid.material.dispose();
+      disposables.forEach((d) => d.dispose());
       renderer.dispose();
     };
-  }, []);
+  }, [prefersReducedMotion]);
 
   return (
     <div style={{ position: 'relative' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.75rem' }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: '1rem',
+          flexWrap: 'wrap',
+          gap: '0.75rem'
+        }}
+      >
         <div>
-          <h3 style={{ fontSize: '1.2rem', color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <h3
+            style={{
+              fontSize: '1.2rem',
+              color: 'var(--text-main)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem'
+            }}
+          >
             <Rotate3d size={18} color="var(--cyan)" />
             <span>3D Multidimensional Semantic Vector Space</span>
           </h3>
           <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-            Interactive 3D WebGL projection of 768-dim SentenceTransformer vector embeddings in reduced 3D PCA coordinate space.
+            Interactive 3D WebGL projection of 768-dim SentenceTransformer vector embeddings in
+            reduced 3D PCA coordinate space.
           </p>
         </div>
 
         {hoveredNode && (
-          <div style={{ background: 'var(--bg-surface-elevated)', border: '1px solid var(--border-accent)', padding: '0.4rem 0.9rem', borderRadius: 'var(--radius-sm)', fontSize: '0.82rem', fontFamily: 'var(--font-mono)' }}>
+          <div
+            style={{
+              background: 'var(--bg-surface-elevated)',
+              border: '1px solid var(--border-accent)',
+              padding: '0.4rem 0.9rem',
+              borderRadius: 'var(--radius-sm)',
+              fontSize: '0.82rem',
+              fontFamily: 'var(--font-mono)'
+            }}
+          >
             <span style={{ color: 'var(--cyan)' }}>[{hoveredNode.cluster}]</span>{' '}
             <strong style={{ color: 'var(--text-main)' }}>{hoveredNode.label}</strong>
           </div>
@@ -203,8 +365,23 @@ export default function VectorSpace3D() {
         }}
       />
 
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.75rem', fontSize: '0.76rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', flexWrap: 'wrap', gap: '0.5rem' }}>
-        <span>• Drag with mouse/touch to rotate 3D cluster • Hover over nodes to inspect semantic embeddings</span>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginTop: '0.75rem',
+          fontSize: '0.76rem',
+          color: 'var(--text-dim)',
+          fontFamily: 'var(--font-mono)',
+          flexWrap: 'wrap',
+          gap: '0.5rem'
+        }}
+      >
+        <span>
+          • Drag with mouse/touch to rotate 3D cluster • Hover over nodes to inspect semantic
+          embeddings
+        </span>
         <span style={{ color: '#059669' }}>Cosine Metric: Normalized L2</span>
       </div>
     </div>

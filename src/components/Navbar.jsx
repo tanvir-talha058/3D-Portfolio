@@ -219,7 +219,7 @@ export default function Navbar({ onOpenResume, onOpenCommandCenter, onToggleThem
             title="Open AI Command Hub (Ctrl+K / ⌘K)"
           >
             <Command size={14} />
-            <span>⌘K Hub</span>
+            <span>Command Hub</span>
           </button>
 
           {/* Day / Night Theme Switcher */}

@@ -35,6 +35,7 @@ export default function ProjectModal({ project, onClose }) {
       ref={dialogRef}
       onClick={handleBackdropClick}
       onClose={onClose}
+      aria-labelledby="project-modal-title"
       style={{
         border: 'none',
         background: 'transparent',
@@ -76,7 +77,18 @@ export default function ProjectModal({ project, onClose }) {
             flexWrap: 'wrap'
           }}
         >
-          <div className="section-tag" style={{ margin: 0 }}>
+          <div
+            style={{
+              padding: '0.25rem 0.65rem',
+              borderRadius: 'var(--radius-full)',
+              background: 'rgba(56, 189, 248, 0.1)',
+              border: '1px solid var(--border-accent)',
+              fontSize: '0.75rem',
+              color: 'var(--cyan)',
+              fontFamily: 'var(--font-mono)',
+              fontWeight: 600
+            }}
+          >
             <span>{project.badge || 'Engineering'}</span>
           </div>
           {project.metrics && (
@@ -95,6 +107,7 @@ export default function ProjectModal({ project, onClose }) {
 
         {/* Title */}
         <h2
+          id="project-modal-title"
           style={{
             fontSize: 'clamp(1.5rem, 3vw, 2.2rem)',
             fontWeight: 800,

@@ -104,6 +104,7 @@ export default function CommandCenter({
       onClick={handleBackdropClick}
       onClose={onClose}
       onKeyDown={handleKeyDown}
+      aria-label="AI Command Center"
       style={{
         border: 'none',
         background: 'transparent',

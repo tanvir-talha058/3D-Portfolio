@@ -7,9 +7,6 @@ import Experience from './components/Experience';
 import Skills from './components/Skills';
 import Projects from './components/Projects';
 import Contact from './components/Contact';
-import ProjectModal from './components/ProjectModal';
-import ResumeModal from './components/ResumeModal';
-import CommandCenter from './components/CommandCenter';
 import ScrollProgress from './components/ScrollProgress';
 import CursorGlow from './components/CursorGlow';
 import SectionSkeleton from './components/SectionSkeleton';
@@ -23,6 +20,9 @@ import { useTheme } from './contexts/ThemeContext';
 const Playground = lazy(() => import('./components/Playground'));
 const Research = lazy(() => import('./components/Research'));
 const Education = lazy(() => import('./components/Education'));
+const ProjectModal = lazy(() => import('./components/ProjectModal'));
+const ResumeModal = lazy(() => import('./components/ResumeModal'));
+const CommandCenter = lazy(() => import('./components/CommandCenter'));
 
 export default function App() {
   const [selectedProject, setSelectedProject] = useState(null);
@@ -327,20 +327,24 @@ export default function App() {
         </div>
       </footer>
 
-      {/* Cybernetic Command Center Modal */}
-      <CommandCenter
-        isOpen={commandCenterOpen}
-        onClose={() => setCommandCenterOpen(false)}
-        onOpenResume={() => setResumeOpen(true)}
-        toggleTheme={handleToggleTheme}
-        onTriggerInference={handleTriggerInference}
-      />
-
-      {/* Project Detail Modal */}
-      <ProjectModal project={selectedProject} onClose={() => setSelectedProject(null)} />
-
-      {/* In-Page Resume PDF Viewer Modal */}
-      <ResumeModal isOpen={resumeOpen} onClose={() => setResumeOpen(false)} />
+      {/* Code-Split Modals */}
+      <Suspense fallback={null}>
+        {commandCenterOpen && (
+          <CommandCenter
+            isOpen={commandCenterOpen}
+            onClose={() => setCommandCenterOpen(false)}
+            onOpenResume={() => setResumeOpen(true)}
+            toggleTheme={handleToggleTheme}
+            onTriggerInference={handleTriggerInference}
+          />
+        )}
+        {selectedProject && (
+          <ProjectModal project={selectedProject} onClose={() => setSelectedProject(null)} />
+        )}
+        {resumeOpen && (
+          <ResumeModal isOpen={resumeOpen} onClose={() => setResumeOpen(false)} />
+        )}
+      </Suspense>
 
       {/* Toast Notifications */}
       <Toast toasts={toasts} />

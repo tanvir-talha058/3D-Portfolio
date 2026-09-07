@@ -43,10 +43,12 @@ export default defineConfig({
     open: false
   },
   build: {
+    chunkSizeWarningLimit: 600,
     rollupOptions: {
       output: {
         manualChunks: {
-          three: ['three']
+          three: ['three'],
+          lucide: ['lucide-react']
         }
       }
     }

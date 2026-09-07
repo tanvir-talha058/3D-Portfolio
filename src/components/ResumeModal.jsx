@@ -36,6 +36,7 @@ export default function ResumeModal({ isOpen, onClose }) {
       ref={dialogRef}
       onClick={handleBackdropClick}
       onClose={onClose}
+      aria-labelledby="resume-modal-title"
       style={{
         border: 'none',
         background: 'transparent',
@@ -91,7 +92,10 @@ export default function ResumeModal({ isOpen, onClose }) {
               <FileText size={18} />
             </div>
             <div>
-              <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--text-main)' }}>
+              <h3
+                id="resume-modal-title"
+                style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--text-main)' }}
+              >
                 {portfolioData.personal.name} — Curriculum Vitae
               </h3>
               <p

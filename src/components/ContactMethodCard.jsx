@@ -54,7 +54,7 @@ export default function ContactMethodCard({
         <div style={{ minWidth: 0 }}>
           <div
             style={{
-              fontSize: '0.76rem',
+              fontSize: '0.75rem',
               fontFamily: 'var(--font-mono)',
               textTransform: 'uppercase',
               color: 'var(--text-dim)'
@@ -64,7 +64,7 @@ export default function ContactMethodCard({
           </div>
           <div
             style={{
-              fontSize: '0.98rem',
+              fontSize: '1rem',
               fontWeight: 600,
               color: 'var(--text-main)',
               wordBreak: 'break-word'

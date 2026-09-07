@@ -100,7 +100,7 @@ export default function DialectClassifierTab() {
         <h3 style={{ fontSize: '1.2rem', marginBottom: '0.75rem', color: 'var(--text-main)' }}>
           Bangla Regional Dialect Transformer
         </h3>
-        <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)', marginBottom: '1.25rem' }}>
+        <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: '1.25rem' }}>
           Classifies regional dialects across 8 major districts of Bangladesh using fine-tuned
           m-BERT & RoBERTa representations trained on 20,090 curated dialectal samples.
         </p>
@@ -108,7 +108,7 @@ export default function DialectClassifierTab() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
           <label
             style={{
-              fontSize: '0.82rem',
+              fontSize: '0.8rem',
               fontFamily: 'var(--font-mono)',
               color: 'var(--text-dim)'
             }}
@@ -127,7 +127,7 @@ export default function DialectClassifierTab() {
               padding: '0.75rem 1rem',
               color: 'var(--text-main)',
               fontFamily: 'var(--font-body)',
-              fontSize: '0.92rem',
+              fontSize: '0.9rem',
               resize: 'none',
               outline: 'none'
             }}
@@ -178,7 +178,7 @@ export default function DialectClassifierTab() {
           border: '1px solid var(--border-medium)',
           padding: '1.25rem',
           fontFamily: 'var(--font-mono)',
-          fontSize: '0.82rem',
+          fontSize: '0.8rem',
           boxShadow: 'var(--shadow-sm)'
         }}
       >
@@ -200,7 +200,7 @@ export default function DialectClassifierTab() {
         {dialectResult ? (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.9rem' }}>
             <div>
-              <div style={{ color: 'var(--text-dim)', fontSize: '0.72rem' }}>PREDICTED REGION:</div>
+              <div style={{ color: 'var(--text-dim)', fontSize: '0.7rem' }}>PREDICTED REGION:</div>
               <div
                 style={{
                   color: '#059669',
@@ -214,7 +214,7 @@ export default function DialectClassifierTab() {
             </div>
 
             <div>
-              <div style={{ color: 'var(--text-dim)', fontSize: '0.72rem' }}>
+              <div style={{ color: 'var(--text-dim)', fontSize: '0.7rem' }}>
                 STANDARD BENGALI TRANSLATION:
               </div>
               <div
@@ -230,7 +230,7 @@ export default function DialectClassifierTab() {
             </div>
 
             <div>
-              <div style={{ color: 'var(--text-dim)', fontSize: '0.72rem' }}>
+              <div style={{ color: 'var(--text-dim)', fontSize: '0.7rem' }}>
                 DETECTED MORPHOLOGICAL FEATURES:
               </div>
               <div

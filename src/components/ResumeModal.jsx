@@ -96,7 +96,7 @@ export default function ResumeModal({ isOpen, onClose }) {
               </h3>
               <p
                 style={{
-                  fontSize: '0.76rem',
+                  fontSize: '0.75rem',
                   color: 'var(--text-dim)',
                   fontFamily: 'var(--font-mono)'
                 }}

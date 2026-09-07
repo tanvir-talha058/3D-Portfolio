@@ -67,7 +67,7 @@ export default function Playground({ activeTab: controlledTab, onTabChange }) {
           </p>
           <p
             style={{
-              fontSize: '0.78rem',
+              fontSize: '0.8rem',
               color: 'var(--text-dim)',
               fontFamily: 'var(--font-mono)',
               marginTop: '0.4rem'

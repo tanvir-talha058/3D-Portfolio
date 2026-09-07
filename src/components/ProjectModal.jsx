@@ -82,7 +82,7 @@ export default function ProjectModal({ project, onClose }) {
           {project.metrics && (
             <span
               style={{
-                fontSize: '0.82rem',
+                fontSize: '0.8rem',
                 color: 'var(--cyan)',
                 fontFamily: 'var(--font-mono)',
                 fontWeight: 600
@@ -106,7 +106,7 @@ export default function ProjectModal({ project, onClose }) {
         </h2>
         <p
           style={{
-            fontSize: '1.02rem',
+            fontSize: '1rem',
             color: 'var(--text-muted)',
             lineHeight: 1.65,
             marginBottom: '1.75rem'
@@ -144,7 +144,7 @@ export default function ProjectModal({ project, onClose }) {
               >
                 <h4
                   style={{
-                    fontSize: '0.88rem',
+                    fontSize: '0.9rem',
                     fontFamily: 'var(--font-mono)',
                     color: 'var(--red-light)',
                     marginBottom: '0.5rem',
@@ -170,7 +170,7 @@ export default function ProjectModal({ project, onClose }) {
               >
                 <h4
                   style={{
-                    fontSize: '0.88rem',
+                    fontSize: '0.9rem',
                     fontFamily: 'var(--font-mono)',
                     color: 'var(--emerald-light)',
                     marginBottom: '0.5rem',
@@ -201,7 +201,7 @@ export default function ProjectModal({ project, onClose }) {
                     display: 'flex',
                     alignItems: 'flex-start',
                     gap: '0.65rem',
-                    fontSize: '0.92rem',
+                    fontSize: '0.9rem',
                     color: 'var(--text-muted)',
                     lineHeight: 1.55
                   }}
@@ -227,7 +227,7 @@ export default function ProjectModal({ project, onClose }) {
                 <span
                   key={i}
                   className="tech-tag"
-                  style={{ fontSize: '0.82rem', padding: '0.3rem 0.75rem' }}
+                  style={{ fontSize: '0.8rem', padding: '0.3rem 0.75rem' }}
                 >
                   {t}
                 </span>

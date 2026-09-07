@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowRight, Mail, Zap, Briefcase, Eye } from 'lucide-react';
+import { ArrowRight, Mail, Zap, Eye } from 'lucide-react';
 import { GithubIcon, LinkedinIcon } from './Icons';
 import { portfolioData } from '../data/portfolioData';
 import InteractivePortrait from './InteractivePortrait';
@@ -15,7 +15,7 @@ const ROLES = [
   'Full-Stack ML Systems Developer'
 ];
 
-export default function Hero({ onOpenRecruiter, onOpenResume }) {
+export default function Hero({ onOpenResume }) {
   const [roleIdx, setRoleIdx] = useState(0);
   const [typedText, setTypedText] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
@@ -178,15 +178,9 @@ export default function Hero({ onOpenRecruiter, onOpenResume }) {
               <button
                 ref={magneticRef}
                 type="button"
-                onClick={onOpenRecruiter}
-                className="btn btn-primary btn-animated"
-                style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
+                onClick={onOpenResume}
+                className="btn btn-outline"
               >
-                <Briefcase size={15} />
-                <span>Recruiter Cheat Sheet</span>
-              </button>
-
-              <button type="button" onClick={onOpenResume} className="btn btn-outline">
                 <Eye size={15} />
                 <span>Preview CV</span>
               </button>

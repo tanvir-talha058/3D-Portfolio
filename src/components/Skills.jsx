@@ -80,7 +80,7 @@ export default function Skills() {
                 style={{
                   borderRadius: 'var(--radius-full)',
                   padding: '0.4rem 1.1rem',
-                  fontSize: '0.82rem',
+                  fontSize: '0.8rem',
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '0.4rem'
@@ -89,7 +89,7 @@ export default function Skills() {
                 <span>{cat.name}</span>
                 <span
                   style={{
-                    fontSize: '0.72rem',
+                    fontSize: '0.7rem',
                     opacity: selectedCat === cat.id ? 0.9 : 0.6,
                     fontFamily: 'var(--font-mono)'
                   }}
@@ -143,7 +143,7 @@ export default function Skills() {
                     {getCategoryIcon(skill.category)}
                     <span
                       style={{
-                        fontSize: '0.74rem',
+                        fontSize: '0.75rem',
                         fontFamily: 'var(--font-mono)',
                         textTransform: 'uppercase',
                         color: 'var(--text-dim)'
@@ -174,7 +174,7 @@ export default function Skills() {
                   {skill.name}
                 </h3>
 
-                <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', lineHeight: 1.5 }}>
+                <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', lineHeight: 1.5 }}>
                   {skill.desc}
                 </p>
 

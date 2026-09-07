@@ -13,13 +13,13 @@ const FIELD_STYLE = {
   padding: '0.8rem 1rem',
   color: 'var(--text-main)',
   fontFamily: 'var(--font-body)',
-  fontSize: '0.92rem',
+  fontSize: '0.9rem',
   outline: 'none'
 };
 
 const LABEL_STYLE = {
   display: 'block',
-  fontSize: '0.82rem',
+  fontSize: '0.8rem',
   fontFamily: 'var(--font-mono)',
   color: 'var(--text-dim)',
   marginBottom: '0.35rem'

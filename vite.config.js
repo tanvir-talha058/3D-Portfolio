@@ -10,7 +10,7 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'robots.txt'],
       manifest: {
-        short_name: 'Tanvir.ai',
+        short_name: 'Tanvir Ahmed',
         name: 'Tanvir Ahmed - AI/ML Engineer & Researcher Portfolio',
         icons: [
           { src: 'favicon.svg', type: 'image/svg+xml', sizes: 'any' },
@@ -26,7 +26,15 @@ export default defineConfig({
         orientation: 'portrait'
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,svg,png,webp,woff2}']
+        globPatterns: ['**/*.{js,css,html,svg,png,webp,woff2}'],
+        // generateSW registers a catch-all NavigationRoute that serves
+        // index.html for every navigation-mode request by default. Without
+        // this, the resume PDF's iframe preview, "Full Tab", and Download
+        // links (ResumeModal.jsx) all silently load the app shell instead
+        // of the PDF once the service worker is installed — the site has
+        // no client-side routing, so nothing actually needs that fallback
+        // to reach index.html; it only needs to not swallow real files.
+        navigateFallbackDenylist: [/\.pdf$/i]
       }
     })
   ],

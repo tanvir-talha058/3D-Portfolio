@@ -8,7 +8,6 @@ function renderCommandCenter(props = {}) {
   const defaults = {
     isOpen: true,
     onClose: vi.fn(),
-    onOpenRecruiter: vi.fn(),
     onOpenResume: vi.fn(),
     toggleTheme: vi.fn(),
     onTriggerInference: vi.fn()
@@ -41,7 +40,6 @@ describe('CommandCenter', () => {
           <CommandCenter
             isOpen={false}
             onClose={vi.fn()}
-            onOpenRecruiter={vi.fn()}
             onOpenResume={vi.fn()}
             toggleTheme={vi.fn()}
             onTriggerInference={vi.fn()}

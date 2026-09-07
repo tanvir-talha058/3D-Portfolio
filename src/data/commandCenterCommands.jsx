@@ -5,7 +5,6 @@ import {
   Brain,
   Cpu,
   FileText,
-  Briefcase,
   Sun,
   Moon,
   Volume2,
@@ -21,7 +20,6 @@ import {
  */
 export function getCommandCenterCommands({
   onClose,
-  onOpenRecruiter,
   onOpenResume,
   onTriggerInference,
   toggleTheme,
@@ -70,17 +68,6 @@ export function getCommandCenterCommands({
         onClose();
         if (onTriggerInference) onTriggerInference('vision');
         document.getElementById('playground')?.scrollIntoView({ behavior: 'smooth' });
-      }
-    },
-    {
-      id: 'recruiter',
-      category: 'Quick Overview',
-      icon: <Briefcase size={16} color="var(--cyan)" />,
-      title: 'Open Executive Recruiter Cheat Sheet',
-      desc: 'View target roles, core stack, metrics, and instant recruiter highlights',
-      action: () => {
-        onClose();
-        onOpenRecruiter();
       }
     },
     {

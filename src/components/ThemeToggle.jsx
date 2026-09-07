@@ -12,6 +12,7 @@ export default function ThemeToggle({ isLightMode, onToggle }) {
       style={{
         width: '38px',
         height: '38px',
+        minWidth: '38px',
         borderRadius: 'var(--radius-md)',
         background: 'var(--bg-surface-elevated)',
         border: '1px solid var(--border-medium)',
@@ -19,7 +20,7 @@ export default function ThemeToggle({ isLightMode, onToggle }) {
         // --amber/--cyan tokens (those shift value between light/dark; the
         // sun/moon glyph should not dim to the light-mode amber shade).
         color: isLightMode ? '#f59e0b' : '#38bdf8',
-        display: 'flex',
+        display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
         cursor: 'pointer',
@@ -28,9 +29,9 @@ export default function ThemeToggle({ isLightMode, onToggle }) {
       }}
     >
       {isLightMode ? (
-        <Sun size={18} className="theme-toggle-icon" />
+        <Sun size={17} className="theme-toggle-icon" />
       ) : (
-        <Moon size={18} className="theme-toggle-icon" />
+        <Moon size={17} className="theme-toggle-icon" />
       )}
     </button>
   );

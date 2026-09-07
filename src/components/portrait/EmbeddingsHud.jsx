@@ -22,7 +22,7 @@ export default function EmbeddingsHud({ tensorSample }) {
           borderRadius: '6px',
           padding: '0.4rem 0.65rem',
           fontFamily: 'var(--font-mono)',
-          fontSize: '0.66rem',
+          fontSize: '0.65rem',
           color: 'var(--cyan)'
         }}
       >
@@ -52,7 +52,7 @@ export default function EmbeddingsHud({ tensorSample }) {
           borderRadius: '6px',
           padding: '0.35rem 0.6rem',
           fontFamily: 'var(--font-mono)',
-          fontSize: '0.66rem',
+          fontSize: '0.65rem',
           color: 'var(--emerald-light)'
         }}
       >

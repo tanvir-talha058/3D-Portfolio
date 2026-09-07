@@ -99,7 +99,7 @@ export default function About() {
                   </h3>
                   <div
                     style={{
-                      fontSize: '0.82rem',
+                      fontSize: '0.8rem',
                       fontFamily: 'var(--font-mono)',
                       color: 'var(--cyan)'
                     }}
@@ -111,7 +111,7 @@ export default function About() {
 
               <p
                 style={{
-                  fontSize: '1.02rem',
+                  fontSize: '1rem',
                   lineHeight: 1.7,
                   color: 'var(--text-muted)',
                   marginBottom: '1.25rem'
@@ -122,7 +122,7 @@ export default function About() {
                 datasets and fine-tuning transformer models, to deploying sub-100ms APIs and
                 resilient microservices in banking and financial technology.
               </p>
-              <p style={{ fontSize: '1.02rem', lineHeight: 1.7, color: 'var(--text-muted)' }}>
+              <p style={{ fontSize: '1rem', lineHeight: 1.7, color: 'var(--text-muted)' }}>
                 Currently at <strong style={{ color: 'var(--cyan)' }}>upay (UCB Fintech)</strong>, I
                 lead conversational outbound AI initiatives and automated payment systems, combining
                 modern LLMs, hybrid vector databases, and robust statistical anomaly detection.
@@ -159,7 +159,7 @@ export default function About() {
                 <div>
                   <div
                     style={{
-                      fontSize: '0.78rem',
+                      fontSize: '0.8rem',
                       fontFamily: 'var(--font-mono)',
                       color: 'var(--text-dim)'
                     }}
@@ -190,7 +190,7 @@ export default function About() {
                 <div>
                   <div
                     style={{
-                      fontSize: '0.78rem',
+                      fontSize: '0.8rem',
                       fontFamily: 'var(--font-mono)',
                       color: 'var(--text-dim)'
                     }}
@@ -221,7 +221,7 @@ export default function About() {
                 <div>
                   <div
                     style={{
-                      fontSize: '0.78rem',
+                      fontSize: '0.8rem',
                       fontFamily: 'var(--font-mono)',
                       color: 'var(--text-dim)'
                     }}
@@ -275,7 +275,7 @@ export default function About() {
               >
                 {pillar.title}
               </h4>
-              <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>
+              <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>
                 {pillar.desc}
               </p>
             </SpotlightCard>

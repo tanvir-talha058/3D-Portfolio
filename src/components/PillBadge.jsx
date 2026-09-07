@@ -2,7 +2,7 @@ import React from 'react';
 
 const SIZE_STYLES = {
   xs: { padding: '0.2rem 0.65rem', fontSize: '0.75rem', gap: '0.4rem' },
-  sm: { padding: '0.3rem 0.8rem', fontSize: '0.78rem', gap: '0.45rem' },
+  sm: { padding: '0.3rem 0.8rem', fontSize: '0.8rem', gap: '0.45rem' },
   md: { padding: '0.4rem 0.85rem', fontSize: '0.8rem', gap: '0.45rem' }
 };
 

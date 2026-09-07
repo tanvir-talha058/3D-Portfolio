@@ -224,7 +224,7 @@ export default function VisionLandmarkCanvas() {
               background: isPinching ? 'rgba(16, 185, 129, 0.15)' : 'rgba(56, 189, 248, 0.1)',
               border: `1px solid ${isPinching ? '#10b981' : 'var(--cyan)'}`,
               color: isPinching ? 'var(--emerald-light)' : 'var(--cyan)',
-              fontSize: '0.78rem',
+              fontSize: '0.8rem',
               fontFamily: 'var(--font-mono)'
             }}
           >
@@ -272,7 +272,7 @@ export default function VisionLandmarkCanvas() {
             display: 'flex',
             justifyContent: 'space-between',
             fontFamily: 'var(--font-mono)',
-            fontSize: '0.72rem',
+            fontSize: '0.7rem',
             color: 'var(--text-dim)',
             pointerEvents: 'none',
             flexWrap: 'wrap',

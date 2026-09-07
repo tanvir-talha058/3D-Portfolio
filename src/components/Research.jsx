@@ -125,7 +125,7 @@ export default function Research({ onToast }) {
                 {/* Summary */}
                 <p
                   style={{
-                    fontSize: '0.92rem',
+                    fontSize: '0.9rem',
                     color: 'var(--text-muted)',
                     lineHeight: 1.65,
                     marginBottom: '1.25rem'
@@ -156,7 +156,7 @@ export default function Research({ onToast }) {
                   type="button"
                   onClick={() => handleCopyBibtex(item)}
                   className="btn btn-outline"
-                  style={{ width: '100%', fontSize: '0.82rem', justifyContent: 'center' }}
+                  style={{ width: '100%', fontSize: '0.8rem', justifyContent: 'center' }}
                   title="Copy Citation"
                 >
                   {copiedId === item.id ? (
@@ -178,7 +178,7 @@ export default function Research({ onToast }) {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="btn btn-outline"
-                    style={{ width: '100%', fontSize: '0.82rem', justifyContent: 'center' }}
+                    style={{ width: '100%', fontSize: '0.8rem', justifyContent: 'center' }}
                   >
                     <ExternalLink size={14} />
                     <span>View Repository</span>

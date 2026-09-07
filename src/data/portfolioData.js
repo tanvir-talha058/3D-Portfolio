@@ -1,4 +1,4 @@
-import { personal, recruiterCheatSheet, metrics } from './personal';
+import { personal } from './personal';
 import { experience } from './experience';
 import { skills } from './skills';
 import { projects } from './projects';
@@ -7,8 +7,6 @@ import { education, awards } from './education';
 
 export const portfolioData = {
   personal,
-  recruiterCheatSheet,
-  metrics,
   experience,
   skills,
   projects,

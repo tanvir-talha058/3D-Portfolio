@@ -150,7 +150,7 @@ export default function Experience() {
                       display: 'flex',
                       alignItems: 'center',
                       gap: '0.45rem',
-                      fontSize: '0.82rem',
+                      fontSize: '0.8rem',
                       color: 'var(--text-dim)',
                       marginBottom: '1.25rem'
                     }}
@@ -175,7 +175,7 @@ export default function Experience() {
                           display: 'flex',
                           alignItems: 'flex-start',
                           gap: '0.65rem',
-                          fontSize: '0.92rem',
+                          fontSize: '0.9rem',
                           color: 'var(--text-muted)',
                           lineHeight: 1.55
                         }}

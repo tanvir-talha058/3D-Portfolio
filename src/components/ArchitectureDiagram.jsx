@@ -63,7 +63,7 @@ export default function ArchitectureDiagram({ nodes = [] }) {
             >
               <div
                 style={{
-                  fontSize: '0.68rem',
+                  fontSize: '0.7rem',
                   fontFamily: 'var(--font-mono)',
                   color: 'var(--cyan)',
                   marginBottom: '0.2rem'
@@ -71,7 +71,7 @@ export default function ArchitectureDiagram({ nodes = [] }) {
               >
                 STAGE 0{idx + 1}
               </div>
-              <div style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--text-main)' }}>
+              <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-main)' }}>
                 {node}
               </div>
             </div>

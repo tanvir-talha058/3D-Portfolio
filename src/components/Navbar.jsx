@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Menu, X, Briefcase, Eye, Volume2, VolumeX, Command } from 'lucide-react';
+import { Menu, X, Eye, Volume2, VolumeX, Command } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import { useSound } from '../contexts/SoundContext';
 import { useTheme } from '../contexts/ThemeContext';
@@ -9,12 +9,7 @@ import { portfolioData } from '../data/portfolioData';
 import { SECTION_IDS } from '../data/navSections';
 import { useActiveSection } from '../hooks/useActiveSection';
 
-export default function Navbar({
-  onOpenRecruiter,
-  onOpenResume,
-  onOpenCommandCenter,
-  onToggleTheme
-}) {
+export default function Navbar({ onOpenResume, onOpenCommandCenter, onToggleTheme }) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const mobileToggleRef = useRef(null);
@@ -119,7 +114,7 @@ export default function Navbar({
                 whiteSpace: 'nowrap'
               }}
             >
-              Tanvir<span style={{ color: 'var(--cyan)' }}>.ai</span>
+              Tanvir <span style={{ color: 'var(--cyan)' }}>Ahmed</span>
             </div>
           </div>
         </a>
@@ -136,7 +131,7 @@ export default function Navbar({
               onClick={() => playBeep(640, 'sine', 0.02)}
               className="nav-link"
               style={{
-                fontSize: '0.86rem',
+                fontSize: '0.85rem',
                 fontWeight: '500',
                 color: activeSection === link.id ? 'var(--cyan)' : 'var(--text-muted)',
                 position: 'relative',
@@ -171,70 +166,85 @@ export default function Navbar({
           <button
             type="button"
             onClick={toggleSound}
+            className="nav-action-btn sound-toggle-btn"
             style={{
-              width: '34px',
-              height: '34px',
-              borderRadius: 'var(--radius-sm)',
+              width: '38px',
+              height: '38px',
+              minWidth: '38px',
+              borderRadius: 'var(--radius-md)',
               background: 'var(--bg-surface-elevated)',
-              border: '1px solid var(--border-subtle)',
+              border: '1px solid var(--border-medium)',
               color: soundEnabled ? '#10b981' : 'var(--text-dim)',
-              display: 'flex',
+              display: 'inline-flex',
               alignItems: 'center',
               justifyContent: 'center',
               cursor: 'pointer',
-              transition: 'all 0.2s ease'
+              transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+              boxShadow: isLightMode
+                ? '0 2px 8px rgba(0, 0, 0, 0.08)'
+                : '0 2px 8px rgba(0, 0, 0, 0.4)'
             }}
             title={`Audio FX: ${soundEnabled ? 'Active (Click to Mute)' : 'Muted (Click to Enable)'}`}
             aria-label={soundEnabled ? 'Mute audio effects' : 'Enable audio effects'}
             aria-pressed={soundEnabled}
           >
-            {soundEnabled ? <Volume2 size={15} /> : <VolumeX size={15} />}
+            {soundEnabled ? <Volume2 size={17} /> : <VolumeX size={17} />}
           </button>
 
           {/* AI Command Center Trigger Button */}
           <button
             type="button"
             onClick={onOpenCommandCenter}
-            className="btn btn-outline btn-sm desktop-only-btn"
+            className="btn btn-outline desktop-only-btn"
             style={{
-              padding: '0.35rem 0.65rem',
-              fontSize: '0.76rem',
-              fontFamily: 'var(--font-mono)',
+              height: '38px',
+              minHeight: '38px',
+              padding: '0 0.95rem',
+              borderRadius: 'var(--radius-md)',
+              fontSize: '0.82rem',
+              fontWeight: 600,
+              fontFamily: 'var(--font-body)',
               borderColor: 'var(--border-accent)',
               color: 'var(--cyan)',
-              background: 'var(--bg-card)'
+              background: 'var(--bg-surface-elevated)',
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.45rem',
+              boxShadow: isLightMode
+                ? '0 2px 8px rgba(0, 0, 0, 0.08)'
+                : '0 2px 8px rgba(0, 0, 0, 0.4)',
+              transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)'
             }}
             title="Open AI Command Hub (Ctrl+K / ⌘K)"
           >
-            <Command size={12} />
+            <Command size={14} />
             <span>⌘K Hub</span>
           </button>
 
           {/* Day / Night Theme Switcher */}
           <ThemeToggle isLightMode={isLightMode} onToggle={onToggleTheme} />
 
-          {/* Desktop Recruiter Cheat Sheet Trigger — hidden in the 992-1199px range
-              where the full nav doesn't fit; still reachable via Command Center / mobile menu. */}
-          <button
-            type="button"
-            onClick={onOpenRecruiter}
-            className="btn btn-outline btn-sm desktop-only-btn recruiter-mode-btn"
-            style={{ borderColor: 'var(--cyan)', color: 'var(--cyan)' }}
-            id="desktop-recruiter-btn"
-            title="Open 1-Page Recruiter Overview"
-          >
-            <Briefcase size={13} />
-            <span>Recruiter Mode</span>
-          </button>
-
           {/* Desktop Resume PDF Viewer Button */}
           <button
             type="button"
             onClick={onOpenResume}
-            className="btn btn-primary btn-sm desktop-only-btn"
+            className="btn btn-primary desktop-only-btn"
             id="desktop-resume-btn"
+            style={{
+              height: '38px',
+              minHeight: '38px',
+              padding: '0 1rem',
+              borderRadius: 'var(--radius-md)',
+              fontSize: '0.82rem',
+              fontWeight: 600,
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.45rem'
+            }}
           >
-            <Eye size={13} />
+            <Eye size={14} />
             <span>View CV</span>
           </button>
 
@@ -262,7 +272,6 @@ export default function Navbar({
         playBeep={playBeep}
         onClose={() => setMobileMenuOpen(false)}
         onOpenCommandCenter={onOpenCommandCenter}
-        onOpenRecruiter={onOpenRecruiter}
         onOpenResume={onOpenResume}
         returnFocusRef={mobileToggleRef}
       />
@@ -275,21 +284,15 @@ export default function Navbar({
           display: flex !important;
         }
 
+        .sound-toggle-btn:hover {
+          border-color: var(--cyan);
+          transform: scale(1.05);
+        }
+
         @media (min-width: 992px) {
           .desktop-nav { display: flex !important; }
           .desktop-only-btn { display: inline-flex !important; }
           .mobile-toggle { display: none !important; }
-        }
-
-        /* Between 992-1199px the full nav (7 links + sound + Cmd K Hub + theme +
-           Recruiter Mode + View CV) doesn't fit in one row, so drop the
-           Recruiter Mode button in that range — it's still reachable via
-           Command Center or the mobile menu. */
-        .recruiter-mode-btn {
-          display: none !important;
-        }
-        @media (min-width: 1200px) {
-          .recruiter-mode-btn { display: inline-flex !important; }
         }
       `}</style>
     </nav>

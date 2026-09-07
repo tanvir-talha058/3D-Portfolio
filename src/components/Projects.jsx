@@ -110,7 +110,7 @@ export default function Projects({ onSelectProject }) {
               style={{
                 borderRadius: 'var(--radius-full)',
                 padding: '0.4rem 1.1rem',
-                fontSize: '0.82rem',
+                fontSize: '0.8rem',
                 transition: 'all 0.2s ease',
                 display: 'inline-flex',
                 alignItems: 'center',
@@ -120,7 +120,7 @@ export default function Projects({ onSelectProject }) {
               <span>{cat}</span>
               <span
                 style={{
-                  fontSize: '0.72rem',
+                  fontSize: '0.7rem',
                   opacity: filter === cat ? 0.9 : 0.6,
                   fontFamily: 'var(--font-mono)'
                 }}
@@ -169,7 +169,7 @@ export default function Projects({ onSelectProject }) {
                   <span
                     style={{
                       fontFamily: 'var(--font-mono)',
-                      fontSize: '0.72rem',
+                      fontSize: '0.7rem',
                       textTransform: 'uppercase',
                       padding: '0.2rem 0.55rem',
                       borderRadius: '4px',
@@ -185,7 +185,7 @@ export default function Projects({ onSelectProject }) {
                     <span
                       style={{
                         fontFamily: 'var(--font-mono)',
-                        fontSize: '0.74rem',
+                        fontSize: '0.75rem',
                         color: '#059669',
                         fontWeight: 700
                       }}
@@ -232,7 +232,7 @@ export default function Projects({ onSelectProject }) {
                         display: 'flex',
                         alignItems: 'flex-start',
                         gap: '0.5rem',
-                        fontSize: '0.82rem',
+                        fontSize: '0.8rem',
                         color: 'var(--text-dim)'
                       }}
                     >
@@ -257,7 +257,7 @@ export default function Projects({ onSelectProject }) {
                     <span
                       key={i}
                       className="tech-tag"
-                      style={{ fontSize: '0.72rem', padding: '0.2rem 0.5rem' }}
+                      style={{ fontSize: '0.7rem', padding: '0.2rem 0.5rem' }}
                     >
                       {t}
                     </span>
@@ -265,7 +265,7 @@ export default function Projects({ onSelectProject }) {
                   {(project.tech || []).length > 4 && (
                     <span
                       className="tech-tag"
-                      style={{ fontSize: '0.72rem', padding: '0.2rem 0.5rem' }}
+                      style={{ fontSize: '0.7rem', padding: '0.2rem 0.5rem' }}
                     >
                       +{project.tech.length - 4}
                     </span>
@@ -288,7 +288,7 @@ export default function Projects({ onSelectProject }) {
                       if (onSelectProject) onSelectProject(project);
                     }}
                     className="btn btn-outline btn-sm open-project-modal"
-                    style={{ fontSize: '0.78rem' }}
+                    style={{ fontSize: '0.8rem' }}
                   >
                     <span>Deep Dive</span>
                     <ArrowRight size={13} />

@@ -341,7 +341,7 @@ export default function VectorSpace3D() {
               border: '1px solid var(--border-accent)',
               padding: '0.4rem 0.9rem',
               borderRadius: 'var(--radius-sm)',
-              fontSize: '0.82rem',
+              fontSize: '0.8rem',
               fontFamily: 'var(--font-mono)'
             }}
           >
@@ -371,7 +371,7 @@ export default function VectorSpace3D() {
           justifyContent: 'space-between',
           alignItems: 'center',
           marginTop: '0.75rem',
-          fontSize: '0.76rem',
+          fontSize: '0.75rem',
           color: 'var(--text-dim)',
           fontFamily: 'var(--font-mono)',
           flexWrap: 'wrap',

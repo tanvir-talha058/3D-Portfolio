@@ -9,7 +9,6 @@ function renderNavbar(props = {}) {
     <ThemeProvider>
       <SoundProvider>
         <Navbar
-          onOpenRecruiter={vi.fn()}
           onOpenResume={vi.fn()}
           onOpenCommandCenter={vi.fn()}
           onToggleTheme={vi.fn()}
@@ -52,14 +51,14 @@ describe('Navbar mobile menu', () => {
     expect(document.getElementById('mobile-menu')).not.toBeInTheDocument();
   });
 
-  it('runs the Recruiter Cheat Sheet action and closes the menu when clicked inside the drawer', () => {
-    const onOpenRecruiter = vi.fn();
-    renderNavbar({ onOpenRecruiter });
+  it('runs the View PDF Resume action and closes the menu when clicked inside the drawer', () => {
+    const onOpenResume = vi.fn();
+    renderNavbar({ onOpenResume });
 
     fireEvent.click(screen.getByRole('button', { name: 'Toggle menu' }));
-    fireEvent.click(screen.getByRole('button', { name: /Recruiter Cheat Sheet/i }));
+    fireEvent.click(screen.getByRole('button', { name: /View PDF Resume/i }));
 
-    expect(onOpenRecruiter).toHaveBeenCalledTimes(1);
+    expect(onOpenResume).toHaveBeenCalledTimes(1);
     expect(document.getElementById('mobile-menu')).not.toBeInTheDocument();
   });
 });

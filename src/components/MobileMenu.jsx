@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Command, Briefcase, Eye } from 'lucide-react';
+import { Command, Eye } from 'lucide-react';
 
 /**
  * The slide-down mobile nav drawer. Traps Tab focus while open (Escape and
@@ -14,7 +14,6 @@ export default function MobileMenu({
   playBeep,
   onClose,
   onOpenCommandCenter,
-  onOpenRecruiter,
   onOpenResume,
   returnFocusRef
 }) {
@@ -118,7 +117,7 @@ export default function MobileMenu({
         >
           <span>{link.label}</span>
           {activeSection === link.id && (
-            <span style={{ color: 'var(--cyan)', fontSize: '0.78rem' }}>● Active</span>
+            <span style={{ color: 'var(--cyan)', fontSize: '0.8rem' }}>● Active</span>
           )}
         </a>
       ))}
@@ -131,22 +130,9 @@ export default function MobileMenu({
           type="button"
           onClick={() => {
             onClose();
-            onOpenRecruiter();
-          }}
-          className="btn btn-primary"
-          style={{ width: '100%', justifyContent: 'center' }}
-        >
-          <Briefcase size={15} />
-          <span>Recruiter Cheat Sheet</span>
-        </button>
-
-        <button
-          type="button"
-          onClick={() => {
-            onClose();
             onOpenResume();
           }}
-          className="btn btn-outline"
+          className="btn btn-primary"
           style={{ width: '100%', justifyContent: 'center' }}
         >
           <Eye size={15} />

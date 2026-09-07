@@ -8,7 +8,6 @@ import CommandResultItem from './CommandResultItem';
 export default function CommandCenter({
   isOpen,
   onClose,
-  onOpenRecruiter,
   onOpenResume,
   toggleTheme,
   onTriggerInference
@@ -32,7 +31,6 @@ export default function CommandCenter({
 
   const commands = getCommandCenterCommands({
     onClose,
-    onOpenRecruiter,
     onOpenResume,
     onTriggerInference,
     toggleTheme,
@@ -166,7 +164,7 @@ export default function CommandCenter({
               border: 'none',
               outline: 'none',
               color: 'var(--text-main)',
-              fontSize: '1.02rem',
+              fontSize: '1rem',
               fontFamily: 'var(--font-sans)'
             }}
           />
@@ -179,7 +177,7 @@ export default function CommandCenter({
               padding: '0.2rem 0.5rem',
               borderRadius: '4px',
               border: '1px solid var(--border-subtle)',
-              fontSize: '0.72rem',
+              fontSize: '0.7rem',
               fontFamily: 'var(--font-mono)',
               color: 'var(--text-dim)'
             }}
@@ -237,7 +235,7 @@ export default function CommandCenter({
                 textAlign: 'center',
                 color: 'var(--text-dim)',
                 fontFamily: 'var(--font-mono)',
-                fontSize: '0.88rem'
+                fontSize: '0.9rem'
               }}
             >
               No commands matching "{searchQuery}". Try "RAG", "CV", "Theme", or "Resume".
@@ -268,7 +266,7 @@ export default function CommandCenter({
             padding: '0.65rem 1.4rem',
             background: 'var(--bg-surface-elevated)',
             borderTop: '1px solid var(--border-subtle)',
-            fontSize: '0.72rem',
+            fontSize: '0.7rem',
             fontFamily: 'var(--font-mono)',
             color: 'var(--text-dim)'
           }}

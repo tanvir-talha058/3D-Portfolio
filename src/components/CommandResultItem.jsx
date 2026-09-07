@@ -60,7 +60,7 @@ export default function CommandResultItem({ command, isSelected, onSelect, onExe
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <span
             style={{
-              fontSize: '0.92rem',
+              fontSize: '0.9rem',
               fontWeight: 600,
               color: isSelected ? 'var(--cyan)' : 'var(--text-main)'
             }}
@@ -69,7 +69,7 @@ export default function CommandResultItem({ command, isSelected, onSelect, onExe
           </span>
           <span
             style={{
-              fontSize: '0.68rem',
+              fontSize: '0.7rem',
               fontFamily: 'var(--font-mono)',
               color: 'var(--text-dim)',
               background: 'var(--bg-surface-elevated)',
@@ -82,7 +82,7 @@ export default function CommandResultItem({ command, isSelected, onSelect, onExe
         </div>
         <p
           style={{
-            fontSize: '0.78rem',
+            fontSize: '0.8rem',
             color: 'var(--text-muted)',
             marginTop: '0.15rem',
             whiteSpace: 'nowrap',

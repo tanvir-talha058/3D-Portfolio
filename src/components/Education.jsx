@@ -77,7 +77,7 @@ export default function Education() {
 
                   <div
                     style={{
-                      fontSize: '0.98rem',
+                      fontSize: '1rem',
                       fontWeight: 600,
                       color: 'var(--cyan)',
                       marginBottom: '0.6rem'
@@ -91,7 +91,7 @@ export default function Education() {
                       display: 'flex',
                       alignItems: 'center',
                       gap: '1rem',
-                      fontSize: '0.82rem',
+                      fontSize: '0.8rem',
                       color: 'var(--text-dim)',
                       marginBottom: '0.85rem'
                     }}
@@ -179,7 +179,7 @@ export default function Education() {
                     </h4>
                     <div
                       style={{
-                        fontSize: '0.84rem',
+                        fontSize: '0.85rem',
                         color: 'var(--cyan)',
                         fontFamily: 'var(--font-mono)',
                         marginBottom: '0.5rem'
@@ -187,9 +187,7 @@ export default function Education() {
                     >
                       {award.category} • {award.organization}
                     </div>
-                    <p
-                      style={{ fontSize: '0.88rem', color: 'var(--text-muted)', lineHeight: 1.55 }}
-                    >
+                    <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', lineHeight: 1.55 }}>
                       {award.desc}
                     </p>
                   </div>

@@ -8,14 +8,13 @@ import Skills from './components/Skills';
 import Projects from './components/Projects';
 import Contact from './components/Contact';
 import ProjectModal from './components/ProjectModal';
-import RecruiterModal from './components/RecruiterModal';
 import ResumeModal from './components/ResumeModal';
 import CommandCenter from './components/CommandCenter';
 import ScrollProgress from './components/ScrollProgress';
 import CursorGlow from './components/CursorGlow';
 import SectionSkeleton from './components/SectionSkeleton';
 import Toast from './components/Toast';
-import { ArrowUp, Briefcase, Eye, Command } from 'lucide-react';
+import { ArrowUp, Eye, Command } from 'lucide-react';
 import { GithubIcon, LinkedinIcon } from './components/Icons';
 import { portfolioData } from './data/portfolioData';
 import { useSound } from './contexts/SoundContext';
@@ -27,7 +26,6 @@ const Education = lazy(() => import('./components/Education'));
 
 export default function App() {
   const [selectedProject, setSelectedProject] = useState(null);
-  const [recruiterOpen, setRecruiterOpen] = useState(false);
   const [resumeOpen, setResumeOpen] = useState(false);
   const [commandCenterOpen, setCommandCenterOpen] = useState(false);
   const [playgroundTab, setPlaygroundTab] = useState('3dvector');
@@ -85,10 +83,6 @@ export default function App() {
     );
   }, [isLightMode, toggleTheme, addToast]);
 
-  const openRecruiter = useCallback(() => {
-    playWhoosh();
-    setRecruiterOpen(true);
-  }, [playWhoosh]);
   const openResume = useCallback(() => {
     playWhoosh();
     setResumeOpen(true);
@@ -125,7 +119,6 @@ export default function App() {
       {/* Navigation */}
       <ScrollProgress />
       <Navbar
-        onOpenRecruiter={openRecruiter}
         onOpenResume={openResume}
         onOpenCommandCenter={openCommandCenter}
         onToggleTheme={handleToggleTheme}
@@ -133,7 +126,7 @@ export default function App() {
 
       {/* Main Content Sections */}
       <main>
-        <Hero onOpenRecruiter={openRecruiter} onOpenResume={openResume} />
+        <Hero onOpenResume={openResume} />
         <About />
         <Experience />
         <Skills />
@@ -280,16 +273,6 @@ export default function App() {
             >
               <button
                 type="button"
-                onClick={openRecruiter}
-                className="btn btn-outline btn-sm"
-                style={{ fontSize: '0.8rem' }}
-              >
-                <Briefcase size={14} />
-                <span>Recruiter View</span>
-              </button>
-
-              <button
-                type="button"
                 onClick={openResume}
                 className="btn btn-outline btn-sm"
                 style={{ fontSize: '0.8rem' }}
@@ -348,7 +331,6 @@ export default function App() {
       <CommandCenter
         isOpen={commandCenterOpen}
         onClose={() => setCommandCenterOpen(false)}
-        onOpenRecruiter={() => setRecruiterOpen(true)}
         onOpenResume={() => setResumeOpen(true)}
         toggleTheme={handleToggleTheme}
         onTriggerInference={handleTriggerInference}
@@ -356,13 +338,6 @@ export default function App() {
 
       {/* Project Detail Modal */}
       <ProjectModal project={selectedProject} onClose={() => setSelectedProject(null)} />
-
-      {/* Recruiter 1-Page Cheat Sheet Modal */}
-      <RecruiterModal
-        isOpen={recruiterOpen}
-        onClose={() => setRecruiterOpen(false)}
-        onOpenResume={() => setResumeOpen(true)}
-      />
 
       {/* In-Page Resume PDF Viewer Modal */}
       <ResumeModal isOpen={resumeOpen} onClose={() => setResumeOpen(false)} />

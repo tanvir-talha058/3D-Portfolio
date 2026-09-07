@@ -57,7 +57,7 @@ export default function FraudScorerTab() {
         <h3 style={{ fontSize: '1.2rem', marginBottom: '0.75rem', color: 'var(--text-main)' }}>
           FinTech Transaction Risk & Anomaly Scorer
         </h3>
-        <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)', marginBottom: '1.25rem' }}>
+        <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: '1.25rem' }}>
           Evaluates velocity patterns, account behavioral deviations, and device telemetry to
           generate real-time sub-20ms fraud risk verdicts.
         </p>
@@ -68,7 +68,7 @@ export default function FraudScorerTab() {
               style={{
                 display: 'flex',
                 justifyContent: 'space-between',
-                fontSize: '0.82rem',
+                fontSize: '0.8rem',
                 marginBottom: '0.35rem',
                 color: 'var(--text-main)'
               }}
@@ -94,7 +94,7 @@ export default function FraudScorerTab() {
               style={{
                 display: 'flex',
                 justifyContent: 'space-between',
-                fontSize: '0.82rem',
+                fontSize: '0.8rem',
                 marginBottom: '0.35rem',
                 color: 'var(--text-main)'
               }}

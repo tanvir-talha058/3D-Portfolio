@@ -189,7 +189,7 @@ export default function InteractivePortrait() {
               backdropFilter: 'blur(10px)',
               border: '1px solid rgba(255, 255, 255, 0.15)',
               color: '#ffffff',
-              fontSize: '0.74rem',
+              fontSize: '0.75rem',
               fontFamily: 'var(--font-mono)',
               boxShadow: '0 4px 12px rgba(0,0,0,0.4)'
             }}
@@ -224,7 +224,7 @@ export default function InteractivePortrait() {
               backdropFilter: 'blur(10px)',
               border: '1px solid rgba(255, 255, 255, 0.2)',
               color: hudMode !== 'off' ? 'var(--btn-text-color)' : '#ffffff',
-              fontSize: '0.72rem',
+              fontSize: '0.7rem',
               fontFamily: 'var(--font-mono)',
               fontWeight: 700,
               cursor: 'pointer',
@@ -265,7 +265,7 @@ export default function InteractivePortrait() {
               <div
                 style={{
                   color: 'var(--cyan)',
-                  fontSize: '0.76rem',
+                  fontSize: '0.75rem',
                   fontFamily: 'var(--font-mono)',
                   fontWeight: 600
                 }}

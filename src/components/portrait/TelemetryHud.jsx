@@ -30,7 +30,7 @@ export default function TelemetryHud() {
               borderRadius: '6px',
               border: '1px solid var(--border-subtle)',
               fontFamily: 'var(--font-mono)',
-              fontSize: '0.68rem'
+              fontSize: '0.7rem'
             }}
           >
             <div style={{ color: 'var(--text-dim)' }}>{label}</div>

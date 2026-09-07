@@ -84,7 +84,7 @@ export default function BiometricHud({ liveConfidence }) {
             background: 'var(--cyan)',
             color: 'var(--btn-text-color)',
             fontFamily: 'var(--font-mono)',
-            fontSize: '0.68rem',
+            fontSize: '0.7rem',
             fontWeight: 800,
             padding: '0.15rem 0.5rem',
             borderRadius: '4px',

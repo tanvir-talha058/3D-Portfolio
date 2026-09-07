@@ -131,7 +131,7 @@ export default function RagEngineTab() {
         <h3 style={{ fontSize: '1.2rem', marginBottom: '0.75rem', color: 'var(--text-main)' }}>
           Hybrid Vector Search & Query Synthesis
         </h3>
-        <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)', marginBottom: '1.25rem' }}>
+        <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: '1.25rem' }}>
           Simulates a dual-pass sparse (BM25) + dense (Qdrant) retrieval pipeline over multilingual
           banking knowledge bases.
         </p>
@@ -139,7 +139,7 @@ export default function RagEngineTab() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
           <label
             style={{
-              fontSize: '0.82rem',
+              fontSize: '0.8rem',
               fontFamily: 'var(--font-mono)',
               color: 'var(--text-dim)'
             }}
@@ -160,7 +160,7 @@ export default function RagEngineTab() {
                 padding: '0.75rem 1rem',
                 color: 'var(--text-main)',
                 fontFamily: 'var(--font-body)',
-                fontSize: '0.92rem',
+                fontSize: '0.9rem',
                 outline: 'none'
               }}
             />
@@ -192,7 +192,7 @@ export default function RagEngineTab() {
           </div>
 
           <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginTop: '0.5rem' }}>
-            <span style={{ fontSize: '0.76rem', color: 'var(--text-dim)', alignSelf: 'center' }}>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-dim)', alignSelf: 'center' }}>
               Try presets:
             </span>
             <button
@@ -250,7 +250,7 @@ export default function RagEngineTab() {
             gap: '1.1rem',
             flexWrap: 'wrap',
             marginTop: '0.6rem',
-            fontSize: '0.72rem',
+            fontSize: '0.7rem',
             fontFamily: 'var(--font-mono)',
             color: 'var(--text-dim)'
           }}
@@ -287,7 +287,7 @@ export default function RagEngineTab() {
           border: '1px solid var(--border-medium)',
           padding: '1.25rem',
           fontFamily: 'var(--font-mono)',
-          fontSize: '0.82rem',
+          fontSize: '0.8rem',
           boxShadow: 'var(--shadow-sm)'
         }}
       >
@@ -334,13 +334,13 @@ export default function RagEngineTab() {
                       borderLeft: '3px solid var(--cyan)'
                     }}
                   >
-                    <div style={{ color: 'var(--cyan)', fontSize: '0.78rem', fontWeight: 600 }}>
+                    <div style={{ color: 'var(--cyan)', fontSize: '0.8rem', fontWeight: 600 }}>
                       {doc.title} (Relevance: {doc.score})
                     </div>
                     <div
                       style={{
                         color: 'var(--text-muted)',
-                        fontSize: '0.72rem',
+                        fontSize: '0.7rem',
                         marginTop: '0.2rem'
                       }}
                     >
@@ -402,7 +402,7 @@ export default function RagEngineTab() {
             <div
               style={{
                 color: 'var(--text-dim)',
-                fontSize: '0.72rem',
+                fontSize: '0.7rem',
                 display: 'flex',
                 justifyContent: 'space-between',
                 flexWrap: 'wrap',

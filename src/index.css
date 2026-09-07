@@ -288,7 +288,7 @@ section {
   border: 1px solid var(--border-medium);
   color: var(--cyan);
   font-family: var(--font-mono);
-  font-size: 0.76rem;
+  font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;

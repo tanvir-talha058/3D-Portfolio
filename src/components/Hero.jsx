@@ -15,6 +15,33 @@ const ROLES = [
   'Full-Stack ML Systems Developer'
 ];
 
+const IMPACT_METRICS = [
+  {
+    value: '32x',
+    label: 'ETL Pipeline Speedup',
+    detail: 'Async parallel ingestion & spatial indexing',
+    badge: 'Scale'
+  },
+  {
+    value: '<50ms',
+    label: 'Multilingual RAG Latency',
+    detail: 'Dense Qdrant + Sparse BM25 hybrid search',
+    badge: 'Latency'
+  },
+  {
+    value: '99.0%',
+    label: 'Fraud Detection Precision',
+    detail: 'Real-time velocity & anomaly scoring at upay',
+    badge: 'FinTech'
+  },
+  {
+    value: '5+',
+    label: 'Peer-Reviewed Works',
+    detail: 'NLP, Low-Resource Transformers & CV',
+    badge: 'Research'
+  }
+];
+
 export default function Hero({ onOpenResume }) {
   const [roleIdx, setRoleIdx] = useState(0);
   const [typedText, setTypedText] = useState('');
@@ -282,6 +309,86 @@ export default function Hero({ onOpenResume }) {
             </div>
           </div>
         </div>
+
+        {/* Executive Impact Metrics Strip */}
+        <div
+          className="anim-up hero-metrics-strip"
+          style={{
+            marginTop: '3.5rem',
+            paddingTop: '2rem',
+            borderTop: '1px solid var(--border-subtle)',
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))',
+            gap: '1.25rem',
+            animationDelay: '0.62s'
+          }}
+        >
+          {IMPACT_METRICS.map((item, idx) => (
+            <div
+              key={idx}
+              className="glass-card hero-metric-card"
+              style={{
+                padding: '1.15rem 1.35rem',
+                borderRadius: 'var(--radius-md)',
+                background: 'var(--bg-surface-elevated)',
+                border: '1px solid var(--border-subtle)',
+                transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.35rem'
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <span
+                  style={{
+                    fontFamily: 'var(--font-heading)',
+                    fontSize: 'clamp(1.75rem, 2.5vw, 2.2rem)',
+                    fontWeight: 800,
+                    letterSpacing: '-0.02em',
+                    color: 'var(--text-main)',
+                    fontVariantNumeric: 'tabular-nums'
+                  }}
+                  className="gradient-text"
+                >
+                  {item.value}
+                </span>
+                <span
+                  style={{
+                    fontSize: '0.68rem',
+                    fontFamily: 'var(--font-mono)',
+                    fontWeight: 600,
+                    padding: '0.2rem 0.55rem',
+                    borderRadius: 'var(--radius-full)',
+                    background: 'rgba(56, 189, 248, 0.1)',
+                    border: '1px solid var(--border-accent)',
+                    color: 'var(--cyan)'
+                  }}
+                >
+                  {item.badge}
+                </span>
+              </div>
+              <div
+                style={{
+                  fontSize: '0.88rem',
+                  fontWeight: 700,
+                  color: 'var(--text-main)',
+                  letterSpacing: '-0.01em'
+                }}
+              >
+                {item.label}
+              </div>
+              <div
+                style={{
+                  fontSize: '0.75rem',
+                  color: 'var(--text-dim)',
+                  lineHeight: 1.45
+                }}
+              >
+                {item.detail}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
       <style>{`
@@ -300,6 +407,11 @@ export default function Hero({ onOpenResume }) {
           transform: translateY(-2px);
           border-color: var(--cyan) !important;
           color: var(--cyan) !important;
+        }
+        .hero-metric-card:hover {
+          transform: translateY(-3px);
+          border-color: var(--cyan) !important;
+          box-shadow: 0 8px 24px -6px var(--cyan-glow);
         }
       `}</style>
     </section>

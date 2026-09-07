@@ -58,6 +58,66 @@ export default function RagEngineTab() {
     recognition.start();
   };
 
+  const PRESET_QUERIES = [
+    {
+      id: 'iso',
+      icon: '🛡️',
+      label: 'ISO8583 Gateway',
+      query: 'How does upay handle transaction validation and ISO8583 processing?',
+      answer: "upay's transaction validation pipeline processes inbound requests through a sub-50ms dual pipeline: fast deterministic ISO8583 rule checks and real-time ML risk inference evaluated against behavioral velocity vectors in Qdrant.",
+      docs: [
+        {
+          score: 0.94,
+          title: 'upay API Transaction Lifecycle & ISO8583 Gateway',
+          snippet: 'Incoming payments undergo dual-pass cryptographic validation followed by ML velocity anomaly checks before settlement ledger commit.'
+        },
+        {
+          score: 0.88,
+          title: 'Qdrant Hybrid Vector Store Architecture',
+          snippet: 'Embeddings generated via fine-tuned multilingual SentenceTransformers with cosine similarity reranking via CrossEncoder.'
+        }
+      ]
+    },
+    {
+      id: 'merchant',
+      icon: '⚡',
+      label: 'Merchant Settlement API',
+      query: 'upay merchant payment API integration steps and webhook security?',
+      answer: "upay Merchant API integration requires OAuth 2.0 mTLS authentication, webhook signature verification via SHA-256 HMAC, and callback settlement reconciliation through our ISO20022 compliant batch clearing gateway.",
+      docs: [
+        {
+          score: 0.96,
+          title: 'upay Merchant Gateway SDK & Webhooks Specification',
+          snippet: 'Webhooks deliver idempotency keys with SHA-256 HMAC signatures verified against registered merchant public keys.'
+        },
+        {
+          score: 0.91,
+          title: 'Cryptographic Signature & TLS 1.3 Requirements',
+          snippet: 'All external merchant endpoints require TLS 1.3 cipher negotiation with mutual certificate validation.'
+        }
+      ]
+    },
+    {
+      id: 'limits',
+      icon: '💳',
+      label: 'NPSB Inter-MFS Limits',
+      query: 'bKash to upay fund transfer limits and clearing settlement?',
+      answer: "Inter-MFS transfers between bKash and upay operate via National Payment Switch Bangladesh (NPSB) with standard BDT 25,000 per-transaction cap, BDT 100,000 monthly ceiling, and real-time ledger settlement.",
+      docs: [
+        {
+          score: 0.97,
+          title: 'Bangladesh Bank MFS Interoperability Directives (NPSB)',
+          snippet: 'Direct interoperable transfers adhere to Bangladesh Bank regulations governing automated clearing house ceilings and daily audit logging.'
+        },
+        {
+          score: 0.89,
+          title: 'Real-Time Clearing Limits & Ledger Reconciliation',
+          snippet: 'Stateful ledger guarantees atomicity across counterparty MFS gateways via two-phase commit protocols.'
+        }
+      ]
+    }
+  ];
+
   const simulateRag = (overrideQuery) => {
     if (streamTimerRef.current) clearInterval(streamTimerRef.current);
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -67,8 +127,12 @@ export default function RagEngineTab() {
     setStreamedTokens('');
     playLaser();
 
-    const fullAnswer =
-      "upay's transaction validation pipeline processes inbound requests through a sub-50ms dual pipeline: fast deterministic ISO8583 rule checks and real-time ML risk inference evaluated against behavioral velocity vectors in Qdrant.";
+    const matchedPreset = PRESET_QUERIES.find(
+      (p) => q.toLowerCase().includes(p.id) || q.toLowerCase().includes(p.label.toLowerCase().split(' ')[0])
+    ) || (q.toLowerCase().includes('merchant') ? PRESET_QUERIES[1] : q.toLowerCase().includes('limit') || q.toLowerCase().includes('bkash') ? PRESET_QUERIES[2] : PRESET_QUERIES[0]);
+
+    const fullAnswer = matchedPreset.answer;
+    const retrievedDocs = matchedPreset.docs;
 
     timeoutRef.current = setTimeout(() => {
       setRagResult({
@@ -77,20 +141,7 @@ export default function RagEngineTab() {
           q.includes('মুই') || q.includes('কীভাবে')
             ? 'Bangla / Multilingual'
             : 'English / Banglish',
-        retrievedDocs: [
-          {
-            score: 0.94,
-            title: 'upay API Transaction Lifecycle & ISO8583 Gateway',
-            snippet:
-              'Incoming payments undergo dual-pass cryptographic validation followed by ML velocity anomaly checks before settlement ledger commit.'
-          },
-          {
-            score: 0.88,
-            title: 'Qdrant Hybrid Vector Store Architecture',
-            snippet:
-              'Embeddings generated via fine-tuned multilingual SentenceTransformers with cosine similarity reranking via CrossEncoder.'
-          }
-        ],
+        retrievedDocs,
         generatedAnswer: fullAnswer,
         latencyMs: 38
       });
@@ -191,32 +242,37 @@ export default function RagEngineTab() {
             </button>
           </div>
 
-          <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginTop: '0.5rem' }}>
-            <span style={{ fontSize: '0.75rem', color: 'var(--text-dim)', alignSelf: 'center' }}>
-              Try presets:
+          <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginTop: '0.5rem', alignItems: 'center' }}>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
+              ⚡ Scenarios:
             </span>
-            <button
-              type="button"
-              onClick={() => {
-                setRagQuery('upay merchant payment API integration steps?');
-                simulateRag('upay merchant payment API integration steps?');
-              }}
-              className="tech-tag"
-              style={{ cursor: 'pointer' }}
-            >
-              Merchant API
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setRagQuery('bKash to upay fund transfer limits');
-                simulateRag('bKash to upay fund transfer limits');
-              }}
-              className="tech-tag"
-              style={{ cursor: 'pointer' }}
-            >
-              Transfer Limits
-            </button>
+            {PRESET_QUERIES.map((preset) => (
+              <button
+                key={preset.id}
+                type="button"
+                onClick={() => {
+                  setRagQuery(preset.query);
+                  simulateRag(preset.query);
+                }}
+                className="tech-tag"
+                style={{
+                  cursor: 'pointer',
+                  fontSize: '0.75rem',
+                  padding: '0.3rem 0.65rem',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.35rem',
+                  background: 'var(--bg-surface-elevated)',
+                  border: '1px solid var(--border-subtle)',
+                  borderRadius: 'var(--radius-sm)',
+                  transition: 'all 0.2s ease'
+                }}
+                title={preset.query}
+              >
+                <span>{preset.icon}</span>
+                <span>{preset.label}</span>
+              </button>
+            ))}
           </div>
         </div>
       </div>

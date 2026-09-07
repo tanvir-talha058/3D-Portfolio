@@ -21,14 +21,51 @@ export default function FraudScorerTab() {
     };
   }, []);
 
-  const calculateFraud = () => {
+  const FRAUD_PRESETS = [
+    {
+      id: 'legit',
+      icon: '🟢',
+      label: 'Routine Utility Bill',
+      inputs: {
+        amount: 1500,
+        velocity: 1,
+        isNewDevice: false,
+        timeOfDay: '02:30 PM'
+      }
+    },
+    {
+      id: 'suspicious',
+      icon: '🟡',
+      label: 'Velocity Spike',
+      inputs: {
+        amount: 18000,
+        velocity: 7,
+        isNewDevice: false,
+        timeOfDay: '08:15 PM'
+      }
+    },
+    {
+      id: 'critical',
+      icon: '🔴',
+      label: 'Midnight Takeover',
+      inputs: {
+        amount: 65000,
+        velocity: 12,
+        isNewDevice: true,
+        timeOfDay: '03:15 AM'
+      }
+    }
+  ];
+
+  const calculateFraud = (customInputs) => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     playLaser();
+    const inputs = customInputs || fraudInputs;
     let baseScore = 0.05;
-    if (fraudInputs.amount > 20000) baseScore += 0.35;
-    if (fraudInputs.velocity > 5) baseScore += 0.3;
-    if (fraudInputs.isNewDevice) baseScore += 0.2;
-    if (fraudInputs.timeOfDay.includes('03:') || fraudInputs.timeOfDay.includes('04:'))
+    if (inputs.amount > 20000) baseScore += 0.35;
+    if (inputs.velocity > 5) baseScore += 0.3;
+    if (inputs.isNewDevice) baseScore += 0.2;
+    if (inputs.timeOfDay && (inputs.timeOfDay.includes('03:') || inputs.timeOfDay.includes('04:')))
       baseScore += 0.15;
 
     const final = Math.min(0.99, baseScore);
@@ -130,11 +167,44 @@ export default function FraudScorerTab() {
             </label>
           </div>
 
+          <div style={{ display: 'flex', gap: '0.45rem', flexWrap: 'wrap', alignItems: 'center', marginTop: '0.25rem' }}>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
+              ⚡ Scenarios:
+            </span>
+            {FRAUD_PRESETS.map((preset) => (
+              <button
+                key={preset.id}
+                type="button"
+                onClick={() => {
+                  setFraudInputs(preset.inputs);
+                  calculateFraud(preset.inputs);
+                }}
+                className="tech-tag"
+                style={{
+                  cursor: 'pointer',
+                  fontSize: '0.75rem',
+                  padding: '0.3rem 0.65rem',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.35rem',
+                  background: 'var(--bg-surface-elevated)',
+                  border: '1px solid var(--border-subtle)',
+                  borderRadius: 'var(--radius-sm)',
+                  transition: 'all 0.2s ease'
+                }}
+                title={`Simulate ${preset.label}`}
+              >
+                <span>{preset.icon}</span>
+                <span>{preset.label}</span>
+              </button>
+            ))}
+          </div>
+
           <button
             type="button"
-            onClick={calculateFraud}
+            onClick={() => calculateFraud()}
             className="btn btn-primary"
-            style={{ marginTop: '0.5rem' }}
+            style={{ marginTop: '0.25rem' }}
           >
             <ShieldCheck size={16} />
             <span>Evaluate Anomaly Risk Score</span>

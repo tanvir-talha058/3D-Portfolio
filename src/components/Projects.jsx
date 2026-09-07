@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
-import { FolderGit2, ExternalLink, ArrowRight } from 'lucide-react';
+import { FolderGit2, ExternalLink, ArrowRight, Sparkles } from 'lucide-react';
 import { GithubIcon } from './Icons';
 import { portfolioData } from '../data/portfolioData';
 import SpotlightCard from './SpotlightCard';
 import Reveal from './Reveal';
 import ScrambleText from './ScrambleText';
 
-export default function Projects({ onSelectProject }) {
+const PROJECT_SIMULATORS = {
+  crimemap: { tab: 'rag', label: 'Try RAG Sim' },
+  gesturemouse: { tab: 'vision', label: 'Try CV Tracker' }
+};
+
+export default function Projects({ onSelectProject, onTriggerInference }) {
   const [filter, setFilter] = useState('All');
 
   const categories = [
@@ -281,18 +286,48 @@ export default function Projects({ onSelectProject }) {
                     borderTop: '1px solid var(--border-subtle)'
                   }}
                 >
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      if (onSelectProject) onSelectProject(project);
-                    }}
-                    className="btn btn-outline btn-sm open-project-modal"
-                    style={{ fontSize: '0.8rem' }}
-                  >
-                    <span>Deep Dive</span>
-                    <ArrowRight size={13} />
-                  </button>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', flexWrap: 'wrap' }}>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (onSelectProject) onSelectProject(project);
+                      }}
+                      className="btn btn-outline btn-sm open-project-modal"
+                      style={{ fontSize: '0.8rem' }}
+                    >
+                      <span>Deep Dive</span>
+                      <ArrowRight size={13} />
+                    </button>
+
+                    {PROJECT_SIMULATORS[project.id] && onTriggerInference && (
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onTriggerInference(PROJECT_SIMULATORS[project.id].tab);
+                        }}
+                        className="btn btn-sm"
+                        style={{
+                          fontSize: '0.74rem',
+                          padding: '0.28rem 0.65rem',
+                          background: 'rgba(6, 182, 212, 0.12)',
+                          border: '1px solid var(--border-accent)',
+                          color: 'var(--cyan)',
+                          fontWeight: 600,
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '0.35rem',
+                          borderRadius: 'var(--radius-sm)',
+                          transition: 'all 0.2s ease'
+                        }}
+                        title={`Launch interactive ${PROJECT_SIMULATORS[project.id].label} in Playground`}
+                      >
+                        <Sparkles size={11} />
+                        <span>{PROJECT_SIMULATORS[project.id].label}</span>
+                      </button>
+                    )}
+                  </div>
 
                   <div style={{ display: 'flex', gap: '0.5rem' }}>
                     {project.github && (

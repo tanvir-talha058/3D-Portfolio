@@ -115,7 +115,7 @@ export default function Hero({ onOpenResume }) {
                 style={{
                   background: 'rgba(16, 185, 129, 0.08)',
                   border: '1px solid rgba(16, 185, 129, 0.25)',
-                  color: '#059669',
+                  color: 'var(--emerald)',
                   fontWeight: 600
                 }}
                 icon={
@@ -139,7 +139,8 @@ export default function Hero({ onOpenResume }) {
                 style={{
                   background: 'var(--bg-surface-elevated)',
                   border: '1px solid var(--border-medium)',
-                  color: 'var(--text-muted)'
+                  color: 'var(--text-main)',
+                  fontWeight: 600
                 }}
                 icon={<Zap size={12} color="var(--cyan)" />}
               >
@@ -359,7 +360,7 @@ export default function Hero({ onOpenResume }) {
                     fontWeight: 600,
                     padding: '0.2rem 0.55rem',
                     borderRadius: 'var(--radius-full)',
-                    background: 'rgba(56, 189, 248, 0.1)',
+                    background: 'var(--cyan-glow)',
                     border: '1px solid var(--border-accent)',
                     color: 'var(--cyan)'
                   }}

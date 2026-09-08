@@ -62,6 +62,19 @@ export default function SpotlightCard({
   const hidden = revealActive && !inView;
   const tiltTransform = `perspective(1000px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`;
 
+  // The card content sits in its own wrapper below (needed to keep the
+  // depth-* 3D layers from flattening — see comment on that div). That
+  // wrapper is the only flex child of this outer element, so any flex
+  // layout a caller passes via `style` (e.g. flexDirection: 'column',
+  // justifyContent: 'space-between' to pin a footer to the bottom) has to
+  // be mirrored onto the wrapper itself, or it silently has no effect on
+  // the actual children.
+  const layoutKeys = ['display', 'flexDirection', 'justifyContent', 'alignItems', 'gap', 'flexWrap'];
+  const contentLayoutStyle = {};
+  layoutKeys.forEach((key) => {
+    if (style[key] !== undefined) contentLayoutStyle[key] = style[key];
+  });
+
   return (
     <div
       ref={setRefs}
@@ -106,7 +119,8 @@ export default function SpotlightCard({
           position: 'relative',
           zIndex: 1,
           height: '100%',
-          transformStyle: 'preserve-3d'
+          transformStyle: 'preserve-3d',
+          ...contentLayoutStyle
         }}
       >
         {children}

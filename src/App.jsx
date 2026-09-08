@@ -239,7 +239,10 @@ export default function App() {
         style={{
           background: 'var(--bg-surface)',
           borderTop: '1px solid var(--border-subtle)',
-          padding: '4rem 0 2rem',
+          // Extra bottom clearance keeps the last row from sitting under the
+          // fixed floating-action-bar (AI Hub pill + scroll-top button),
+          // which always occupies the bottom-right 24-64px of the viewport.
+          padding: '4rem 0 6rem',
           position: 'relative',
           zIndex: 1
         }}

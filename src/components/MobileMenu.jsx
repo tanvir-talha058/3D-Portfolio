@@ -21,6 +21,18 @@ export default function MobileMenu({
 
   useEffect(() => {
     if (!isOpen) return undefined;
+    // Lock body scroll while the drawer is open — otherwise the page behind
+    // it (which has no backdrop covering it below the panel's own height)
+    // keeps scrolling and its buttons stay clickable through the gap.
+    const { overflow } = document.body.style;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = overflow;
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return undefined;
     const panel = panelRef.current;
     if (!panel) return undefined;
     const triggerEl = returnFocusRef?.current;
@@ -56,30 +68,51 @@ export default function MobileMenu({
   if (!isOpen) return null;
 
   return (
-    <div
-      id="mobile-menu"
-      className="mobile-menu-panel"
-      ref={panelRef}
-      style={{
-        position: 'fixed',
-        top: 'var(--nav-height)',
-        left: 0,
-        right: 0,
-        width: '100%',
-        maxHeight: 'calc(100vh - var(--nav-height))',
-        overflowY: 'auto',
-        background: isLightMode ? '#ffffff' : '#080a0f',
-        borderBottom: '1px solid var(--border-medium)',
-        padding: '1.25rem 1.25rem 2rem',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '0.65rem',
-        backdropFilter: 'blur(24px)',
-        boxShadow: 'var(--shadow-lg)',
-        zIndex: 99
-      }}
-    >
-      {/* Quick Command Center in Mobile */}
+    <>
+      {/* Full-viewport scrim behind the drawer — without it, the page
+          below the panel's own (content-sized) height stays visible and
+          clickable, which is broken for a modal-style nav drawer. */}
+      <div
+        aria-hidden="true"
+        onClick={onClose}
+        style={{
+          position: 'fixed',
+          top: 'var(--nav-height)',
+          left: 0,
+          right: 0,
+          // `bottom: 0` would resolve against <nav>'s own (nav-height-tall)
+          // box, not the viewport — its backdrop-filter makes it the
+          // containing block for fixed descendants. An explicit vh-based
+          // height sidesteps that.
+          height: 'calc(100vh - var(--nav-height))',
+          background: isLightMode ? 'rgba(15, 23, 42, 0.35)' : 'rgba(3, 4, 8, 0.6)',
+          zIndex: 98
+        }}
+      />
+      <div
+        id="mobile-menu"
+        className="mobile-menu-panel"
+        ref={panelRef}
+        style={{
+          position: 'fixed',
+          top: 'var(--nav-height)',
+          left: 0,
+          right: 0,
+          width: '100%',
+          maxHeight: 'calc(100vh - var(--nav-height))',
+          overflowY: 'auto',
+          background: isLightMode ? '#ffffff' : '#080a0f',
+          borderBottom: '1px solid var(--border-medium)',
+          padding: '1.25rem 1.25rem 2rem',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '0.65rem',
+          backdropFilter: 'blur(24px)',
+          boxShadow: 'var(--shadow-lg)',
+          zIndex: 99
+        }}
+      >
+        {/* Quick Command Center in Mobile */}
       <button
         type="button"
         onClick={() => {
@@ -139,6 +172,7 @@ export default function MobileMenu({
           <span>View PDF Resume</span>
         </button>
       </div>
-    </div>
+      </div>
+    </>
   );
 }
